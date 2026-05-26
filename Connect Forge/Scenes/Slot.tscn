@@ -21,6 +21,9 @@ metadata/_custom_type_script = "uid://b1giryd51yg07"
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dgrc"]
 size = Vector2(400, 400)
 
+[sub_resource type="LabelSettings" id="LabelSettings_tngci"]
+font_size = 75
+
 [node name="Slot" type="Area2D" unique_id=63901002]
 script = ExtResource("1_tngci")
 
@@ -36,6 +39,22 @@ texture = ExtResource("3_7dgrc")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1930698945]
 visible = false
 shape = SubResource("RectangleShape2D_7dgrc")
+
+[node name="Slot Label" type="Label" parent="." unique_id=1230789968]
+visible = false
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -73.0
+offset_right = 125.0
+offset_bottom = 73.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_tngci")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

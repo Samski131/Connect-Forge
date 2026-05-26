@@ -1,4 +1,6 @@
 extends Node
+#This script handles the logic for the resolution state.
+#This state is skipped just now but will handle win checking.
 
 var game_manager:Node
 

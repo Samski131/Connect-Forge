@@ -1,51 +1,43 @@
 class_name Token
 extends Area2D
 
+#This script is the basic behaviour for every single token.
+#All common functions of tokens should go here, even if some special ones will override the functions.
 
 var playerID = 0
-var tokenPos :Vector2 = Vector2(0,0)
+var token_pos :Vector2 = Vector2(0,0)
 var ability_charges = 0
 var resolved:bool = false
 @onready var timer:Timer = $Timer
 
-#check if I should move DONE
-#check if I should effect tokens around me?
-#use my ability if needed
-#Tell board I'm finished.
-
-func setupToken():
-	#set position and stuff
-	pass
-
-func update_token_position():
+func update_token_position(): #checks if the token should move.
 	var attempts =0
-	while (can_fall() and attempts<Global.board_settings.board_height+1):
-		attempts +=1
-		var grav_direction =Global.board_settings.gravity_direction
-		var displacement_dirs =  Global.board_settings.displacement_direction.values()
-		Global.boardPool.board[tokenPos.x*Global.board_settings.board_width + tokenPos.y]= null
-		tokenPos += displacement_dirs[grav_direction]
-		Global.boardPool.board[tokenPos.x*Global.board_settings.board_width + tokenPos.y]= self
-		moveToken(tokenPos)
-		timer.start(0.1)
-		
-func moveToken(pos:Vector2):
-	global_position.x = (tokenPos.x * Global.slot_size.x) - (Global.board_settings.board_collumns * Global.slot_size.x)/2 + Global.slot_size.x/2 
-	global_position.y = (tokenPos.y * Global.slot_size.y) - (Global.board_settings.board_rows * Global.slot_size.y)/2 + Global.slot_size.y/2
+	while (can_fall() and attempts<Global.board_settings.height+1): #keeps trying to fall until it can't anymore. Will try to fall the entire height of the board +1
+		attempts +=1 #attempts counter keeps us from getting stalled in case there's something getting us stuck in a loop.
+		var grav_direction =Global.board_settings.gravity_direction 
+		var displacement_dirs =  Global.board_settings.displacement_direction.values() #the direction we should move based on the grav direction (0,-1) for down
+		Global.board_pool.remove_token_from_board(Vector2(token_pos.x,token_pos.y))
+		token_pos += displacement_dirs[grav_direction] #move the token in the appropriate direction.
+		Global.board_pool.add_token_to_board(self,Vector2(token_pos.x,token_pos.y))
+		move_token()
 
-func check_if_token_at_limits()->bool:
+func move_token(): #update the position of the actual token's tile not just the under the hood board representation.
+	global_position.x = (token_pos.x * Global.slot_size.x) - (Global.board_settings.collumns * Global.slot_size.x)/2 + Global.slot_size.x/2 
+	global_position.y = (token_pos.y * Global.slot_size.y) - (Global.board_settings.rows * Global.slot_size.y)/2 + Global.slot_size.y/2
+
+func check_if_token_at_limits()->bool: #check if the token is at the edge of the board based on the gravity direction.
 	match Global.board_settings.gravity_direction:
 		Global.board_settings.DIRECTION.UP: 
-			if(tokenPos.y == 0):
+			if(token_pos.y == 0):
 				return true
 		Global.board_settings.DIRECTION.RIGHT: 
-			if(tokenPos.x == Global.board_settings.board_width-1):
+			if(token_pos.x == Global.board_settings.width-1):
 				return true
 		Global.board_settings.DIRECTION.DOWN: 
-			if(tokenPos.y == Global.board_settings.board_height-1):
+			if(token_pos.y == Global.board_settings.height-1):
 				return true
 		Global.board_settings.DIRECTION.LEFT: 
-			if(tokenPos.x == 0):
+			if(token_pos.x == 0):
 				return true
 	return false
 	
@@ -55,17 +47,21 @@ func can_fall()->bool:
 	var grav_direction =Global.board_settings.gravity_direction
 	var displacement_dirs =  Global.board_settings.displacement_direction.values()
 	var dis:Vector2 =displacement_dirs[grav_direction]
-	#check we're not already at the furthest we can go
-	if check_if_token_at_limits():
+	
+	#Check if the token has hit the edge of the board, the maximum it can go based on gravity.
+	if check_if_token_at_limits(): 
+		#mark the token as resolved.
 		resolved = true
 		return false
 		
 	#Checks if there is a token "below" the current token (in the direction of gravity)
-	print("Token pos", tokenPos)
-	print("Other token pos", Vector2(tokenPos.x + dis.x,tokenPos.y + dis.y ))
-	if Global.boardPool.getToken(tokenPos.x + dis.x,tokenPos.y + dis.y ) != null:
+	if Global.board_pool.get_token(token_pos.x + dis.x,token_pos.y + dis.y ) != null:
+		#mark the token as resolved.
 		resolved = true
 		return false
 	
 	#move token
 	return true
+
+func reset_resolved():
+	resolved = false
