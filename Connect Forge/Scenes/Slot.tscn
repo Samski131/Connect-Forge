@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://blypsciusbgxs"]
+
+[ext_resource type="Script" uid="uid://b1giryd51yg07" path="res://addons/shape_texture_2d/shape_texture_2d.gd" id="1_ncnge"]
+[ext_resource type="Script" uid="uid://drqajqm0mfpyo" path="res://Scripts/slot.gd" id="1_tngci"]
+[ext_resource type="Script" uid="uid://67ncrabyyfmf" path="res://addons/shape_texture_2d/drawable_rectangle.gd" id="2_tngci"]
+[ext_resource type="Texture2D" uid="uid://dutf6yam0bok2" path="res://Assets/Slot Front@4x.png" id="3_7dgrc"]
+
+[sub_resource type="Resource" id="Resource_a1x03"]
+script = ExtResource("2_tngci")
+metadata/_custom_type_script = "uid://67ncrabyyfmf"
+
+[sub_resource type="Texture2D" id="Texture2D_v3ifj"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_ncnge")
+size = Vector2i(400, 400)
+shape = SubResource("Resource_a1x03")
+fill_color = Color(0.117647, 0.411765, 0.223529, 1)
+metadata/_custom_type_script = "uid://b1giryd51yg07"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7dgrc"]
+size = Vector2(400, 400)
+
+[node name="Slot" type="Area2D" unique_id=63901002]
+script = ExtResource("1_tngci")
+
+[node name="Back" type="Sprite2D" parent="." unique_id=1229060593]
+z_index = -1
+texture_filter = 2
+texture = SubResource("Texture2D_v3ifj")
+
+[node name="Front" type="Sprite2D" parent="." unique_id=1087407638]
+z_index = 1
+texture = ExtResource("3_7dgrc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1930698945]
+visible = false
+shape = SubResource("RectangleShape2D_7dgrc")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

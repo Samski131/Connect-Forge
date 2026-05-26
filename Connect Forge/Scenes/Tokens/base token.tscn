@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://j0olx0rh5lb4"]
+
+[ext_resource type="Script" uid="uid://d21wnweviqo5c" path="res://Scripts/base token.gd" id="2_1njb1"]
+[ext_resource type="Texture2D" uid="uid://c4qto86phwy5j" path="res://Assets/tokens/Blank greyscale token.png" id="2_dq2og"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1njb1"]
+size = Vector2(340, 340)
+
+[node name="Token" type="Area2D" unique_id=658385762]
+script = ExtResource("2_1njb1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
+shape = SubResource("RectangleShape2D_1njb1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1897946786]
+texture = ExtResource("2_dq2og")
+
+[node name="Timer" type="Timer" parent="." unique_id=1615134451]

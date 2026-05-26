@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://6cxy0ihx263q"]
+
+[ext_resource type="Script" uid="uid://bd85kf7sdt0xe" path="res://Scripts/board_builder.gd" id="1_tnbny"]
+[ext_resource type="Script" uid="uid://cexepp4ka05qc" path="res://Scripts/game_manager.gd" id="2_2wvcj"]
+[ext_resource type="Script" uid="uid://7rr5e3m0xk0h" path="res://Scripts/board_manager.gd" id="2_bh37u"]
+[ext_resource type="Script" uid="uid://cnbxdsojq88tt" path="res://Scripts/placement_logic.gd" id="3_uh3b8"]
+[ext_resource type="Script" uid="uid://c8qp3vqse121a" path="res://Scripts/action_logic.gd" id="4_s4i1f"]
+[ext_resource type="Script" uid="uid://dogor60gt0dw1" path="res://Scripts/resolution_logic.gd" id="5_bh37u"]
+
+[node name="World" type="Node2D" unique_id=1895785283]
+
+[node name="Token Pool" type="Node2D" parent="." unique_id=1697406012 groups=["token pool"]]
+
+[node name="Board Builder" type="Node" parent="." unique_id=6529522]
+script = ExtResource("1_tnbny")
+
+[node name="Board Pool" type="Node2D" parent="." unique_id=397328331 groups=["board pool"]]
+script = ExtResource("2_bh37u")
+
+[node name="Game Manager" type="Node" parent="." unique_id=1217688198 groups=["game manager"]]
+script = ExtResource("2_2wvcj")
+
+[node name="Placement State" type="Node" parent="Game Manager" unique_id=133202691]
+script = ExtResource("3_uh3b8")
+
+[node name="Action State" type="Node" parent="Game Manager" unique_id=1405517346]
+script = ExtResource("4_s4i1f")
+
+[node name="Resolution State" type="Node" parent="Game Manager" unique_id=1565146920]
+script = ExtResource("5_bh37u")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1023481867]
+zoom = Vector2(0.25, 0.25)

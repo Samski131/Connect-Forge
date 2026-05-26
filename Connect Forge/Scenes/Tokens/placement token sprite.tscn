@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dco7pr8t17vkc"]
+
+[ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="1_jlupc"]
+
+[node name="Placement Token" type="Sprite2D" unique_id=1402028742]
+modulate = Color(1, 1, 1, 0.4627451)
+texture = ExtResource("1_jlupc")
