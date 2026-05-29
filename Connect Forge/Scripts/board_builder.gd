@@ -7,6 +7,7 @@ extends Node
 @export var rows :int = 6
 
 @onready var board_pool = $"../Board Pool"
+@onready var token_pool = $"../Token Pool"
 
 var slot_instance:PackedScene = load("res://Scenes/Slot.tscn")
 
@@ -23,12 +24,14 @@ func build_board():
 	#Creates a new board based on the height and width settings.
 	#Instantiates the appropraite number of slots.
 	#Sets the board array to be all null tiles.
-	Global.board_settings.height= rows
-	Global.board_settings.width = collumns
+	if not Engine.is_editor_hint():
+		Global.board_settings.height= rows
+		Global.board_settings.width = collumns
 	for x in range(collumns):
 		for y in range(rows):
 			create_slot(x,y)
-			Global.board_pool.board.append(null)
+			if not Engine.is_editor_hint():
+				Global.board_pool.board.append(null)
 			
 func clear_board():
 	#delete all the slots and tokens on the board.
@@ -41,9 +44,10 @@ func setup_board_settings():
 	#passes important details to the Global script to be referenced elsewhere.
 	var new_slot = slot_instance.instantiate()
 	var texture:Texture2D= new_slot.find_child("Front").texture as Texture2D
-	Global.slot_size = Vector2(texture.get_width(),texture.get_height())
-	Global.board_settings.collumns = collumns
-	Global.board_settings.rows = rows
+	if not Engine.is_editor_hint():
+		Global.slot_size = Vector2(texture.get_width(),texture.get_height())
+		Global.board_settings.collumns = collumns
+		Global.board_settings.rows = rows
 	
 func create_slot(x:int, y:int):
 	#Create new slot nodes, sets up the appropriate slot types based on postion and positions the nodes.
@@ -52,7 +56,8 @@ func create_slot(x:int, y:int):
 	var slot_width_and_height = texture.get_width()
 	new_slot.global_position.x = x * (slot_width_and_height* new_slot.scale.x) - (slot_width_and_height* new_slot.scale.x * collumns)/2 + slot_width_and_height/2 
 	new_slot.global_position.y = y * (slot_width_and_height* new_slot.scale.y) - (slot_width_and_height* new_slot.scale.y * rows)/2 + slot_width_and_height/2
-	new_slot.slot_types = assign_slot_types(x,y)
+	if not Engine.is_editor_hint():
+		new_slot.slot_types = assign_slot_types(x,y)
 	new_slot.slot_position = Vector2(x,y)
 	board_pool.add_child(new_slot)
 	

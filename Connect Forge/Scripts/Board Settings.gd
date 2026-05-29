@@ -14,3 +14,4 @@ var height :int = 0
 var width :int = 0
 var rows:int =0
 var collumns:int=0
+var tokens_to_win:int = 4 #how many tokens must be adjacent to win.

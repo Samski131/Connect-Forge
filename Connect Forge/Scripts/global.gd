@@ -1,3 +1,4 @@
+@tool
 extends Node
 #Global script with useful variables as well as common helper functions.
 

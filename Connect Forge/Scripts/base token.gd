@@ -4,7 +4,7 @@ extends Area2D
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
 
-var playerID = 0
+var player_id = 0
 var token_pos :Vector2 = Vector2(0,0)
 var ability_charges = 0
 var resolved:bool = false
