@@ -10,8 +10,6 @@
 [ext_resource type="Script" uid="uid://bb2u8kjrewyet" path="res://Scripts/game_over_logic.gd" id="7_vw4oq"]
 [ext_resource type="Script" uid="uid://c7si6rd3ogeyg" path="res://Scripts/winner_display.gd" id="8_vw4oq"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_vw4oq"]
-
 [node name="World" type="Node2D" unique_id=1895785283]
 
 [node name="Token Pool" type="Node2D" parent="." unique_id=1697406012 groups=["token pool"]]
@@ -24,6 +22,9 @@ script = ExtResource("2_bh37u")
 
 [node name="Game Manager" type="Node" parent="." unique_id=1217688198 groups=["game manager"]]
 script = ExtResource("2_2wvcj")
+starting_number_of_players = null
+max_number_of_players = null
+player_colours = null
 
 [node name="Placement State" type="Node" parent="Game Manager" unique_id=133202691]
 script = ExtResource("3_uh3b8")
@@ -89,7 +90,6 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 23
-label_settings = SubResource("LabelSettings_vw4oq")
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="UI/Control/Panel/VBoxContainer" unique_id=1756463395]

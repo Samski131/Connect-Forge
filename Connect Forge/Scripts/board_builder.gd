@@ -19,7 +19,17 @@ func rebuild_board():
 	clear_board()
 	build_board()
 
+func clear_board():
+	#delete all the slots and tokens on the board.
+	for child in board_pool.get_children():
+		child.queue_free()
+	for child in token_pool.get_children():
+		child.queue_free()
 	
+	if not Engine.is_editor_hint():
+		Global.board_pool.board =[]
+		
+		
 func build_board():
 	#Creates a new board based on the height and width settings.
 	#Instantiates the appropraite number of slots.
@@ -32,14 +42,8 @@ func build_board():
 			create_slot(x,y)
 			if not Engine.is_editor_hint():
 				Global.board_pool.board.append(null)
-			
-func clear_board():
-	#delete all the slots and tokens on the board.
-	for child in board_pool.get_children():
-		child.queue_free()
-	for child in Global.token_pool.get_children():
-		child.queue_free()
-		
+
+
 func setup_board_settings():
 	#passes important details to the Global script to be referenced elsewhere.
 	var new_slot = slot_instance.instantiate()
@@ -54,8 +58,10 @@ func create_slot(x:int, y:int):
 	var new_slot = slot_instance.instantiate()
 	var texture:Texture2D= new_slot.find_child("Front").texture as Texture2D
 	var slot_width_and_height = texture.get_width()
-	new_slot.global_position.x = x * (slot_width_and_height* new_slot.scale.x) - (slot_width_and_height* new_slot.scale.x * collumns)/2 + slot_width_and_height/2 
-	new_slot.global_position.y = y * (slot_width_and_height* new_slot.scale.y) - (slot_width_and_height* new_slot.scale.y * rows)/2 + slot_width_and_height/2
+	var offset_x :float = (slot_width_and_height* new_slot.scale.x * collumns)/2 
+	var offset_y :float = (slot_width_and_height* new_slot.scale.y * rows)/2 
+	new_slot.global_position.x = x * (slot_width_and_height* new_slot.scale.x) - offset_x + slot_width_and_height/2 
+	new_slot.global_position.y = y * (slot_width_and_height* new_slot.scale.y) - offset_y + slot_width_and_height/2
 	if not Engine.is_editor_hint():
 		new_slot.slot_types = assign_slot_types(x,y)
 	new_slot.slot_position = Vector2(x,y)

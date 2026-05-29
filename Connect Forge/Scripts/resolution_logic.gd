@@ -1,6 +1,6 @@
 extends Node
 #This script handles the logic for the resolution state.
-#This state is skipped just now but will handle win checking.
+#This state handles checking for wins, once all possible wins are checked it starts the next turn.
 
 var game_manager:Node
 
@@ -14,12 +14,12 @@ func exit_state():
 	game_manager.end_turn()
 	
 func process_state():
-	check_for_win()
-	if(check_for_win() != -1):
-		print("Win!")
+	var winner_id = check_for_win()
+	if(winner_id != -1):
+		game_manager.winner_ui.update_winner(winner_id)
 	else:
-		print("No win!")
-		
+		#print("No win!")
+		pass
 	exit_state()
 
 func check_for_win()->int:
@@ -76,4 +76,3 @@ func check_for_win()->int:
 				if win:
 					return current_player_id
 	return -1
-						

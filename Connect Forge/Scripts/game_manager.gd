@@ -3,16 +3,25 @@ extends Node
 #Game Managment
 #Stores settings but mostly directs the games turn order and state machine.
 
-@export var number_of_players = 2
-@export var player_colours = [Color.GOLDENROD,Color.DARK_RED, Color.ROYAL_BLUE,Color.FOREST_GREEN]
+@export var starting_number_of_players = 2
+@export var max_number_of_players = 6
+var number_of_players:int
+@export var player_colours = [Color.GOLDENROD,Color.DARK_RED, Color.ROYAL_BLUE,Color.FOREST_GREEN, Color.DARK_ORCHID, Color.ORCHID]
+var player_names = []
 var current_turn_phase = Global.TURN_PHASE.NONE
 var current_player_id = 0
 @onready var placement_state = $"Placement State"
 @onready var action_state = $"Action State"
 @onready var resolution_state = $"Resolution State"
+@onready var board_builder = $"../Board Builder"
+var winner_ui:VBoxContainer
 
 func _ready():
+	gather_groups()
 	start_game()
+
+func gather_groups():
+	winner_ui = get_tree().get_first_node_in_group("winner ui")
 	
 func start_game(): #start game on player 0s turn.
 	start_turn(0)
@@ -36,6 +45,11 @@ func _process(_delta): #runs the appropriate process_state based on the state ma
 			action_state.process_state()
 		Global.TURN_PHASE.RESOLUTION:
 			resolution_state.process_state()
-
+		
+func reset_game():
+	print("reset")
+	board_builder.rebuild_board()
+	winner_ui.clear_winner()
+	start_game()
 
 	
