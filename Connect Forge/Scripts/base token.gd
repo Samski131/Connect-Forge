@@ -9,6 +9,7 @@ var token_pos :Vector2 = Vector2(0,0)
 var ability_charges = 0
 var resolved:bool = false
 @onready var timer:Timer = $Timer
+@onready var sprites = $Sprites
 
 func update_token_position(): #checks if the token should move.
 	var attempts =0
@@ -65,3 +66,6 @@ func can_fall()->bool:
 
 func reset_resolved():
 	resolved = false
+
+func recolor(player_id):
+	sprites.recolor(player_id)

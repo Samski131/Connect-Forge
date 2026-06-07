@@ -70,9 +70,10 @@ func create_new_token(slot_pos:Vector2):
 	#Create the node representation of the token and also add a board representation too.
 	var new_token = base_token.instantiate()
 	new_token.token_pos = slot_pos
-	new_token.modulate = game_manager.player_colours[game_manager.current_player_id]
+
 	new_token.global_position = Global.hovered_slot.global_position
 	new_token.player_id = get_parent().current_player_id
 	Global.token_pool.add_child(new_token)
+	new_token.recolor(game_manager.current_player_id)
 	Global.board_pool.add_token_to_board(new_token,Vector2(slot_pos.x,slot_pos.y))
 	

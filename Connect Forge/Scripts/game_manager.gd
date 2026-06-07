@@ -6,7 +6,7 @@ extends Node
 @export var starting_number_of_players = 2
 @export var max_number_of_players = 6
 var number_of_players:int
-@export var player_colours = [Color.GOLDENROD,Color.DARK_RED, Color.ROYAL_BLUE,Color.FOREST_GREEN, Color.DARK_ORCHID, Color.ORCHID]
+@export var player_colours:Array[ColorPalette]
 var player_names = []
 var current_turn_phase = Global.TURN_PHASE.NONE
 var current_player_id = 0
