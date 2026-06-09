@@ -3,7 +3,7 @@ extends Area2D
 
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
-enum TokenType{BASIC, ANVIL}
+enum TokenType{BASIC, ANVIL, PYRE}
 var player_id = 0
 var token_pos :Vector2 = Vector2(0,0)
 var resolved:bool = false
@@ -22,7 +22,7 @@ func _setup():
 	token_type = TokenType.BASIC
 	
 func update_token_position(): #checks if the token should move.
-	var token_below =  Global.board_pool.get_token_below(token_pos.x,token_pos.y)
+	var token_below =  Global.board_pool.get_adjacent_token(token_pos.x,token_pos.y, BoardSetting.DIRECTION.DOWN)
 	if(token_below==null):
 		var grav_direction =Global.board_settings.gravity_direction 
 		var displacement_dirs =  Global.board_settings.displacement_direction.values() #the direction we should move based on the grav direction (0,-1) for down
@@ -55,7 +55,7 @@ func check_if_token_at_limits()->bool: #check if the token is at the edge of the
 		Global.board_settings.DIRECTION.LEFT: 
 			if(token_pos.x == 0):
 				limits=true
-	var token_below =  Global.board_pool.get_token_below(token_pos.x,token_pos.y)
+	var token_below =  Global.board_pool.get_adjacent_token(token_pos.x,token_pos.y, BoardSetting.DIRECTION.DOWN)
 	if(token_below!=null):
 		if(token_below.landed == true):
 			limits = true

@@ -5,6 +5,8 @@ var placement_token_sprite:PackedScene = load("res://Scenes/Tokens/placement tok
 var current_placement_token
 var base_token: PackedScene = load("res://Scenes/Tokens/base token.tscn")
 var anvil_token: PackedScene = load("res://Scenes/Tokens/anvil token.tscn")
+var pyre_token: PackedScene = load("res://Scenes/Tokens/pyre token.tscn")
+
 var game_manager:Node
 
 func _ready():
@@ -31,7 +33,7 @@ func process_state():
 	if Input.is_action_just_pressed("left_click"):
 		place_attempt(base_token)
 	elif Input.is_action_just_pressed("right_click"):
-		place_attempt(anvil_token)
+		place_attempt(pyre_token)
 		
 func place_attempt(token:PackedScene):
 	#checks that the hovered slot actually is a slot, ensures the hovered slot is on the top row
