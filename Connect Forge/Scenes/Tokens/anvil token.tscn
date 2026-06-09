@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dbey5h3625uou"]
 
-[ext_resource type="Script" uid="uid://d21wnweviqo5c" path="res://Scripts/base token.gd" id="1_ju8ml"]
+[ext_resource type="Script" uid="uid://pc336u4vlo0r" path="res://Scripts/anvil_token.gd" id="1_ekvmn"]
 [ext_resource type="Script" uid="uid://ddj8cqyx72gkn" path="res://Scripts/token sprite recolour.gd" id="2_ekvmn"]
 [ext_resource type="Texture2D" uid="uid://dx3rk037p4xdx" path="res://Assets/tokens/parts of tokens/Asset 79.png" id="3_ul5sb"]
 [ext_resource type="Texture2D" uid="uid://bye1xdl4xnqry" path="res://Assets/tokens/parts of tokens/Asset 78.png" id="4_eke4g"]
@@ -16,13 +16,14 @@ size = Vector2(340, 340)
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0ocfi"]
 load_path = "res://.godot/imported/Asset 80.png-b9fd4c1000c540fdfeb773a6ae500bd6.ctex"
 
-[node name="Token" type="Area2D" unique_id=658385762 groups=["token"]]
-script = ExtResource("1_ju8ml")
+[sub_resource type="LabelSettings" id="LabelSettings_ju8ml"]
+font_size = 100
+
+[node name="Anvil Token" type="Area2D" unique_id=658385762 groups=["token"]]
+script = ExtResource("1_ekvmn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
 shape = SubResource("RectangleShape2D_1njb1")
-
-[node name="Timer" type="Timer" parent="." unique_id=1615134451]
 
 [node name="Sprites" type="Node2D" parent="." unique_id=1434195102]
 script = ExtResource("2_ekvmn")
@@ -61,9 +62,27 @@ texture = ExtResource("8_32mha")
 
 [node name="cyan - anvil shadow" type="Sprite2D" parent="Sprites" unique_id=586332891]
 modulate = Color(0, 1, 1, 1)
+position = Vector2(0, 12.5)
 texture = ExtResource("9_ekvmn")
 offset = Vector2(0, -4)
 
 [node name="red - anvil light" type="Sprite2D" parent="Sprites" unique_id=427416080]
 modulate = Color(1, 0, 0, 1)
+position = Vector2(0, 12.5)
 texture = ExtResource("9_ekvmn")
+
+[node name="Token_pos Label" type="Label" parent="." unique_id=1356980226]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -71.0
+offset_top = 50.0
+offset_right = 71.0
+offset_bottom = 187.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_ju8ml")
+horizontal_alignment = 1

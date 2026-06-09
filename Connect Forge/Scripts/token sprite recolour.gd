@@ -22,6 +22,11 @@ func recolor(player_id):
 		elif sprite.name.contains("yellow"):
 			sprite.modulate = get_part_color(PART.yellow, player_id)
 
+func darken(amount:float):
+	gather_sprites()
+	for sprite in sprites:
+		sprite.modulate = sprite.modulate.darkened(amount)
+		
 func gather_sprites():
 	sprites = get_children(true)
 	for sprite in sprites:
