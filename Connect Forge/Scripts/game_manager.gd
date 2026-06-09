@@ -13,6 +13,8 @@ var current_player_id = 0
 @onready var placement_state = $"Placement State"
 @onready var action_state = $"Action State"
 @onready var resolution_state = $"Resolution State"
+@onready var game_over_state = $"Game Over State"
+
 @onready var board_builder = $"../Board Builder"
 var winner_ui:VBoxContainer
 

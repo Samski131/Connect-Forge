@@ -17,6 +17,7 @@ func process_state():
 	var winner_id = check_for_win()
 	if(winner_id != -1):
 		game_manager.winner_ui.update_winner(winner_id)
+		game_manager.game_over_state.enter_state()
 	else:
 		#print("No win!")
 		pass

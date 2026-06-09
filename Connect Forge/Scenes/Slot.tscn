@@ -27,6 +27,7 @@ font_size = 75
 script = ExtResource("1_tngci")
 
 [node name="Back" type="Sprite2D" parent="." unique_id=1229060593]
+modulate = Color(0.11764706, 0.4117647, 0.22352941, 1)
 z_index = -1
 texture_filter = 2
 texture = SubResource("Texture2D_v3ifj")

@@ -3,7 +3,7 @@ extends Area2D
 
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
-enum TokenType{BASIC, ANVIL, PYRE}
+enum TokenType{BASIC, ANVIL, PYRE, RAMP}
 var player_id = 0
 var token_pos :Vector2 = Vector2(0,0)
 var resolved:bool = false
@@ -91,4 +91,4 @@ func debug_token():
 	token_pos_label.visible = debug_label_visibility
 	#token_pos_label.text = str(int(token_pos.x)) + "," + str(int(token_pos.y))
 	#token_pos_label.text =str(token_pos.y * Global.board_settings.collumns + token_pos.x)
-	token_pos_label.text = str(landed)
+	token_pos_label.text = str(player_id)

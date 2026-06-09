@@ -6,6 +6,7 @@ var current_placement_token
 var base_token: PackedScene = load("res://Scenes/Tokens/base token.tscn")
 var anvil_token: PackedScene = load("res://Scenes/Tokens/anvil token.tscn")
 var pyre_token: PackedScene = load("res://Scenes/Tokens/pyre token.tscn")
+var ramp_token: PackedScene = load("res://Scenes/Tokens/ramp token.tscn")
 
 var game_manager:Node
 
@@ -36,7 +37,8 @@ func process_state():
 		place_attempt(anvil_token)
 	elif Input.is_action_just_pressed("action_3"):
 		place_attempt(pyre_token)
-		
+	elif Input.is_action_just_pressed("action_4"):
+		place_attempt(ramp_token)
 func place_attempt(token:PackedScene):
 	#checks that the hovered slot actually is a slot, ensures the hovered slot is on the top row
 	if try_to_place_token() == false:
@@ -44,7 +46,7 @@ func place_attempt(token:PackedScene):
 		
 	var slot_pos = Global.hovered_slot.slot_position
 	if Global.board_pool.get_token(slot_pos.x,slot_pos.y)==null: #if there is no token in the slot we click on
-		create_new_token(slot_pos, token)
+		Global.board_pool.create_new_token(token, slot_pos)
 		
 		#move onto action state
 		exit_state()
@@ -88,14 +90,3 @@ func try_to_place_token()->bool:
 		return false
 	return true
 		
-func create_new_token(slot_pos:Vector2, token:PackedScene):
-	#Create the node representation of the token and also add a board representation too.
-	var new_token = token.instantiate()
-	new_token.token_pos = slot_pos
-
-	new_token.global_position = Global.hovered_slot.global_position
-	new_token.player_id = get_parent().current_player_id
-	Global.token_pool.add_child(new_token)
-	new_token.recolor()
-	Global.board_pool.add_token_to_board(new_token,Vector2(slot_pos.x,slot_pos.y))
-	

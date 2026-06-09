@@ -1,5 +1,10 @@
 extends Node2D
 var board = []
+var game_manager:Node
+
+func _ready():
+	game_manager= get_tree().get_first_node_in_group("game manager")
+	
 #Controls various board functions and stores the under the hood board representation.
 
 #gets a token from a given XY, error protection for numbers out of range
@@ -30,6 +35,15 @@ func get_adjacent_token(x:float, y:float, direction:BoardSetting.DIRECTION)->Tok
 			offset = grav_vector.orthogonal()
 		BoardSetting.DIRECTION.LEFT:
 			offset =  -grav_vector.orthogonal()
+		BoardSetting.DIRECTION.UP_RIGHT:
+			offset =  -grav_vector +  grav_vector.orthogonal()
+		BoardSetting.DIRECTION.UP_LEFT:
+			offset =  -grav_vector -  grav_vector.orthogonal()
+		BoardSetting.DIRECTION.DOWN_RIGHT:
+			offset =  grav_vector +  grav_vector.orthogonal()
+		BoardSetting.DIRECTION.DOWN_LEFT:
+			offset =  grav_vector -  grav_vector.orthogonal()
+			
 	var check_token_pos = Vector2(x,y) + offset
 	var checked_token = Global.board_pool.get_token(check_token_pos.x,check_token_pos.y)
 	return checked_token
@@ -38,6 +52,18 @@ func get_adjacent_token(x:float, y:float, direction:BoardSetting.DIRECTION)->Tok
 func add_token_to_board(new_token:Token, slot_pos:Vector2):
 	if(get_token(slot_pos.x,slot_pos.y)==null): #ensures there's not already a token in this slot
 		Global.board_pool.board[slot_pos.y*Global.board_settings.width + slot_pos.x ]= new_token
+
+func create_new_token(token:PackedScene,slot_pos:Vector2):
+	#Create the node representation of the token and also add a board representation too.
+	var new_token = token.instantiate()
+	new_token.token_pos = slot_pos
+
+	new_token.global_position = Global.hovered_slot.global_position
+	new_token.player_id = game_manager.current_player_id
+	Global.token_pool.add_child(new_token)
+	new_token.recolor()
+	add_token_to_board(new_token,Vector2(slot_pos.x,slot_pos.y))
+	
 
 #Removes a token from the board array DOES NOT REMOVE ADD A TOKEN NODE.
 func remove_token_from_board(slot_pos:Vector2):

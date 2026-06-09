@@ -1,5 +1,5 @@
 extends Token
-#Anvil Token
+#Pyre Token
 
 func _setup():
 	token_type = TokenType.PYRE
