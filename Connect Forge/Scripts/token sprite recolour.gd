@@ -7,7 +7,8 @@ var game_manager:Node
 
 func _ready():
 	game_manager= get_tree().get_first_node_in_group("game manager")
-
+	recolor(game_manager.current_player_id)
+	
 func recolor(player_id):
 	gather_sprites()
 	for sprite in sprites:

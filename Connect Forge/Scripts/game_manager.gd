@@ -77,4 +77,5 @@ func debug_gravity_changes():
 				action_state.exit_state()
 			Global.TURN_PHASE.RESOLUTION:
 				resolution_state.exit_state()
+		get_tree().call_group("slot", "gravity_change")
 		action_state.enter_state()

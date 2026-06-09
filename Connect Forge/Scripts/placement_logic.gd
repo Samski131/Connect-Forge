@@ -30,9 +30,11 @@ func process_state():
 	move_placement_token() # update where the ghost placement token is.
 	
 
-	if Input.is_action_just_pressed("left_click"):
+	if Input.is_action_just_pressed("action_1"):
 		place_attempt(base_token)
-	elif Input.is_action_just_pressed("right_click"):
+	elif Input.is_action_just_pressed("action_2"):
+		place_attempt(anvil_token)
+	elif Input.is_action_just_pressed("action_3"):
 		place_attempt(pyre_token)
 		
 func place_attempt(token:PackedScene):
@@ -54,7 +56,19 @@ func move_placement_token():
 	if(Global.hovered_slot ==null):
 		current_placement_token.visible = false
 		return
-	if(Global.SLOT_TYPE.TOP_EDGE not in Global.hovered_slot.slot_types):
+		
+	var valid_slots:Global.SLOT_TYPE
+	match Global.board_settings.gravity_direction:
+		BoardSetting.DIRECTION.DOWN:
+			valid_slots = Global.SLOT_TYPE.TOP_EDGE
+		BoardSetting.DIRECTION.UP:
+			valid_slots = Global.SLOT_TYPE.BOTTOM_EDGE
+		BoardSetting.DIRECTION.RIGHT:
+			valid_slots = Global.SLOT_TYPE.LEFT_EDGE
+		BoardSetting.DIRECTION.LEFT:
+			valid_slots = Global.SLOT_TYPE.RIGHT_EDGE
+			
+	if( valid_slots not in Global.hovered_slot.slot_types):
 		current_placement_token.visible = false
 		return
 	current_placement_token.visible = true

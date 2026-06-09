@@ -15,7 +15,6 @@ resource_name = ""
 script = ExtResource("1_ncnge")
 size = Vector2i(400, 400)
 shape = SubResource("Resource_a1x03")
-fill_color = Color(0.117647, 0.411765, 0.223529, 1)
 metadata/_custom_type_script = "uid://b1giryd51yg07"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dgrc"]
@@ -24,7 +23,7 @@ size = Vector2(400, 400)
 [sub_resource type="LabelSettings" id="LabelSettings_tngci"]
 font_size = 75
 
-[node name="Slot" type="Area2D" unique_id=63901002]
+[node name="Slot" type="Area2D" unique_id=63901002 groups=["slot"]]
 script = ExtResource("1_tngci")
 
 [node name="Back" type="Sprite2D" parent="." unique_id=1229060593]
