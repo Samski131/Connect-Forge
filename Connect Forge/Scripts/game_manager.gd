@@ -38,6 +38,8 @@ func getNextPlayerID()->int: #figure out who the next player is depending on how
 	return next
 	
 func _process(_delta): #runs the appropriate process_state based on the state machine phase.
+	
+	debug_gravity_changes()
 	match(current_turn_phase):
 		Global.TURN_PHASE.PLACEMENT:
 			placement_state.process_state()
@@ -52,4 +54,27 @@ func reset_game():
 	winner_ui.clear_winner()
 	start_game()
 
+func debug_gravity_changes():
+	var change:bool = false
+	if(Input.is_action_just_pressed("right_arrow")):
+		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.RIGHT
+		change = true
+	if(Input.is_action_just_pressed("left_arrow")):
+		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.LEFT
+		change = true
+	if(Input.is_action_just_pressed("up_arrow")):
+		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.UP
+		change = true
+	if(Input.is_action_just_pressed("down_arrow")):
+		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.DOWN
+		change = true
 	
+	if(change):
+		match(current_turn_phase):
+			Global.TURN_PHASE.PLACEMENT:
+				placement_state.exit_state()
+			Global.TURN_PHASE.ACTION:
+				action_state.exit_state()
+			Global.TURN_PHASE.RESOLUTION:
+				resolution_state.exit_state()
+		action_state.enter_state()

@@ -26,6 +26,7 @@ func exit_state():
 func process_state():
 	move_placement_token() # update where the ghost placement token is.
 	
+
 	if Input.is_action_just_pressed("left_click"):
 		#checks that the hovered slot actually is a slot, ensures the hovered slot is on the top row
 		if try_to_place_token() == false:
@@ -56,8 +57,8 @@ func try_to_place_token()->bool:
 	#check if we can place the token, true if yes, false if no.
 	if(Global.hovered_slot ==null):
 		return false
-	if(Global.SLOT_TYPE.TOP_EDGE not in Global.hovered_slot.slot_types):
-		return false
+	#if(Global.SLOT_TYPE.TOP_EDGE not in Global.hovered_slot.slot_types):
+		#return false
 		
 	var slot = Global.hovered_slot.slot_position
 	var token_in_slot = Global.board_pool.get_token(slot.x,slot.y)

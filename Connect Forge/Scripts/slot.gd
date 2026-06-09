@@ -8,7 +8,7 @@ var slot_position:Vector2 = Vector2.ZERO
 @onready var slot_label = $"Slot Label"
 
 func _ready():
-	slot_label.text= str(slot_position)
+	slot_label.text= str(int(slot_position.x)) + "," + str(int(slot_position.y))
 func _on_mouse_entered():
 	Global.hovered_slot=self
 	

@@ -4,14 +4,16 @@ var board = []
 
 #gets a token from a given XY, error protection for numbers out of range
 func get_token(x:float, y:float)->Token: 
-	if (x <0 or x >= Global.board_settings.width):
+	var width = Global.board_settings.width
+	if (x <0 or x >= width):
 		return
 		
 	if (y <0 or y > Global.board_settings.height):
 		return
-		
-	var width = Global.board_settings.width
 
+	if( y*width + x >= width*Global.board_settings.height):
+		return
+		
 	return board[y*width + x]
 
 #Adds a token to the board array DOES NOT ADD A TOKEN NODE.

@@ -8,8 +8,8 @@ var player_id = 0
 var token_pos :Vector2 = Vector2(0,0)
 var ability_charges = 0
 var resolved:bool = false
-@onready var timer:Timer = $Timer
 @onready var sprites = $Sprites
+@onready var token_pos_label = $"Token_pos Label"
 
 func update_token_position(): #checks if the token should move.
 	var attempts =0
@@ -21,7 +21,7 @@ func update_token_position(): #checks if the token should move.
 		token_pos += displacement_dirs[grav_direction] #move the token in the appropriate direction.
 		Global.board_pool.add_token_to_board(self,Vector2(token_pos.x,token_pos.y))
 		move_token()
-
+	debug_positions()
 func move_token(): #update the position of the actual token's tile not just the under the hood board representation.
 	global_position.x = (token_pos.x * Global.slot_size.x) - (Global.board_settings.collumns * Global.slot_size.x)/2 + Global.slot_size.x/2 
 	global_position.y = (token_pos.y * Global.slot_size.y) - (Global.board_settings.rows * Global.slot_size.y)/2 + Global.slot_size.y/2
@@ -69,3 +69,7 @@ func reset_resolved():
 
 func recolor(player_id):
 	sprites.recolor(player_id)
+
+func debug_positions():
+	#token_pos_label.text = str(int(token_pos.x)) + "," + str(int(token_pos.y))
+	token_pos_label.text =str(token_pos.y * Global.board_settings.collumns + token_pos.x)

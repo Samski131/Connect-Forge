@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://dbey5h3625uou"]
+
+[ext_resource type="Script" uid="uid://d21wnweviqo5c" path="res://Scripts/base token.gd" id="1_ju8ml"]
+[ext_resource type="Script" uid="uid://ddj8cqyx72gkn" path="res://Scripts/token sprite recolour.gd" id="2_ekvmn"]
+[ext_resource type="Texture2D" uid="uid://dx3rk037p4xdx" path="res://Assets/tokens/parts of tokens/Asset 79.png" id="3_ul5sb"]
+[ext_resource type="Texture2D" uid="uid://bye1xdl4xnqry" path="res://Assets/tokens/parts of tokens/Asset 78.png" id="4_eke4g"]
+[ext_resource type="Texture2D" uid="uid://3sepmrl4nlv2" path="res://Assets/tokens/parts of tokens/Asset 76.png" id="5_d78l8"]
+[ext_resource type="Texture2D" uid="uid://bddb6eysdayni" path="res://Assets/tokens/parts of tokens/Asset 77.png" id="6_k7oho"]
+[ext_resource type="Texture2D" uid="uid://bm0yjjdpdyrss" path="res://Assets/tokens/parts of tokens/Asset 75.png" id="7_1dcrp"]
+[ext_resource type="Texture2D" uid="uid://cpj36d6rqcu7a" path="res://Assets/tokens/parts of tokens/Asset 74.png" id="8_32mha"]
+[ext_resource type="Texture2D" uid="uid://o7y661in2b8" path="res://Assets/tokens/parts of tokens/token decoration/Anvil.png" id="9_ekvmn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1njb1"]
+size = Vector2(340, 340)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0ocfi"]
+load_path = "res://.godot/imported/Asset 80.png-b9fd4c1000c540fdfeb773a6ae500bd6.ctex"
+
+[node name="Token" type="Area2D" unique_id=658385762 groups=["token"]]
+script = ExtResource("1_ju8ml")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
+shape = SubResource("RectangleShape2D_1njb1")
+
+[node name="Timer" type="Timer" parent="." unique_id=1615134451]
+
+[node name="Sprites" type="Node2D" parent="." unique_id=1434195102]
+script = ExtResource("2_ekvmn")
+
+[node name="red -outer bevel upper" type="Sprite2D" parent="Sprites" unique_id=393066544]
+modulate = Color(1, 0, 0, 1)
+texture = ExtResource("3_ul5sb")
+offset = Vector2(0, -86)
+
+[node name="cyan - outer bevel lower" type="Sprite2D" parent="Sprites" unique_id=453642622]
+modulate = Color(0, 1, 1, 1)
+texture = SubResource("CompressedTexture2D_0ocfi")
+offset = Vector2(0, 86)
+
+[node name="green - main body" type="Sprite2D" parent="Sprites" unique_id=1111479988]
+modulate = Color(0, 1, 0, 1)
+texture = ExtResource("4_eke4g")
+
+[node name="red - center outer bevel dark" type="Sprite2D" parent="Sprites" unique_id=1542752131]
+modulate = Color(1, 0, 0, 1)
+texture = ExtResource("5_d78l8")
+offset = Vector2(0, 60)
+
+[node name="yellow - centre innter bevel upper" type="Sprite2D" parent="Sprites" unique_id=1103856249]
+modulate = Color(1, 1, 0, 1)
+texture = ExtResource("6_k7oho")
+offset = Vector2(0, -60)
+
+[node name="cyan - centre inner bevel lower" type="Sprite2D" parent="Sprites" unique_id=1318592803]
+modulate = Color(0, 1, 1, 1)
+texture = ExtResource("7_1dcrp")
+
+[node name="blue - center body" type="Sprite2D" parent="Sprites" unique_id=830925483]
+modulate = Color(0, 0, 1, 1)
+texture = ExtResource("8_32mha")
+
+[node name="cyan - anvil shadow" type="Sprite2D" parent="Sprites" unique_id=586332891]
+modulate = Color(0, 1, 1, 1)
+texture = ExtResource("9_ekvmn")
+offset = Vector2(0, -4)
+
+[node name="red - anvil light" type="Sprite2D" parent="Sprites" unique_id=427416080]
+modulate = Color(1, 0, 0, 1)
+texture = ExtResource("9_ekvmn")
