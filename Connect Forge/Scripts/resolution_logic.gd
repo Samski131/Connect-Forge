@@ -3,7 +3,12 @@ extends Node
 #This state handles checking for wins, once all possible wins are checked it starts the next turn.
 
 var game_manager:Node
-
+const  WIN_DIRECTIONS = [
+	Vector2(0, 1),   # horizontal right
+	Vector2(1, 0),   # vertical down
+	Vector2(1, 1),   # diagonal down-right
+	Vector2(1, -1),  # diagonal down-left
+]
 func _ready():
 	game_manager= get_tree().get_first_node_in_group("game manager")
 
@@ -48,13 +53,14 @@ func check_for_win()->int:
 
 			
 			#all the directions that a win can be detected in (to the right, down, diagonal up and right, diagonal down and right.)
-			var win_directions = [Vector2(0,1),Vector2(-1,0), Vector2(1,1),Vector2(-1,1)]
-			for dir in win_directions: #for each of the 4 win directions
+
+			for dir in WIN_DIRECTIONS: #for each of the 4 win directions
 				
 				#Check if the last token in the streak is out of bounds
 				#a streak is a row, collumn or diagonal of tokens
-				var farthest_r = r + dir.x * Global.board_settings.tokens_to_win
-				var farthest_c = c + dir.y * Global.board_settings.tokens_to_win
+				var steps = Global.board_settings.tokens_to_win - 1
+				var farthest_r = r + dir.x * steps
+				var farthest_c = c + dir.y * steps
 
 				if (farthest_r <0 or farthest_r >= rows) or (farthest_c <0 or farthest_c >= collumns):
 					continue #skips to next direction to check

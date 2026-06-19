@@ -11,7 +11,7 @@ var displacement_direction= {
 	"UP_RIGHT":  Vector2(1,-1),
 	"UP_LEFT":  Vector2(-1,-1),
 	"DOWN_RIGHT":  Vector2(1,1),
-	"DOWN_LEFT":  Vector2(-1,-1),
+	"DOWN_LEFT":  Vector2(-1,1),
 }
 var gravity_direction = DIRECTION.DOWN
 var height :int = 0

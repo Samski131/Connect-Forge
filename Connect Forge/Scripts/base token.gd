@@ -77,6 +77,8 @@ func check_enough_charges(cost:int)->bool:
 		return false
 		
 func deduct_charges(cost:int):
+	if(cost ==0):
+		return
 	charges-=cost
 	sprites.darken(0.3)
 	

@@ -20,12 +20,12 @@ func get_token(x:float, y:float)->Token:
 		return
 		
 	return board[y*width + x]
-
-func get_adjacent_token(x:float, y:float, direction:BoardSetting.DIRECTION)->Token:
-		#check if there's a token below mine (in the direction of gravity
+	
+func get_adjacent_pos(x:float, y:float, direction:BoardSetting.DIRECTION)->Vector2:
 	var grav_direction = Global.board_settings.gravity_direction
 	var grav_vector = Global.board_settings.displacement_direction.values()[grav_direction]
 	var offset:Vector2
+	
 	match(direction):
 		BoardSetting.DIRECTION.DOWN:
 			offset = grav_vector
@@ -34,19 +34,21 @@ func get_adjacent_token(x:float, y:float, direction:BoardSetting.DIRECTION)->Tok
 		BoardSetting.DIRECTION.RIGHT:
 			offset = grav_vector.orthogonal()
 		BoardSetting.DIRECTION.LEFT:
-			offset =  -grav_vector.orthogonal()
+			offset = -grav_vector.orthogonal()
 		BoardSetting.DIRECTION.UP_RIGHT:
-			offset =  -grav_vector +  grav_vector.orthogonal()
+			offset = -grav_vector + grav_vector.orthogonal()
 		BoardSetting.DIRECTION.UP_LEFT:
-			offset =  -grav_vector -  grav_vector.orthogonal()
+			offset = -grav_vector - grav_vector.orthogonal()
 		BoardSetting.DIRECTION.DOWN_RIGHT:
-			offset =  grav_vector +  grav_vector.orthogonal()
+			offset = grav_vector + grav_vector.orthogonal()
 		BoardSetting.DIRECTION.DOWN_LEFT:
-			offset =  grav_vector -  grav_vector.orthogonal()
-			
-	var check_token_pos = Vector2(x,y) + offset
-	var checked_token = Global.board_pool.get_token(check_token_pos.x,check_token_pos.y)
-	return checked_token
+			offset = grav_vector - grav_vector.orthogonal()
+	
+	return Vector2(x, y) + offset
+	
+func get_adjacent_token(x:float, y:float, direction:BoardSetting.DIRECTION)->Token:
+	var check_token_pos = get_adjacent_pos(x, y, direction)
+	return get_token(check_token_pos.x, check_token_pos.y)
 
 #Adds a token to the board array DOES NOT ADD A TOKEN NODE.
 func add_token_to_board(new_token:Token, slot_pos:Vector2):
@@ -76,3 +78,16 @@ func replace_token_on_board(new_token:Token, slot_pos:Vector2):
 	remove_token_from_board(slot_pos)
 	add_token_to_board(new_token, slot_pos)
 	
+func move_token_on_board(token:Token, new_pos:Vector2)->bool:
+	if token == null:
+		return false
+	
+	if get_token(new_pos.x, new_pos.y) != null:
+		return false
+	
+	remove_token_from_board(token.token_pos)
+	token.token_pos = new_pos
+	add_token_to_board(token, new_pos)
+	token.move_token_visual()
+	
+	return true
