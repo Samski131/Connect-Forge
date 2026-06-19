@@ -21,22 +21,22 @@ func process_state():
 	all_resolved= true #default is that token is resolved
 	var grav_dir:int =Global.board_settings.gravity_direction
 	var rows:int = Global.board_settings.rows
-	var collumns:int = Global.board_settings.collumns 
+	var columns:int = Global.board_settings.columns 
 	match(grav_dir):
 		BoardSetting.DIRECTION.DOWN:
-			for y in range(rows, -1, -1):
-				for x in range(0, collumns, 1):
+			for y in range(rows-1, -1, -1):
+				for x in range(0, columns, 1):
 					process_token(x,y)
 		BoardSetting.DIRECTION.UP:
 			for y in range(0, rows, 1):
-				for x in range(0, collumns, 1):
+				for x in range(0, columns, 1):
 					process_token(x,y)
 		BoardSetting.DIRECTION.LEFT:
-			for x in range(0, collumns, 1):
+			for x in range(0, columns, 1):
 				for y in range(0, rows, 1):
 					process_token(x,y)
 		BoardSetting.DIRECTION.RIGHT:
-			for x in range(collumns, -1, -1):
+			for x in range(columns-1, -1, -1):
 				for y in range(0, rows, 1):
 					process_token(x,y)
 
@@ -44,29 +44,31 @@ func process_state():
 		exit_state()
 
 func report_on_token(token)-> Report:
-	if token ==null:
-		return Report.EMPTY #slot is empty
+	if token == null:
+		return Report.EMPTY
 	
-	if token.resolved == true: #if the token has resolved already
+	if token.resolved:
 		return Report.RESOLVED
 	
 	var reached_limit:bool = token.check_if_token_at_limits()
-	var cant_use_ability:bool = false
-	if(reached_limit):
-		cant_use_ability = token._try_to_use_ability()
-	else:
-		token.update_token_position()
 	
-	if (reached_limit and cant_use_ability):
-		return Report.RESOLVED
-	else:
+	if reached_limit == false:
+		token.update_token_position()
 		return Report.IN_PROGRESS
+	
+	var ability_was_used:bool = token._try_to_use_ability()
+	
+	if ability_was_used:
+		return Report.IN_PROGRESS
+	
+	token.resolved = true
+	return Report.RESOLVED
 		
 func reset_token_resolution():
 	get_tree().call_group("token", "reset_resolved")
 	
 func process_token(x:int,y:int):
-	var token = Global.board_pool.get_token(x,y)
+	var token = Global.board_pool.get_token(Vector2i(x,y))
 	var report = report_on_token(token)
 	if(report == Report.IN_PROGRESS):
 		all_resolved = false

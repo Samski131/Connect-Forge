@@ -26,16 +26,18 @@ func gather_groups():
 	winner_ui = get_tree().get_first_node_in_group("winner ui")
 	
 func start_game(): #start game on player 0s turn.
+	
 	start_turn(0)
 	
-func start_turn(_playerID:int):
+func start_turn(player_id:int):
+	current_player_id = player_id
 	placement_state.enter_state()# begin first player's placement phase.
 	
 func end_turn(): #move on to the next player's turn
-	current_player_id= getNextPlayerID()
+	current_player_id= get_next_player_id()
 	start_turn(current_player_id)
 	
-func getNextPlayerID()->int: #figure out who the next player is depending on how many players total there are.
+func get_next_player_id()->int: #figure out who the next player is depending on how many players total there are.
 	var next = (current_player_id + 1) % number_of_players
 	return next
 	
@@ -51,7 +53,6 @@ func _process(_delta): #runs the appropriate process_state based on the state ma
 			resolution_state.process_state()
 		
 func reset_game():
-	print("reset")
 	board_builder.rebuild_board()
 	winner_ui.clear_winner()
 	start_game()

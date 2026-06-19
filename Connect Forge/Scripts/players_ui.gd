@@ -41,7 +41,8 @@ func add_player():
 		update_player_counter()
 	
 func remove_player():
-	if(game_manager.number_of_players >=1):
+
+	if(game_manager.number_of_players >2):
 		player_entries.back().queue_free()
 		game_manager.number_of_players -=1
 		player_entries.pop_back()

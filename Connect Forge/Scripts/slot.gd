@@ -4,7 +4,7 @@ extends Area2D
 #It stores the type of slot as well as the position.
 
 var slot_types=[]
-var slot_position:Vector2 = Vector2.ZERO
+var slot_position:Vector2i = Vector2i.ZERO
 var background_color:Color = Color(0x1e6939ff)
 var highlight_color:Color = Color(0.2, 0.667, 0.373, 1.0)
 @onready var back = $Back

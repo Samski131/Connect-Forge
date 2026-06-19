@@ -20,12 +20,11 @@ func exit_state():
 	
 func process_state():
 	var winner_id = check_for_win()
-	if(winner_id != -1):
+	if winner_id != -1 :
 		game_manager.winner_ui.update_winner(winner_id)
 		game_manager.game_over_state.enter_state()
-	else:
-		#print("No win!")
-		pass
+		return
+		
 	exit_state()
 
 func check_for_win()->int:
@@ -33,14 +32,14 @@ func check_for_win()->int:
 	#Grab variables for easier typing
 	var board = Global.board_pool.board
 	var rows = Global.board_settings.rows
-	var collumns = Global.board_settings.collumns
+	var columns = Global.board_settings.columns
 	
 	for r in rows:
-		for c in collumns:
+		for c in columns:
 			
 			#if(r== 0 and c ==0):
 				#print("Checking from: (", r, ",",c,")")
-			var current_index = r* collumns + c
+			var current_index = r* columns + c
 			var current_board_slot = board[current_index]
 
 			#if the current board slot doesn't have a token then move on.
@@ -62,14 +61,14 @@ func check_for_win()->int:
 				var farthest_r = r + dir.x * steps
 				var farthest_c = c + dir.y * steps
 
-				if (farthest_r <0 or farthest_r >= rows) or (farthest_c <0 or farthest_c >= collumns):
+				if (farthest_r <0 or farthest_r >= rows) or (farthest_c <0 or farthest_c >= columns):
 					continue #skips to next direction to check
 				
 				
 				var token_indices= [] # array to hold the indices of the other tokens in a given streak
 				
 				for i in range(1,Global.board_settings.tokens_to_win): #add all of the other indices to an array to be checked
-					var index = (r + dir.x * i) * collumns + (c+dir.y * i)
+					var index = (r + dir.x * i) * columns + (c+dir.y * i)
 					token_indices.push_back(index)
 				
 				#for any given streak we are checking, assume the player has won until we find one of the two reasons those streaks don't win.

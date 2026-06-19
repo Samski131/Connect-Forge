@@ -30,7 +30,7 @@ window/stretch/aspect="ignore"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/workday_timer/plugin.cfg")
+enabled=PackedStringArray("res://addons/flatten_for_llm/plugin.cfg", "res://addons/workday_timer/plugin.cfg")
 
 [input]
 

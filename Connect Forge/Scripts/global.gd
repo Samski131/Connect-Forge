@@ -18,5 +18,6 @@ func _ready():
 func slot_to_global_position(sX,sY): #changes slot position from e.g (0,1) to (200,400). From slot to actual position.
 	return Vector2(sX,sY) * slot_size
 
-func global_position_to_slot(gX,gY): #detect which slot a certain position on the screen falls under.
-	return floor( Vector2(gX,gY) / slot_size)
+func global_position_to_slot(gX,gY)->Vector2i: #detect which slot a certain position on the screen falls under.
+	var slot =  Vector2(gX,gY) / slot_size
+	return Vector2i(slot)

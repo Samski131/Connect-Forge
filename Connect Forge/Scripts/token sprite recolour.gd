@@ -29,10 +29,11 @@ func darken(amount:float):
 		sprite.modulate = sprite.modulate.darkened(amount)
 		
 func gather_sprites():
-	sprites = get_children(true)
-	for sprite in sprites:
-		if(sprite is not Sprite2D):
-			sprites.erase(sprite)
+	sprites.clear()
+	
+	for child in get_children(true):
+		if child is Sprite2D:
+			sprites.append(child)
 			
 
 func get_part_color(part_id:int,player_id:int)->Color:

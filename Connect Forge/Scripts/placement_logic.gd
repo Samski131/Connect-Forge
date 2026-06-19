@@ -45,8 +45,8 @@ func place_attempt(token:PackedScene):
 		return
 		
 	var slot_pos = Global.hovered_slot.slot_position
-	if Global.board_pool.get_token(slot_pos.x,slot_pos.y)==null: #if there is no token in the slot we click on
-		Global.board_pool.create_new_token(token, slot_pos)
+	if Global.board_pool.get_token(Vector2i(slot_pos.x,slot_pos.y))==null: #if there is no token in the slot we click on
+		Global.board_pool.create_new_token(token, slot_pos, game_manager.current_player_id)
 		
 		#move onto action state
 		exit_state()
@@ -85,7 +85,7 @@ func try_to_place_token()->bool:
 		return false
 		
 	var slot = Global.hovered_slot.slot_position
-	var token_in_slot = Global.board_pool.get_token(slot.x,slot.y)
+	var token_in_slot = Global.board_pool.get_token(Vector2i(slot.x,slot.y))
 
 	if(token_in_slot):
 		return false

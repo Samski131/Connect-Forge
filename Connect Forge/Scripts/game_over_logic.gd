@@ -14,5 +14,4 @@ func exit_state():
 	pass
 	
 func process_state():
-
-	exit_state()
+	pass
