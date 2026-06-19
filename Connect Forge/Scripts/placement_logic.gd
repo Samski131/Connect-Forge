@@ -80,8 +80,9 @@ func try_to_place_token()->bool:
 	#check if we can place the token, true if yes, false if no.
 	if(Global.hovered_slot ==null):
 		return false
-	#if(Global.SLOT_TYPE.TOP_EDGE not in Global.hovered_slot.slot_types):
-		#return false
+	
+	if(check_slot_type()==false):
+		return false
 		
 	var slot = Global.hovered_slot.slot_position
 	var token_in_slot = Global.board_pool.get_token(slot.x,slot.y)
@@ -90,3 +91,31 @@ func try_to_place_token()->bool:
 		return false
 	return true
 		
+
+func check_slot_type()->bool:
+	var slot_types = Global.hovered_slot.slot_types
+	
+	match(Global.board_settings.gravity_direction):
+		BoardSetting.DIRECTION.DOWN:
+			if Global.SLOT_TYPE.TOP_EDGE not in Global.hovered_slot.slot_types:
+				return false
+		BoardSetting.DIRECTION.UP:
+			if Global.SLOT_TYPE.BOTTOM_EDGE not in Global.hovered_slot.slot_types:
+				return false
+		BoardSetting.DIRECTION.LEFT:
+			if Global.SLOT_TYPE.RIGHT_EDGE not in Global.hovered_slot.slot_types:
+				return false
+		BoardSetting.DIRECTION.RIGHT:
+			if Global.SLOT_TYPE.LEFT_EDGE not in Global.hovered_slot.slot_types:
+				return false
+	return true
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
