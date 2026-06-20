@@ -62,11 +62,16 @@ func report_on_token(token)-> Report:
 		token.update_token_position()
 		return Report.IN_PROGRESS
 	
+	var trigger_was_used:bool = board.resolve_landing_triggers(token)
+
+	if trigger_was_used:
+		return Report.IN_PROGRESS
+
 	var ability_was_used:bool = token._try_to_use_ability()
-	
+
 	if ability_was_used:
 		return Report.IN_PROGRESS
-	
+
 	token.resolved = true
 	return Report.RESOLVED
 		

@@ -3,23 +3,25 @@ extends Token
 
 func setup_special_token():
 	token_type = TokenType.RAMP
-	
-func _try_to_use_ability()->bool:
-	#return true if it works and changes the board.
-	#return false if it fails to activate for any reason
+	keywords = [Global.KEYWORD.ON_IMPACT]
 
-	var token_above = board.get_adjacent_token(token_pos.x, token_pos.y,BoardSetting.DIRECTION.UP)
+
+func _try_to_use_ability()->bool:
+	return false
+
+
+func _on_impact(context:Dictionary)->bool:
+	var landing_token:Token = context.get("landing_token", null)
 	
-	if token_above == null:
+	if landing_token == null:
 		return false
 	
-	var ramp_drop_off_pos = board.get_adjacent_pos(token_pos.x,token_pos.y,BoardSetting.DIRECTION.DOWN_LEFT)
+	var ramp_drop_off_pos = board.get_adjacent_pos(token_pos.x,token_pos.y,BoardSetting.DIRECTION.LEFT)
 	
-	var ramp_drop_off = board.get_token(Vector2i(ramp_drop_off_pos.x,ramp_drop_off_pos.y)) #check if there's a token in the drop off slot
-	
-	if ramp_drop_off != null: # there's a token in the position we want to drop into
+	if board.is_position_in_bounds(ramp_drop_off_pos) == false:
 		return false
-		
-	board.move_token_on_board(token_above, ramp_drop_off_pos)
 	
-	return true
+	if board.get_token(ramp_drop_off_pos) != null:
+		return false
+	
+	return board.move_token_on_board(landing_token, ramp_drop_off_pos)

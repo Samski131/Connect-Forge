@@ -24,25 +24,27 @@ func get_token(pos:Vector2i)->Token:
 func get_adjacent_pos(x:int, y:int, direction:BoardSetting.DIRECTION)->Vector2i:
 	var grav_direction = settings.gravity_direction
 	var grav_vector = settings.get_direction_vector(grav_direction)
+	var right_vector = settings.get_right_relative_vector(grav_vector)
 	var offset:Vector2i
 	var DIRECTION = BoardSetting.DIRECTION
+	
 	match(direction):
 		DIRECTION.DOWN:
 			offset = grav_vector
 		DIRECTION.UP:
 			offset = -grav_vector
 		DIRECTION.RIGHT:
-			offset = grav_vector.orthogonal()
+			offset = right_vector
 		DIRECTION.LEFT:
-			offset = -grav_vector.orthogonal()
+			offset = -right_vector
 		DIRECTION.UP_RIGHT:
-			offset = -grav_vector + grav_vector.orthogonal()
+			offset = -grav_vector + right_vector
 		DIRECTION.UP_LEFT:
-			offset = -grav_vector - grav_vector.orthogonal()
+			offset = -grav_vector - right_vector
 		DIRECTION.DOWN_RIGHT:
-			offset = grav_vector + grav_vector.orthogonal()
+			offset = grav_vector + right_vector
 		DIRECTION.DOWN_LEFT:
-			offset = grav_vector - grav_vector.orthogonal()
+			offset = grav_vector - right_vector
 	
 	return Vector2i(x, y) + offset
 	
@@ -136,3 +138,36 @@ func global_position_to_slot(global_pos:Vector2)->Vector2i:
 	var local_slot_pos := (local_pos - board_top_left) / slot_size
 	
 	return Vector2i(floor(local_slot_pos.x), floor(local_slot_pos.y))
+
+func resolve_landing_triggers(landing_token:Token)->bool:
+	if landing_token == null:
+		return false
+	
+	var changed_board := false
+	
+	var token_below := get_adjacent_token(landing_token.token_pos.x, landing_token.token_pos.y, BoardSetting.DIRECTION.DOWN	)
+	
+	if token_below != null:
+		#if the token below exists, pack a dictionary ful of some context.
+		var impact_context := {
+			"landing_token": landing_token,
+			"impacted_token": token_below,
+			"board": self
+		}
+		
+		if token_below.trigger_keyword(Global.KEYWORD.ON_IMPACT, impact_context):
+			changed_board = true
+	
+	# The landing token may have been deleted by On Impact.
+	if get_token(landing_token.token_pos) != landing_token:
+		return changed_board
+	
+	var land_context := {
+		"landing_token": landing_token,
+		"board": self
+	}
+	
+	if landing_token.trigger_keyword(Global.KEYWORD.ON_LAND, land_context):
+		changed_board = true
+	
+	return changed_board

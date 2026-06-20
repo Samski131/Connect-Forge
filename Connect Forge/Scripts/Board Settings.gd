@@ -27,3 +27,6 @@ func get_direction_vector(direction:DIRECTION)->Vector2i:
 		DIRECTION.DOWN_LEFT:
 			return Vector2i(-1, 1)
 	return Vector2i.ZERO
+
+func get_right_relative_vector(direction_vector:Vector2i)->Vector2i:
+	return Vector2i(direction_vector.y, -direction_vector.x)

@@ -4,11 +4,13 @@ extends Area2D
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
 enum TokenType{BASIC, ANVIL, PYRE, RAMP}
+
 var player_id = 0
 var token_pos :Vector2i = Vector2i.ZERO
 var resolved:bool = false
 var landed:bool = false
 var token_type
+var keywords:Array[Global.KEYWORD] = []
 var board:BoardManager
 
 @onready var sprites = $Sprites
@@ -29,6 +31,7 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 
 func setup_special_token():
 	token_type = TokenType.BASIC
+	keywords = []
 	
 func update_token_position(): #checks if the token should move.
 	var token_below =  board.get_adjacent_token(token_pos.x,token_pos.y, BoardSetting.DIRECTION.DOWN)
@@ -103,3 +106,50 @@ func debug_token():
 	#token_pos_label.text = str(int(token_pos.x)) + "," + str(int(token_pos.y))
 	#token_pos_label.text =str(token_pos.y * board.settings.columns + token_pos.x)
 	token_pos_label.text = str(player_id)
+
+func has_keyword(keyword:Global.KEYWORD)->bool:
+	return keyword in keywords
+
+
+func trigger_keyword(keyword:Global.KEYWORD, context:Dictionary)->bool:
+	if has_keyword(keyword) == false:
+		return false
+	
+	match keyword:
+		Global.KEYWORD.ON_LAND:
+			return _on_land(context)
+		Global.KEYWORD.ON_IMPACT:
+			return _on_impact(context)
+		Global.KEYWORD.ON_PASS_LEFT:
+			return _on_pass_left(context)
+		Global.KEYWORD.ON_PASS_RIGHT:
+			return _on_pass_right(context)
+		Global.KEYWORD.ON_PASS_ABOVE:
+			return _on_pass_above(context)
+		Global.KEYWORD.ON_PASS_BELOW:
+			return _on_pass_below(context)
+	
+	return false
+	
+func _on_land(context:Dictionary)->bool:
+	return false
+
+
+func _on_impact(context:Dictionary)->bool:
+	return false
+
+
+func _on_pass_left(context:Dictionary)->bool:
+	return false
+
+
+func _on_pass_right(context:Dictionary)->bool:
+	return false
+
+
+func _on_pass_above(context:Dictionary)->bool:
+	return false
+
+
+func _on_pass_below(context:Dictionary)->bool:
+	return false
