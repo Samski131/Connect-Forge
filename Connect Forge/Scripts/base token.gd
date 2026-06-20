@@ -55,7 +55,7 @@ func update_token_position():
 		BoardVisualManager.MOVE_VISUAL.FALL
 	):
 		if pass_step["has_pass_trigger"]:
-			board.resolve_passing_triggers(
+			board.queue_passing_trigger(
 				self,
 				pass_step["from_pos"],
 				pass_step["to_pos"]
@@ -172,3 +172,12 @@ func _on_pass_above(_context:Dictionary)->bool:
 
 func _on_pass_below(_context:Dictionary)->bool:
 	return false
+
+func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->bool:
+	if has_keyword(keyword) == false:
+		return false
+	
+	if check_enough_charges(ability_cost) == false:
+		return false
+	
+	return true

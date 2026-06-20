@@ -7,6 +7,7 @@ var settings:BoardSetting = BoardSetting.new()
 var hovered_slot:Slot = null
 var slot_size:Vector2 = Vector2.ZERO
 @onready var visuals:BoardVisualManager = $"../Board Visual Manager"
+var pending_pass_triggers:Array[Dictionary] = []
 
 func _ready():
 	token_pool = get_tree().get_first_node_in_group("token pool")
@@ -69,13 +70,17 @@ func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int)
 	
 	if get_token(slot_pos) != null:
 		return null
-		
+	
 	var new_token:Token = token_scene.instantiate()
+	new_token.visible = false
+	
 	token_pool.add_child(new_token)
 	
 	new_token.setup(self, slot_pos, player_id)
 	add_token_to_board(new_token, slot_pos)
-
+	
+	new_token.visible = true
+	
 	return new_token
 
 #Removes a token from the board array DOES NOT REMOVE ADD A TOKEN NODE.
@@ -232,7 +237,16 @@ func has_passing_reactor_for_step(moving_token:Token,_from_pos:Vector2i,to_pos:V
 		if reacting_token == moving_token:
 			continue
 		
-		if reacting_token.has_keyword(keyword):
+		var context := {
+			"moving_token": moving_token,
+			"reacting_token": reacting_token,
+			"from_pos": _from_pos,
+			"to_pos": to_pos,
+			"keyword": keyword,
+			"board": self
+		}
+
+		if reacting_token._can_trigger_keyword(keyword, context):
 			return true
 	
 	return false
@@ -315,5 +329,45 @@ func resolve_passing_triggers(moving_token:Token, from_pos:Vector2i, to_pos:Vect
 		# Stop resolving pass triggers if the moving token was destroyed or moved
 		if get_token(to_pos) != moving_token:
 			break
+	
+	return changed_board
+
+func queue_passing_trigger(
+	moving_token:Token,
+	from_pos:Vector2i,
+	to_pos:Vector2i
+):
+	pending_pass_triggers.append({
+		"moving_token": moving_token,
+		"from_pos": from_pos,
+		"to_pos": to_pos
+	})
+
+
+func resolve_pending_pass_triggers()->bool:
+	if pending_pass_triggers.is_empty():
+		return false
+	
+	var changed_board := false
+	var triggers := pending_pass_triggers.duplicate()
+	pending_pass_triggers.clear()
+	
+	for trigger in triggers:
+		var moving_token:Token = trigger["moving_token"]
+		
+		if moving_token == null:
+			continue
+		
+		if is_instance_valid(moving_token) == false:
+			continue
+		
+		if moving_token.being_destroyed:
+			continue
+		
+		var from_pos:Vector2i = trigger["from_pos"]
+		var to_pos:Vector2i = trigger["to_pos"]
+		
+		if resolve_passing_triggers(moving_token, from_pos, to_pos):
+			changed_board = true
 	
 	return changed_board

@@ -27,3 +27,20 @@ func _on_pass_right(context:Dictionary)->bool:
 	
 	deduct_charges(ability_cost)
 	return board.destroy_token(moving_token)
+
+func _can_trigger_keyword(keyword:Global.KEYWORD, context:Dictionary = {})->bool:
+	if keyword != Global.KEYWORD.ON_PASS_RIGHT:
+		return false
+	
+	if check_enough_charges(ability_cost) == false:
+		return false
+	
+	var moving_token:Token = context.get("moving_token", null)
+	
+	if moving_token == null:
+		return false
+	
+	if moving_token.being_destroyed:
+		return false
+	
+	return true

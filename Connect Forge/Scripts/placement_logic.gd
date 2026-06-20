@@ -22,9 +22,10 @@ func enter_state():
 	clear_placement_token()
 	
 	current_placement_token = placement_token_sprite.instantiate()
+	current_placement_token.visible = false
+	current_placement_token.global_position = Vector2(-100000, -100000)
+	
 	get_tree().root.call_deferred("add_child", current_placement_token)
-	
-	
 func exit_state():
 	clear_placement_token()
 	#begin the action state.
@@ -81,9 +82,9 @@ func move_placement_token():
 	if( valid_slots not in board.hovered_slot.slot_types):
 		current_placement_token.visible = false
 		return
-	current_placement_token.visible = true
+		
 	current_placement_token.global_position = board.hovered_slot.global_position
-
+	current_placement_token.visible = true
 func try_to_place_token()->bool:
 	#check if we can place the token, true if yes, false if no.
 	if(board.hovered_slot ==null):

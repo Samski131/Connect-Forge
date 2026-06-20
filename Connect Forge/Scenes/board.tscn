@@ -16,6 +16,11 @@
 [ext_resource type="ColorPalette" uid="uid://dtk2y800v5vfs" path="res://Scenes/Tokens/token colour resources/pink.tres" id="8_qjv7d"]
 [ext_resource type="Script" uid="uid://c7si6rd3ogeyg" path="res://Scripts/winner_display.gd" id="8_vw4oq"]
 [ext_resource type="ColorPalette" uid="uid://yw8l0l4ienur" path="res://Scenes/Tokens/token colour resources/violet.tres" id="9_ardhx"]
+[ext_resource type="Texture2D" uid="uid://blt8dxurt5cl7" path="res://Assets/tokens/parts of tokens/Asset 73.png" id="17_bb5wj"]
+[ext_resource type="Texture2D" uid="uid://o7y661in2b8" path="res://Assets/tokens/parts of tokens/token decoration/Anvil.png" id="18_o57li"]
+[ext_resource type="Texture2D" uid="uid://cq8d0vr6o3rwi" path="res://Assets/tokens/parts of tokens/token decoration/pyre - main.png" id="19_abmxi"]
+[ext_resource type="Texture2D" uid="uid://bhlafbl3l6aax" path="res://Assets/tokens/parts of tokens/token decoration/Ramp back.png" id="20_mc7rj"]
+[ext_resource type="Texture2D" uid="uid://bik5j8ijw3dhe" path="res://Assets/tokens/parts of tokens/token decoration/Dagger.png" id="21_d5nw7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_vw4oq"]
 
@@ -63,7 +68,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Panel" type="Panel" parent="UI/Control" unique_id=696490779]
+[node name="Players Panel" type="Panel" parent="UI/Control" unique_id=696490779]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 1
 anchors_preset = 11
@@ -74,65 +79,151 @@ grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Panel" unique_id=1695492532]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Players Panel" unique_id=1695492532]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 77.0
 grow_horizontal = 2
 
-[node name="Reset Board Button" type="Button" parent="UI/Control/Panel/VBoxContainer" unique_id=1746495731]
+[node name="Reset Board Button" type="Button" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1746495731]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Reset Board"
 
-[node name="Winner Display" type="VBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1398040347 groups=["winner ui"]]
+[node name="Winner Display" type="VBoxContainer" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1398040347 groups=["winner ui"]]
 layout_mode = 2
 script = ExtResource("8_vw4oq")
 
-[node name="Winner" type="Label" parent="UI/Control/Panel/VBoxContainer/Winner Display" unique_id=1307753811]
+[node name="Winner" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Winner Display" unique_id=1307753811]
 layout_mode = 2
 theme_override_font_sizes/font_size = 23
 text = "Winner:"
 horizontal_alignment = 1
 
-[node name="Winner Result" type="Label" parent="UI/Control/Panel/VBoxContainer/Winner Display" unique_id=1433037511]
+[node name="Winner Result" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Winner Display" unique_id=1433037511]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 23
 label_settings = SubResource("LabelSettings_vw4oq")
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="UI/Control/Panel/VBoxContainer" unique_id=1756463395]
+[node name="HSeparator" type="HSeparator" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1756463395]
 layout_mode = 2
 
-[node name="Players" type="VBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1519201100]
+[node name="Players" type="VBoxContainer" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1519201100]
 layout_mode = 2
 script = ExtResource("7_d8vyx")
 
-[node name="Player Label" type="Label" parent="UI/Control/Panel/VBoxContainer/Players" unique_id=310037578]
+[node name="Player Label" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Players" unique_id=310037578]
 layout_mode = 2
 theme_override_font_sizes/font_size = 23
 text = "Players:"
 horizontal_alignment = 1
 
-[node name="Number of Players" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer/Players" unique_id=1329709113]
+[node name="Number of Players" type="HBoxContainer" parent="UI/Control/Players Panel/VBoxContainer/Players" unique_id=1329709113]
 layout_mode = 2
 alignment = 1
 
-[node name="-" type="Button" parent="UI/Control/Panel/VBoxContainer/Players/Number of Players" unique_id=653735120]
+[node name="-" type="Button" parent="UI/Control/Players Panel/VBoxContainer/Players/Number of Players" unique_id=653735120]
 layout_mode = 2
 text = "-
 "
 
-[node name="number of players label" type="Label" parent="UI/Control/Panel/VBoxContainer/Players/Number of Players" unique_id=160624191]
+[node name="number of players label" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Players/Number of Players" unique_id=160624191]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "0"
 
-[node name="+" type="Button" parent="UI/Control/Panel/VBoxContainer/Players/Number of Players" unique_id=1505526666]
+[node name="+" type="Button" parent="UI/Control/Players Panel/VBoxContainer/Players/Number of Players" unique_id=1505526666]
 layout_mode = 2
 text = "+"
+
+[node name="Panel" type="Panel" parent="UI/Control" unique_id=1106794498]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Panel" unique_id=1645323971]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=285750839]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer" unique_id=950320675]
+layout_mode = 2
+texture = ExtResource("17_bb5wj")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer" unique_id=1135273675]
+layout_mode = 2
+text = "1"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1742702136]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer2" unique_id=872496548]
+layout_mode = 2
+texture = ExtResource("18_o57li")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer2" unique_id=1228317770]
+layout_mode = 2
+text = "2"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1468386088]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer3" unique_id=1893195306]
+layout_mode = 2
+texture = ExtResource("19_abmxi")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer3" unique_id=424403802]
+layout_mode = 2
+text = "3"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=394710638]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer4" unique_id=211233819]
+layout_mode = 2
+texture = ExtResource("20_mc7rj")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer4" unique_id=2098167547]
+layout_mode = 2
+text = "4"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1856150622]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer5" unique_id=408855798]
+layout_mode = 2
+texture = ExtResource("21_d5nw7")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer5" unique_id=597378249]
+layout_mode = 2
+text = "5"
 
 [connection signal="mouse_entered" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_exited"]
@@ -218,4 +309,4 @@ text = "+"
 [connection signal="mouse_exited" from="Board Manager/@Area2D@18971" to="Board Manager/@Area2D@18971" method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Board Manager/@Area2D@18972" to="Board Manager/@Area2D@18972" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Board Manager/@Area2D@18972" to="Board Manager/@Area2D@18972" method="_on_mouse_exited"]
-[connection signal="pressed" from="UI/Control/Panel/VBoxContainer/Reset Board Button" to="Game Manager" method="reset_game"]
+[connection signal="pressed" from="UI/Control/Players Panel/VBoxContainer/Reset Board Button" to="Game Manager" method="reset_game"]
