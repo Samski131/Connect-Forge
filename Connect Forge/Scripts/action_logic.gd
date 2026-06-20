@@ -21,32 +21,50 @@ func exit_state():
 	game_manager.resolution_state.enter_state() #enters the resolution state.
 
 func process_state():
-	#loop through all tokensin the token pool until they are all reporting done.
-	all_resolved= true #default is that token is resolved
-	var grav_dir:int =board.settings.gravity_direction
+	if board.visuals != null and board.visuals.is_busy():
+		return
+	
+	all_resolved = true
+	
+	var grav_dir:int = board.settings.gravity_direction
 	var rows:int = board.settings.rows
 	var columns:int = board.settings.columns 
 	var DIRECTION = BoardSetting.DIRECTION
 	
-	match(grav_dir):
+	match grav_dir:
 		DIRECTION.DOWN:
-			for y in range(rows-1, -1, -1):
+			for y in range(rows - 1, -1, -1):
 				for x in range(0, columns, 1):
-					process_token(x,y)
+					process_token(x, y)
+					if board.visuals != null and board.visuals.is_busy():
+						all_resolved = false
+						return
+		
 		DIRECTION.UP:
 			for y in range(0, rows, 1):
 				for x in range(0, columns, 1):
-					process_token(x,y)
+					process_token(x, y)
+					if board.visuals != null and board.visuals.is_busy():
+						all_resolved = false
+						return
+		
 		DIRECTION.LEFT:
 			for x in range(0, columns, 1):
 				for y in range(0, rows, 1):
-					process_token(x,y)
+					process_token(x, y)
+					if board.visuals != null and board.visuals.is_busy():
+						all_resolved = false
+						return
+		
 		DIRECTION.RIGHT:
-			for x in range(columns-1, -1, -1):
+			for x in range(columns - 1, -1, -1):
 				for y in range(0, rows, 1):
-					process_token(x,y)
-
-	if(all_resolved):
+					process_token(x, y)
+					if board.visuals != null and board.visuals.is_busy():
+						all_resolved = false
+						return
+	
+	if all_resolved:
 		exit_state()
 
 func report_on_token(token)-> Report:

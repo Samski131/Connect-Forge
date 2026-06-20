@@ -12,6 +12,7 @@ var landed:bool = false
 var token_type
 var keywords:Array[Global.KEYWORD] = []
 var board:BoardManager
+var being_destroyed:bool = false
 
 @onready var sprites = $Sprites
 @onready var token_pos_label = $"Token_pos Label"
@@ -25,6 +26,9 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	board = new_board
 	token_pos = new_pos
 	player_id = new_player_id
+	being_destroyed = false
+	scale = Vector2.ONE
+	modulate = Color.WHITE
 	setup_special_token()
 	recolor()
 	move_token_visual()
@@ -34,19 +38,28 @@ func setup_special_token():
 	keywords = []
 	
 func update_token_position():
-	var token_below = board.get_adjacent_token(token_pos.x, token_pos.y, BoardSetting.DIRECTION.DOWN)
+	var old_pos := token_pos
+	var fall_path = board.get_fall_path(self)
 	
-	if token_below == null:
-		var old_pos := token_pos
-		var grav_direction = board.settings.gravity_direction 
-		var displacement_dir = board.settings.get_direction_vector(grav_direction)
-		
-		board.remove_token_from_board(token_pos)
-		token_pos += displacement_dir
-		board.add_token_to_board(self, token_pos)
-		move_token_visual()
-		
-		board.resolve_passing_triggers(self, old_pos, token_pos)
+	if fall_path.is_empty():
+		if board.get_token(token_pos) == self:
+			debug_token()
+		return
+	
+	var pass_step = board.find_first_pass_trigger_step(self, old_pos, fall_path)
+	var destination:Vector2i = pass_step["to_pos"]
+	
+	if board.move_token_on_board(
+		self,
+		destination,
+		BoardVisualManager.MOVE_VISUAL.FALL
+	):
+		if pass_step["has_pass_trigger"]:
+			board.resolve_passing_triggers(
+				self,
+				pass_step["from_pos"],
+				pass_step["to_pos"]
+			)
 	
 	if board.get_token(token_pos) == self:
 		debug_token()

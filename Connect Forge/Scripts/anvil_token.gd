@@ -22,7 +22,4 @@ func _on_land(_context:Dictionary)->bool:
 		return false
 	
 	deduct_charges(ability_cost)
-	board.remove_token_from_board(token_below.token_pos)
-	token_below.queue_free()
-	
-	return true
+	return board.destroy_token(token_below)

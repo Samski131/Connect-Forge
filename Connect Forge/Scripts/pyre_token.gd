@@ -22,7 +22,5 @@ func _on_impact(context:Dictionary)->bool:
 		return false
 	
 	deduct_charges(ability_cost)
-	board.remove_token_from_board(landing_token.token_pos)
-	landing_token.queue_free()
+	return board.destroy_token(landing_token)
 	
-	return true

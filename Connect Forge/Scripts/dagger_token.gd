@@ -26,7 +26,4 @@ func _on_pass_right(context:Dictionary)->bool:
 		return false
 	
 	deduct_charges(ability_cost)
-	board.remove_token_from_board(moving_token.token_pos)
-	moving_token.queue_free()
-	
-	return true
+	return board.destroy_token(moving_token)

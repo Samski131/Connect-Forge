@@ -24,4 +24,4 @@ func _on_impact(_context:Dictionary)->bool:
 	if board.get_token(ramp_drop_off_pos) != null:
 		return false
 	
-	return board.move_token_on_board(landing_token, ramp_drop_off_pos)
+	return board.move_token_on_board(landing_token, ramp_drop_off_pos, BoardVisualManager.MOVE_VISUAL.SLIDE)

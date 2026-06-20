@@ -1,10 +1,12 @@
 class_name BoardManager
 extends Node2D
+
 var board = []
 var token_pool:Node2D
 var settings:BoardSetting = BoardSetting.new()
 var hovered_slot:Slot = null
 var slot_size:Vector2 = Vector2.ZERO
+@onready var visuals:BoardVisualManager = $"../Board Visual Manager"
 
 func _ready():
 	token_pool = get_tree().get_first_node_in_group("token pool")
@@ -98,20 +100,52 @@ func replace_token_on_board(new_token:Token, slot_pos:Vector2i)->bool:
 func is_position_in_bounds(pos:Vector2i)->bool:
 	return (pos.x >= 0 and pos.x < settings.columns and pos.y >= 0 and pos.y < settings.rows)
 
-func move_token_on_board(token:Token, new_pos:Vector2i)->bool:
-	if token == null: #if you've sent an invalid token to move
+func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualManager.MOVE_VISUAL = BoardVisualManager.MOVE_VISUAL.SLIDE)->bool:
+	if token == null:
 		return false
 	
-	if is_position_in_bounds(new_pos) == false: #if the position isn't on the board
+	if is_instance_valid(token) == false:
 		return false
 	
-	if get_token(Vector2i(new_pos.x, new_pos.y)) != null: #if there's already a token at the new position don't move.
+	if token.being_destroyed:
+		return false
+	
+	if is_position_in_bounds(new_pos) == false:
+		return false
+	
+	if get_token(new_pos) != null:
 		return false
 	
 	remove_token_from_board(token.token_pos)
 	token.token_pos = new_pos
 	add_token_to_board(token, new_pos)
-	token.move_token_visual()
+	
+	if visuals != null:
+		visuals.queue_token_move(token, slot_to_global_position(new_pos),move_visual)
+	else:
+		token.move_token_visual()
+	
+	return true
+
+func destroy_token(token:Token)->bool:
+	if token == null:
+		return false
+	
+	if is_instance_valid(token) == false:
+		return false
+	
+	if token.being_destroyed:
+		return false
+	
+	if get_token(token.token_pos) == token:
+		remove_token_from_board(token.token_pos)
+	
+	token.being_destroyed = true
+	
+	if visuals != null:
+		visuals.queue_token_destroy(token)
+	else:
+		token.queue_free()
 	
 	return true
 
@@ -138,6 +172,70 @@ func global_position_to_slot(global_pos:Vector2)->Vector2i:
 	var local_slot_pos := (local_pos - board_top_left) / slot_size
 	
 	return Vector2i(floor(local_slot_pos.x), floor(local_slot_pos.y))
+
+func get_fall_path(token:Token)->Array[Vector2i]:
+	var path:Array[Vector2i] = []
+	
+	if token == null:
+		return path
+	
+	if is_instance_valid(token) == false:
+		return path
+	
+	var current_pos := token.token_pos
+	var next_pos := get_adjacent_pos(current_pos.x, current_pos.y,BoardSetting.DIRECTION.DOWN)
+	
+	while is_position_in_bounds(next_pos) and get_token(next_pos) == null:
+		path.append(next_pos)
+		current_pos = next_pos
+		next_pos = get_adjacent_pos(current_pos.x, current_pos.y,BoardSetting.DIRECTION.DOWN)
+	
+	return path
+
+func find_first_pass_trigger_step(moving_token:Token,start_pos:Vector2i,path:Array[Vector2i])->Dictionary:
+	var previous_pos := start_pos
+	
+	for to_pos in path:
+		if has_passing_reactor_for_step(moving_token, previous_pos, to_pos):
+			return {
+				"has_pass_trigger": true,
+				"from_pos": previous_pos,
+				"to_pos": to_pos
+			}
+		
+		previous_pos = to_pos
+	
+	return {
+		"has_pass_trigger": false,
+		"from_pos": start_pos,
+		"to_pos": path.back() if path.size() > 0 else start_pos
+	}
+
+func has_passing_reactor_for_step(moving_token:Token,_from_pos:Vector2i,to_pos:Vector2i)->bool:
+	var pass_checks := [
+		[BoardSetting.DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
+		[BoardSetting.DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
+		[BoardSetting.DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
+		[BoardSetting.DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
+	]
+	
+	for check in pass_checks:
+		var neighbour_direction:BoardSetting.DIRECTION = check[0]
+		var keyword:Global.KEYWORD = check[1]
+		
+		var reacting_pos := get_adjacent_pos(to_pos.x, to_pos.y, neighbour_direction)
+		var reacting_token := get_token(reacting_pos)
+		
+		if reacting_token == null:
+			continue
+		
+		if reacting_token == moving_token:
+			continue
+		
+		if reacting_token.has_keyword(keyword):
+			return true
+	
+	return false
 
 func resolve_landing_triggers(landing_token:Token)->bool:
 	if landing_token == null:
