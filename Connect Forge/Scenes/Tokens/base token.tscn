@@ -22,6 +22,7 @@ font_size = 100
 script = ExtResource("2_1njb1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
+visible = false
 shape = SubResource("RectangleShape2D_1njb1")
 
 [node name="Sprites" type="Node2D" parent="." unique_id=1434195102]

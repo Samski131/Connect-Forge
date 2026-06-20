@@ -8,6 +8,8 @@ enum MOVE_VISUAL {FALL, SLIDE}
 @export var max_fall_duration:float = 0.55
 @export var fall_pixels_per_second:float = 2200.0
 @export var destroy_duration:float = 0.2
+@export var shimmer_duration:float = 0.45
+@export var darken_duration:float = 0.12
 
 var visual_busy:bool = false
 var visual_queue:Array[Dictionary] = []
@@ -56,7 +58,48 @@ func queue_token_destroy(token:Token):
 	
 	_queue_visual_event(event)
 
+func queue_token_shimmer(
+	token:Token,
+	duration:float = shimmer_duration,
+	direction:Vector2 = Vector2(1.0, -1.0),
+	strength:float = 0.75
+):
+	if token == null:
+		return
 
+	if is_instance_valid(token) == false:
+		return
+
+	var event := {
+		"type": "shimmer",
+		"token": token,
+		"duration": duration,
+		"direction": direction,
+		"strength": strength
+	}
+
+	_queue_visual_event(event)
+
+func queue_token_darken(
+	token:Token,
+	amount:float = 0.3,
+	duration:float = darken_duration
+):
+	if token == null:
+		return
+
+	if is_instance_valid(token) == false:
+		return
+
+	var event := {
+		"type": "darken",
+		"token": token,
+		"amount": amount,
+		"duration": duration
+	}
+
+	_queue_visual_event(event)
+	
 func _start_next_visual_event():
 	if visual_busy:
 		return
@@ -90,7 +133,22 @@ func _start_next_visual_event():
 				return
 			
 			_play_destroy_event(event)
-		
+		"shimmer":
+			var token:Token = event.get("token", null)
+
+			if token == null or is_instance_valid(token) == false:
+				_finish_visual_event()
+				return
+
+			_play_shimmer_event(event)
+		"darken":
+			var token:Token = event.get("token", null)
+
+			if token == null or is_instance_valid(token) == false:
+				_finish_visual_event()
+				return
+
+			_play_darken_event(event)
 		_:
 			_finish_visual_event()
 
@@ -139,7 +197,37 @@ func _play_destroy_event(event:Dictionary):
 	
 	tween.finished.connect(_finish_destroy_event.bind(token))
 
+			
+func _play_shimmer_event(event:Dictionary):
+	var token:Token = event["token"]
+	var duration:float = event.get("duration", shimmer_duration)
+	var direction:Vector2 = event.get("direction", Vector2(1.0, -1.0))
+	var strength:float = event.get("strength", 0.75)
 
+	if token == null or is_instance_valid(token) == false:
+		_finish_visual_event()
+		return
+
+	token.play_shimmer(duration, direction, strength)
+
+	var timer := get_tree().create_timer(duration)
+	timer.timeout.connect(_finish_visual_event)
+
+
+func _play_darken_event(event:Dictionary):
+	var token:Token = event["token"]
+	var amount:float = event.get("amount", 0.3)
+	var duration:float = event.get("duration", darken_duration)
+
+	if token == null or is_instance_valid(token) == false:
+		_finish_visual_event()
+		return
+
+	token.apply_charge_darken(amount)
+
+	var timer := get_tree().create_timer(duration)
+	timer.timeout.connect(_finish_visual_event)
+	
 func _finish_destroy_event(token:Token):
 	if token != null and is_instance_valid(token):
 		token.queue_free()

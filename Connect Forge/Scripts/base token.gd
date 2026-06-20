@@ -108,11 +108,27 @@ func check_enough_charges(cost:int)->bool:
 		return false
 		
 func deduct_charges(cost:int):
-	if(cost ==0):
+	if cost == 0:
 		return
-	charges-=cost
-	sprites.darken(0.3)
-	
+
+	charges -= cost
+
+	if board != null and board.visuals != null:
+		board.visuals.queue_token_darken(self, 0.3)
+	else:
+		apply_charge_darken(0.3)
+
+func apply_charge_darken(amount:float = 0.3):
+	if sprites != null and sprites.has_method("darken"):
+		sprites.darken(amount)
+
+
+func play_darken_tween(amount:float = 0.3, duration:float = 1.0)->Tween:
+	if sprites != null and sprites.has_method("tween_darken"):
+		return sprites.tween_darken(amount, duration)
+
+	return null
+
 func regain_charges(cost:int):
 	charges+=cost
 	sprites.recolor()
@@ -181,3 +197,7 @@ func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->boo
 		return false
 	
 	return true
+
+func play_shimmer(duration:float = 0.45,direction:Vector2 = Vector2(1.0, -1.0), strength:float = 0.75):
+	if sprites != null and sprites.has_method("play_shimmer"):
+		sprites.play_shimmer(duration, direction, strength)

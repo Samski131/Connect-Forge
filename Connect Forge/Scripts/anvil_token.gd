@@ -16,10 +16,11 @@ func _on_land(_context:Dictionary)->bool:
 	if check_enough_charges(ability_cost) == false:
 		return false
 
-	var token_below = board.get_adjacent_token(token_pos.x,token_pos.y, BoardSetting.DIRECTION.DOWN	)
-	
+	var token_below = board.get_adjacent_token(token_pos.x, token_pos.y, BoardSetting.DIRECTION.DOWN)
+
 	if token_below == null:
 		return false
-	
+
+	board.visuals.queue_token_shimmer(self)
 	deduct_charges(ability_cost)
 	return board.destroy_token(token_below)
