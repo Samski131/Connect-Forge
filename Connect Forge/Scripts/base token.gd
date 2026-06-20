@@ -3,7 +3,7 @@ extends Area2D
 
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
-enum TokenType{BASIC, ANVIL, PYRE, RAMP}
+enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER}
 
 var player_id = 0
 var token_pos :Vector2i = Vector2i.ZERO
@@ -33,17 +33,23 @@ func setup_special_token():
 	token_type = TokenType.BASIC
 	keywords = []
 	
-func update_token_position(): #checks if the token should move.
-	var token_below =  board.get_adjacent_token(token_pos.x,token_pos.y, BoardSetting.DIRECTION.DOWN)
-	if(token_below==null):
+func update_token_position():
+	var token_below = board.get_adjacent_token(token_pos.x, token_pos.y, BoardSetting.DIRECTION.DOWN)
+	
+	if token_below == null:
+		var old_pos := token_pos
 		var grav_direction = board.settings.gravity_direction 
-		var displacement_dir = board.settings.get_direction_vector(grav_direction) #the direction we should move based on the grav direction (0,-1) for down
-		board.remove_token_from_board(Vector2i(token_pos.x,token_pos.y))
-		token_pos += displacement_dir #move the token in the appropriate direction.
-		board.add_token_to_board(self,Vector2i(token_pos.x,token_pos.y))
+		var displacement_dir = board.settings.get_direction_vector(grav_direction)
+		
+		board.remove_token_from_board(token_pos)
+		token_pos += displacement_dir
+		board.add_token_to_board(self, token_pos)
 		move_token_visual()
 		
-	debug_token()
+		board.resolve_passing_triggers(self, old_pos, token_pos)
+	
+	if board.get_token(token_pos) == self:
+		debug_token()
 
 func _try_to_use_ability()->bool:
 	return false #no ability to try it is always false
@@ -131,25 +137,25 @@ func trigger_keyword(keyword:Global.KEYWORD, context:Dictionary)->bool:
 	
 	return false
 	
-func _on_land(context:Dictionary)->bool:
+func _on_land(_context:Dictionary)->bool:
 	return false
 
 
-func _on_impact(context:Dictionary)->bool:
+func _on_impact(_context:Dictionary)->bool:
 	return false
 
 
-func _on_pass_left(context:Dictionary)->bool:
+func _on_pass_left(_context:Dictionary)->bool:
 	return false
 
 
-func _on_pass_right(context:Dictionary)->bool:
+func _on_pass_right(_context:Dictionary)->bool:
 	return false
 
 
-func _on_pass_above(context:Dictionary)->bool:
+func _on_pass_above(_context:Dictionary)->bool:
 	return false
 
 
-func _on_pass_below(context:Dictionary)->bool:
+func _on_pass_below(_context:Dictionary)->bool:
 	return false

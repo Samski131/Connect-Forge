@@ -10,8 +10,8 @@ func _try_to_use_ability()->bool:
 	return false
 
 
-func _on_impact(context:Dictionary)->bool:
-	var landing_token:Token = context.get("landing_token", null)
+func _on_impact(_context:Dictionary)->bool:
+	var landing_token:Token = _context.get("landing_token", null)
 	
 	if landing_token == null:
 		return false

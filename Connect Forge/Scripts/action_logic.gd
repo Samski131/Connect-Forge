@@ -60,6 +60,7 @@ func report_on_token(token)-> Report:
 	
 	if reached_limit == false:
 		token.update_token_position()
+		
 		return Report.IN_PROGRESS
 	
 	var trigger_was_used:bool = board.resolve_landing_triggers(token)

@@ -171,3 +171,51 @@ func resolve_landing_triggers(landing_token:Token)->bool:
 		changed_board = true
 	
 	return changed_board
+
+func resolve_passing_triggers(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i)->bool:
+	if moving_token == null: #if the moving token doesn't eist
+		return false
+	
+	if get_token(to_pos) != moving_token: #if our token didn't manage to move where it wanted.
+		return false
+	
+	var changed_board := false
+	
+	#definte which sides we care about
+	var pass_checks := [
+		[BoardSetting.DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
+		[BoardSetting.DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
+		[BoardSetting.DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
+		[BoardSetting.DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
+	]
+	
+	for check in pass_checks:
+		var neighbour_direction:BoardSetting.DIRECTION = check[0] #set which direction to check
+		var keyword:Global.KEYWORD = check[1] #set which keyword we are checking for
+		
+		var reacting_pos := get_adjacent_pos(to_pos.x, to_pos.y, neighbour_direction)
+		var reacting_token := get_token(reacting_pos)
+		
+		if reacting_token == null: #if the token that would react doesn't exist, skip
+			continue
+		
+		if reacting_token == moving_token: #if the token that would react is the current token somehow, skip
+			continue
+		
+		var context := {
+			"moving_token": moving_token,
+			"reacting_token": reacting_token,
+			"from_pos": from_pos,
+			"to_pos": to_pos,
+			"keyword": keyword,
+			"board": self
+		}
+		
+		if reacting_token.trigger_keyword(keyword, context):
+			changed_board = true
+		
+		# Stop resolving pass triggers if the moving token was destroyed or moved
+		if get_token(to_pos) != moving_token:
+			break
+	
+	return changed_board

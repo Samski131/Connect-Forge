@@ -13,7 +13,6 @@ func _try_to_use_ability()->bool:
 
 
 func _on_impact(context:Dictionary)->bool:
-	print("Impact")
 	if check_enough_charges(ability_cost) == false:
 		return false
 	

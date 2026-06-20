@@ -7,6 +7,7 @@ var base_token: PackedScene = load("res://Scenes/Tokens/base token.tscn")
 var anvil_token: PackedScene = load("res://Scenes/Tokens/anvil token.tscn")
 var pyre_token: PackedScene = load("res://Scenes/Tokens/pyre token.tscn")
 var ramp_token: PackedScene = load("res://Scenes/Tokens/ramp token.tscn")
+var dagger_token: PackedScene = load("res://Scenes/Tokens/dagger token.tscn")
 
 var game_manager:Node
 var board:BoardManager
@@ -42,6 +43,8 @@ func process_state():
 		place_attempt(pyre_token)
 	elif Input.is_action_just_pressed("action_4"):
 		place_attempt(ramp_token)
+	elif Input.is_action_just_pressed("action_5"):
+		place_attempt(dagger_token)
 		
 func place_attempt(token:PackedScene):
 	#checks that the hovered slot actually is a slot, ensures the hovered slot is on the top row
