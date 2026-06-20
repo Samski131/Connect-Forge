@@ -16,12 +16,20 @@ var current_player_id = 0
 @onready var game_over_state = $"Game Over State"
 
 @onready var board_builder = $"../Board Builder"
+@onready var board:BoardManager = $"../Board Manager"
 var winner_ui:VBoxContainer
 
 func _ready():
 	gather_groups()
+	setup_states()
 	start_game()
 
+func setup_states():
+	placement_state.setup(self, board)
+	action_state.setup(self, board)
+	resolution_state.setup(self, board)
+	game_over_state.setup(self, board)
+	
 func gather_groups():
 	winner_ui = get_tree().get_first_node_in_group("winner ui")
 	
@@ -59,26 +67,22 @@ func reset_game():
 
 func debug_gravity_changes():
 	var change:bool = false
-	if(Input.is_action_just_pressed("right_arrow")):
-		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.RIGHT
+	var DIRECTION = BoardSetting.DIRECTION
+
+	if Input.is_action_just_pressed("right_arrow"):
+		board.settings.gravity_direction = DIRECTION.RIGHT
 		change = true
-	if(Input.is_action_just_pressed("left_arrow")):
-		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.LEFT
+	if Input.is_action_just_pressed("left_arrow"):
+		board.settings.gravity_direction = DIRECTION.LEFT
 		change = true
-	if(Input.is_action_just_pressed("up_arrow")):
-		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.UP
+	if Input.is_action_just_pressed("up_arrow"):
+		board.settings.gravity_direction = DIRECTION.UP
 		change = true
-	if(Input.is_action_just_pressed("down_arrow")):
-		Global.board_settings.gravity_direction = Global.board_settings.DIRECTION.DOWN
+	if Input.is_action_just_pressed("down_arrow"):
+		board.settings.gravity_direction = DIRECTION.DOWN
 		change = true
 	
-	if(change):
-		match(current_turn_phase):
-			Global.TURN_PHASE.PLACEMENT:
-				placement_state.exit_state()
-			Global.TURN_PHASE.ACTION:
-				action_state.exit_state()
-			Global.TURN_PHASE.RESOLUTION:
-				resolution_state.exit_state()
+	if change:
 		get_tree().call_group("slot", "gravity_change")
+		placement_state.clear_placement_token()
 		action_state.enter_state()

@@ -9,20 +9,23 @@ var pyre_token: PackedScene = load("res://Scenes/Tokens/pyre token.tscn")
 var ramp_token: PackedScene = load("res://Scenes/Tokens/ramp token.tscn")
 
 var game_manager:Node
+var board:BoardManager
 
-func _ready():
-	game_manager= get_tree().get_first_node_in_group("game manager")
+func setup(new_game_manager:Node, new_board:BoardManager):
+	game_manager = new_game_manager
+	board = new_board
 	
 func enter_state():
 	get_parent().current_turn_phase = Global.TURN_PHASE.PLACEMENT
+	
+	clear_placement_token()
+	
 	current_placement_token = placement_token_sprite.instantiate()
-	get_tree().root.call_deferred("add_child",current_placement_token)
+	get_tree().root.call_deferred("add_child", current_placement_token)
+	
 	
 func exit_state():
-	#delete the ghost image placement token
-	if current_placement_token !=null:
-		current_placement_token.queue_free()
-
+	clear_placement_token()
 	#begin the action state.
 	game_manager.action_state.enter_state()
 
@@ -39,14 +42,15 @@ func process_state():
 		place_attempt(pyre_token)
 	elif Input.is_action_just_pressed("action_4"):
 		place_attempt(ramp_token)
+		
 func place_attempt(token:PackedScene):
 	#checks that the hovered slot actually is a slot, ensures the hovered slot is on the top row
 	if try_to_place_token() == false:
 		return
 		
-	var slot_pos = Global.hovered_slot.slot_position
-	if Global.board_pool.get_token(Vector2i(slot_pos.x,slot_pos.y))==null: #if there is no token in the slot we click on
-		Global.board_pool.create_new_token(token, slot_pos, game_manager.current_player_id)
+	var slot_pos = board.hovered_slot.slot_position
+	if board.get_token(Vector2i(slot_pos.x,slot_pos.y))==null: #if there is no token in the slot we click on
+		board.create_new_token(token, slot_pos, game_manager.current_player_id)
 		
 		#move onto action state
 		exit_state()
@@ -55,37 +59,38 @@ func move_placement_token():
 	if current_placement_token ==null:
 		return
 	
-	if(Global.hovered_slot ==null):
+	if(board.hovered_slot ==null):
 		current_placement_token.visible = false
 		return
 		
 	var valid_slots:Global.SLOT_TYPE
-	match Global.board_settings.gravity_direction:
-		BoardSetting.DIRECTION.DOWN:
+	var DIRECTION = BoardSetting.DIRECTION
+	match board.settings.gravity_direction:
+		DIRECTION.DOWN:
 			valid_slots = Global.SLOT_TYPE.TOP_EDGE
-		BoardSetting.DIRECTION.UP:
+		DIRECTION.UP:
 			valid_slots = Global.SLOT_TYPE.BOTTOM_EDGE
-		BoardSetting.DIRECTION.RIGHT:
+		DIRECTION.RIGHT:
 			valid_slots = Global.SLOT_TYPE.LEFT_EDGE
-		BoardSetting.DIRECTION.LEFT:
+		DIRECTION.LEFT:
 			valid_slots = Global.SLOT_TYPE.RIGHT_EDGE
 			
-	if( valid_slots not in Global.hovered_slot.slot_types):
+	if( valid_slots not in board.hovered_slot.slot_types):
 		current_placement_token.visible = false
 		return
 	current_placement_token.visible = true
-	current_placement_token.global_position = Global.hovered_slot.global_position
+	current_placement_token.global_position = board.hovered_slot.global_position
 
 func try_to_place_token()->bool:
 	#check if we can place the token, true if yes, false if no.
-	if(Global.hovered_slot ==null):
+	if(board.hovered_slot ==null):
 		return false
 	
 	if(check_slot_type()==false):
 		return false
 		
-	var slot = Global.hovered_slot.slot_position
-	var token_in_slot = Global.board_pool.get_token(Vector2i(slot.x,slot.y))
+	var slot = board.hovered_slot.slot_position
+	var token_in_slot = board.get_token(Vector2i(slot.x,slot.y))
 
 	if(token_in_slot):
 		return false
@@ -93,26 +98,29 @@ func try_to_place_token()->bool:
 		
 
 func check_slot_type()->bool:
-	var slot_types = Global.hovered_slot.slot_types
-	
-	match(Global.board_settings.gravity_direction):
-		BoardSetting.DIRECTION.DOWN:
-			if Global.SLOT_TYPE.TOP_EDGE not in Global.hovered_slot.slot_types:
+	var slot_types = board.hovered_slot.slot_types
+	var DIRECTION = BoardSetting.DIRECTION
+
+	match(board.settings.gravity_direction):
+		DIRECTION.DOWN:
+			if Global.SLOT_TYPE.TOP_EDGE not in board.hovered_slot.slot_types:
 				return false
-		BoardSetting.DIRECTION.UP:
-			if Global.SLOT_TYPE.BOTTOM_EDGE not in Global.hovered_slot.slot_types:
+		DIRECTION.UP:
+			if Global.SLOT_TYPE.BOTTOM_EDGE not in board.hovered_slot.slot_types:
 				return false
-		BoardSetting.DIRECTION.LEFT:
-			if Global.SLOT_TYPE.RIGHT_EDGE not in Global.hovered_slot.slot_types:
+		DIRECTION.LEFT:
+			if Global.SLOT_TYPE.RIGHT_EDGE not in board.hovered_slot.slot_types:
 				return false
-		BoardSetting.DIRECTION.RIGHT:
-			if Global.SLOT_TYPE.LEFT_EDGE not in Global.hovered_slot.slot_types:
+		DIRECTION.RIGHT:
+			if Global.SLOT_TYPE.LEFT_EDGE not in board.hovered_slot.slot_types:
 				return false
 	return true
 			
 			
-			
-			
+func clear_placement_token():
+	if current_placement_token != null:
+		current_placement_token.queue_free()
+		current_placement_token = null
 			
 			
 			

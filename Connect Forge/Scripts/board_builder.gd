@@ -6,7 +6,8 @@ extends Node
 @export var columns :int = 7
 @export var rows :int = 6
 
-@onready var board_pool = $"../Board Pool"
+@onready var board = $"../Board Manager"
+
 @onready var token_pool = $"../Token Pool"
 
 var slot_instance:PackedScene = load("res://Scenes/Slot.tscn")
@@ -21,51 +22,60 @@ func rebuild_board():
 
 func clear_board():
 	#delete all the slots and tokens on the board.
-	for child in board_pool.get_children():
+	for child in board.get_children():
 		child.queue_free()
 	for child in token_pool.get_children():
 		child.queue_free()
 	
 	if not Engine.is_editor_hint():
-		Global.board_pool.board =[]
-		
+		board.board =[]
+		board.hovered_slot = null
 		
 func build_board():
 	#Creates a new board based on the rows and columns settings.
 	#Instantiates the appropraite number of slots.
 	#Sets the board array to be all null tiles.
 	if not Engine.is_editor_hint():
-		Global.board_settings.rows = rows
-		Global.board_settings.columns = columns
+		board.settings.columns = columns
+		board.settings.rows = rows
+		
 	for x in range(columns):
 		for y in range(rows):
 			create_slot(x,y)
 			if not Engine.is_editor_hint():
-				Global.board_pool.board.append(null)
+				board.board.append(null)
 
 
 func setup_board_settings():
-	#passes important details to the Global script to be referenced elsewhere.
+	#picks up how big our slot textures are.
 	var new_slot = slot_instance.instantiate()
 	var texture:Texture2D= new_slot.find_child("Front").texture as Texture2D
 	if not Engine.is_editor_hint():
-		Global.slot_size = Vector2(texture.get_width(),texture.get_height())
-		Global.board_settings.columns = columns
-		Global.board_settings.rows = rows
+		board.slot_size = Vector2(texture.get_width(), texture.get_height())
+	new_slot.queue_free()
+	
 	
 func create_slot(x:int, y:int):
-	#Create new slot nodes, sets up the appropriate slot types based on postion and positions the nodes.
 	var new_slot = slot_instance.instantiate()
-	var texture:Texture2D= new_slot.find_child("Front").texture as Texture2D
+	var texture:Texture2D = new_slot.find_child("Front").texture as Texture2D
 	var slot_width_and_height = texture.get_width()
-	var offset_x :float = (slot_width_and_height* new_slot.scale.x * columns)/2 
-	var offset_y :float = (slot_width_and_height* new_slot.scale.y * rows)/2 
-	new_slot.global_position.x = x * (slot_width_and_height* new_slot.scale.x) - offset_x + slot_width_and_height/2 
-	new_slot.global_position.y = y * (slot_width_and_height* new_slot.scale.y) - offset_y + slot_width_and_height/2
+
+	var offset_x:float = (slot_width_and_height * new_slot.scale.x * columns) / 2
+	var offset_y:float = (slot_width_and_height * new_slot.scale.y * rows) / 2
+
+	# This is the actual visual/world position.
+	new_slot.global_position.x = x * (slot_width_and_height * new_slot.scale.x) - offset_x + slot_width_and_height / 2
+	new_slot.global_position.y = y * (slot_width_and_height * new_slot.scale.y) - offset_y + slot_width_and_height / 2
+
+	# This is the grid position used for board logic.
+	var slot_pos := Vector2i(x, y)
+	var types := []
+
 	if not Engine.is_editor_hint():
-		new_slot.slot_types = assign_slot_types(x,y)
-	new_slot.slot_position = Vector2i(x,y)
-	board_pool.add_child(new_slot)
+		types = assign_slot_types(x, y)
+
+	new_slot.setup_slot(board, slot_pos, types)
+	board.add_child(new_slot)
 	
 func assign_slot_types(x,y):
 	var slot_types =[]

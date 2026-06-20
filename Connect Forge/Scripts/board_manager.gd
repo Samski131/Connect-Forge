@@ -1,44 +1,49 @@
+class_name BoardManager
 extends Node2D
 var board = []
 var game_manager:Node
+var token_pool:Node2D
+var settings:BoardSetting = BoardSetting.new()
+var hovered_slot:Slot = null
+var slot_size:Vector2 = Vector2.ZERO
 
 func _ready():
 	game_manager= get_tree().get_first_node_in_group("game manager")
-	
+	token_pool = get_tree().get_first_node_in_group("token pool")
 #Controls various board functions and stores the under the hood board representation.
 
 #gets a token from a given XY, error protection for numbers out of range
 func get_token(pos:Vector2i)->Token:
-	if pos.x < 0 or pos.x >= Global.board_settings.columns:
+	if pos.x < 0 or pos.x >= settings.columns:
 		return null
 	
-	if pos.y < 0 or pos.y >= Global.board_settings.rows:
+	if pos.y < 0 or pos.y >= settings.rows:
 		return null
 	
-	return board[pos.y * Global.board_settings.columns + pos.x]
+	return board[pos.y * settings.columns + pos.x]
 
 
 func get_adjacent_pos(x:int, y:int, direction:BoardSetting.DIRECTION)->Vector2i:
-	var grav_direction = Global.board_settings.gravity_direction
-	var grav_vector = Global.board_settings.displacement_direction.values()[grav_direction]
+	var grav_direction = settings.gravity_direction
+	var grav_vector = settings.displacement_direction.values()[grav_direction]
 	var offset:Vector2i
-	
+	var DIRECTION = BoardSetting.DIRECTION
 	match(direction):
-		BoardSetting.DIRECTION.DOWN:
+		DIRECTION.DOWN:
 			offset = grav_vector
-		BoardSetting.DIRECTION.UP:
+		DIRECTION.UP:
 			offset = -grav_vector
-		BoardSetting.DIRECTION.RIGHT:
+		DIRECTION.RIGHT:
 			offset = grav_vector.orthogonal()
-		BoardSetting.DIRECTION.LEFT:
+		DIRECTION.LEFT:
 			offset = -grav_vector.orthogonal()
-		BoardSetting.DIRECTION.UP_RIGHT:
+		DIRECTION.UP_RIGHT:
 			offset = -grav_vector + grav_vector.orthogonal()
-		BoardSetting.DIRECTION.UP_LEFT:
+		DIRECTION.UP_LEFT:
 			offset = -grav_vector - grav_vector.orthogonal()
-		BoardSetting.DIRECTION.DOWN_RIGHT:
+		DIRECTION.DOWN_RIGHT:
 			offset = grav_vector + grav_vector.orthogonal()
-		BoardSetting.DIRECTION.DOWN_LEFT:
+		DIRECTION.DOWN_LEFT:
 			offset = grav_vector - grav_vector.orthogonal()
 	
 	return Vector2i(x, y) + offset
@@ -52,21 +57,21 @@ func add_token_to_board(new_token:Token, slot_pos:Vector2i):
 	if is_position_in_bounds(slot_pos) == false: #if the position isn't on the board skip
 		return false
 	if(get_token(Vector2i(slot_pos.x,slot_pos.y))==null): #ensures there's not already a token in this slot
-		Global.board_pool.board[slot_pos.y*Global.board_settings.columns + slot_pos.x ]= new_token
+		board[slot_pos.y* settings.columns + slot_pos.x ]= new_token
 
 
 func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int):
-	if is_position_in_bounds(slot_pos) == false: #if the position isn't on the board skip
-		return false
+	if is_position_in_bounds(slot_pos) == false:
+		return null
+	
+	if get_token(slot_pos) != null:
+		return null
 		
-	var new_token = token_scene.instantiate()
-	new_token.token_pos = slot_pos
-	new_token.player_id = player_id
-
-	Global.token_pool.add_child(new_token)
+	var new_token:Token = token_scene.instantiate()
+	token_pool.add_child(new_token)
+	
+	new_token.setup(self, slot_pos, player_id)
 	add_token_to_board(new_token, slot_pos)
-	new_token.recolor()
-	new_token.move_token_visual()
 
 	return new_token
 
@@ -77,7 +82,7 @@ func remove_token_from_board(slot_pos:Vector2i):
 		
 	var token = get_token(Vector2i(slot_pos.x,slot_pos.y))
 	if(token!=null):#ensures there is already a token in this slot
-		Global.board_pool.board[slot_pos.y*Global.board_settings.columns + slot_pos.x ]= null
+		board[slot_pos.y* settings.columns + slot_pos.x ]= null
 
 #Quick function to swap out a token with a new one.
 func replace_token_on_board(new_token:Token, slot_pos:Vector2i):
@@ -85,7 +90,7 @@ func replace_token_on_board(new_token:Token, slot_pos:Vector2i):
 	add_token_to_board(new_token, slot_pos)
 	
 func is_position_in_bounds(pos:Vector2i)->bool:
-	return (pos.x >= 0 and pos.x < Global.board_settings.columns and pos.y >= 0 and pos.y < Global.board_settings.rows)
+	return (pos.x >= 0 and pos.x < settings.columns and pos.y >= 0 and pos.y < settings.rows)
 
 func move_token_on_board(token:Token, new_pos:Vector2i)->bool:
 	if token == null: #if you've sent an invalid token to move
@@ -103,3 +108,26 @@ func move_token_on_board(token:Token, new_pos:Vector2i)->bool:
 	token.move_token_visual()
 	
 	return true
+
+func set_hovered_slot(slot:Slot):
+	hovered_slot = slot
+
+func clear_hovered_slot(slot:Slot):
+	if hovered_slot == slot:
+		hovered_slot = null
+
+func slot_to_global_position(slot_pos:Vector2i)->Vector2:
+	return Vector2(
+		(slot_pos.x * slot_size.x) - (settings.columns * slot_size.x) / 2 + slot_size.x / 2,
+		(slot_pos.y * slot_size.y) - (settings.rows * slot_size.y) / 2 + slot_size.y / 2
+	)
+	
+func global_position_to_slot(global_pos:Vector2)->Vector2i:
+	var board_top_left := Vector2(
+		-(settings.columns * slot_size.x) / 2,
+		-(settings.rows * slot_size.y) / 2
+	)
+	
+	var local_slot_pos := (global_pos - board_top_left) / slot_size
+	
+	return Vector2i(floor(local_slot_pos.x), floor(local_slot_pos.y))
