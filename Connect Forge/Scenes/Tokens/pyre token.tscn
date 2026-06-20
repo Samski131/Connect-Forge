@@ -22,8 +22,8 @@ font_size = 100
 
 [node name="Pyre Token" type="Area2D" unique_id=658385762 groups=["token"]]
 script = ExtResource("1_54pe4")
-charges = null
-ability_cost = null
+charges = 1
+ability_cost = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
 shape = SubResource("RectangleShape2D_1njb1")

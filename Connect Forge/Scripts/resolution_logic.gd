@@ -39,10 +39,6 @@ func check_for_win()->int:
 	
 	for r in rows:
 		for c in columns:
-			
-			#if(r== 0 and c ==0):
-				#print("Checking from: (", r, ",",c,")")
-			var current_index = r* columns + c
 			var current_board_slot = board.get_token(Vector2i(c,r))
 
 			#if the current board slot doesn't have a token then move on.

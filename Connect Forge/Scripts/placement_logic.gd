@@ -103,16 +103,16 @@ func check_slot_type()->bool:
 
 	match(board.settings.gravity_direction):
 		DIRECTION.DOWN:
-			if Global.SLOT_TYPE.TOP_EDGE not in board.hovered_slot.slot_types:
+			if Global.SLOT_TYPE.TOP_EDGE not in slot_types:
 				return false
 		DIRECTION.UP:
-			if Global.SLOT_TYPE.BOTTOM_EDGE not in board.hovered_slot.slot_types:
+			if Global.SLOT_TYPE.BOTTOM_EDGE not in slot_types:
 				return false
 		DIRECTION.LEFT:
-			if Global.SLOT_TYPE.RIGHT_EDGE not in board.hovered_slot.slot_types:
+			if Global.SLOT_TYPE.RIGHT_EDGE not in slot_types:
 				return false
 		DIRECTION.RIGHT:
-			if Global.SLOT_TYPE.LEFT_EDGE not in board.hovered_slot.slot_types:
+			if Global.SLOT_TYPE.LEFT_EDGE not in slot_types:
 				return false
 	return true
 			

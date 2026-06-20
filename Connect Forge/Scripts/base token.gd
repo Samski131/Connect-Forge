@@ -34,9 +34,9 @@ func update_token_position(): #checks if the token should move.
 	var token_below =  board.get_adjacent_token(token_pos.x,token_pos.y, BoardSetting.DIRECTION.DOWN)
 	if(token_below==null):
 		var grav_direction = board.settings.gravity_direction 
-		var displacement_dirs = board.settings.displacement_direction.values() #the direction we should move based on the grav direction (0,-1) for down
+		var displacement_dir = board.settings.get_direction_vector(grav_direction) #the direction we should move based on the grav direction (0,-1) for down
 		board.remove_token_from_board(Vector2i(token_pos.x,token_pos.y))
-		token_pos += displacement_dirs[grav_direction] #move the token in the appropriate direction.
+		token_pos += displacement_dir #move the token in the appropriate direction.
 		board.add_token_to_board(self,Vector2i(token_pos.x,token_pos.y))
 		move_token_visual()
 		

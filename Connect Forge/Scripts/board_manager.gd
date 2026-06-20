@@ -1,14 +1,12 @@
 class_name BoardManager
 extends Node2D
 var board = []
-var game_manager:Node
 var token_pool:Node2D
 var settings:BoardSetting = BoardSetting.new()
 var hovered_slot:Slot = null
 var slot_size:Vector2 = Vector2.ZERO
 
 func _ready():
-	game_manager= get_tree().get_first_node_in_group("game manager")
 	token_pool = get_tree().get_first_node_in_group("token pool")
 #Controls various board functions and stores the under the hood board representation.
 
@@ -25,7 +23,7 @@ func get_token(pos:Vector2i)->Token:
 
 func get_adjacent_pos(x:int, y:int, direction:BoardSetting.DIRECTION)->Vector2i:
 	var grav_direction = settings.gravity_direction
-	var grav_vector = settings.displacement_direction.values()[grav_direction]
+	var grav_vector = settings.get_direction_vector(grav_direction)
 	var offset:Vector2i
 	var DIRECTION = BoardSetting.DIRECTION
 	match(direction):
@@ -53,12 +51,13 @@ func get_adjacent_token(x:int, y:int, direction:BoardSetting.DIRECTION)->Token:
 	return get_token(Vector2i(check_token_pos.x, check_token_pos.y))
 
 #Adds a token to the board array DOES NOT ADD A TOKEN NODE.
-func add_token_to_board(new_token:Token, slot_pos:Vector2i):
+func add_token_to_board(new_token:Token, slot_pos:Vector2i)->bool:
 	if is_position_in_bounds(slot_pos) == false: #if the position isn't on the board skip
 		return false
 	if(get_token(Vector2i(slot_pos.x,slot_pos.y))==null): #ensures there's not already a token in this slot
 		board[slot_pos.y* settings.columns + slot_pos.x ]= new_token
-
+		return true
+	return false
 
 func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int):
 	if is_position_in_bounds(slot_pos) == false:
@@ -76,18 +75,23 @@ func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int)
 	return new_token
 
 #Removes a token from the board array DOES NOT REMOVE ADD A TOKEN NODE.
-func remove_token_from_board(slot_pos:Vector2i):
+func remove_token_from_board(slot_pos:Vector2i)->bool:
 	if is_position_in_bounds(slot_pos) == false: #if the position isn't on the board skip
 		return false
 		
 	var token = get_token(Vector2i(slot_pos.x,slot_pos.y))
 	if(token!=null):#ensures there is already a token in this slot
 		board[slot_pos.y* settings.columns + slot_pos.x ]= null
-
+		return true
+	return false
+	
 #Quick function to swap out a token with a new one.
-func replace_token_on_board(new_token:Token, slot_pos:Vector2i):
-	remove_token_from_board(slot_pos)
-	add_token_to_board(new_token, slot_pos)
+func replace_token_on_board(new_token:Token, slot_pos:Vector2i)->bool:
+	var success:bool
+	success = remove_token_from_board(slot_pos)
+	if(success):
+		success = add_token_to_board(new_token, slot_pos)
+	return success
 	
 func is_position_in_bounds(pos:Vector2i)->bool:
 	return (pos.x >= 0 and pos.x < settings.columns and pos.y >= 0 and pos.y < settings.rows)
@@ -117,17 +121,18 @@ func clear_hovered_slot(slot:Slot):
 		hovered_slot = null
 
 func slot_to_global_position(slot_pos:Vector2i)->Vector2:
-	return Vector2(
+	var local_pos := Vector2(
 		(slot_pos.x * slot_size.x) - (settings.columns * slot_size.x) / 2 + slot_size.x / 2,
 		(slot_pos.y * slot_size.y) - (settings.rows * slot_size.y) / 2 + slot_size.y / 2
 	)
 	
-func global_position_to_slot(global_pos:Vector2)->Vector2i:
-	var board_top_left := Vector2(
-		-(settings.columns * slot_size.x) / 2,
-		-(settings.rows * slot_size.y) / 2
-	)
+	return to_global(local_pos)
 	
-	var local_slot_pos := (global_pos - board_top_left) / slot_size
+func global_position_to_slot(global_pos:Vector2)->Vector2i:
+	var local_pos := to_local(global_pos)
+	
+	var board_top_left := Vector2(-(settings.columns * slot_size.x) / 2,-(settings.rows * slot_size.y) / 2)
+	
+	var local_slot_pos := (local_pos - board_top_left) / slot_size
 	
 	return Vector2i(floor(local_slot_pos.x), floor(local_slot_pos.y))
