@@ -16,11 +16,16 @@ func _on_impact(context:Dictionary)->bool:
 	if check_enough_charges(ability_cost) == false:
 		return false
 	
-	var landing_token:Token = context.get("landing_token", null) #gets the token that landed on the pyre
+	var landing_token:Token = context.get("landing_token", null)
 	
 	if landing_token == null:
 		return false
 	
+	if board.visuals != null:
+		board.visuals.queue_effect(TokenShimmerVisualEffect.new(self))
+		
 	deduct_charges(ability_cost)
-	return board.destroy_token(landing_token)
 	
+
+	
+	return board.destroy_token(landing_token)

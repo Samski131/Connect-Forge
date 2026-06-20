@@ -105,7 +105,10 @@ func replace_token_on_board(new_token:Token, slot_pos:Vector2i)->bool:
 func is_position_in_bounds(pos:Vector2i)->bool:
 	return (pos.x >= 0 and pos.x < settings.columns and pos.y >= 0 and pos.y < settings.rows)
 
-func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualManager.MOVE_VISUAL = BoardVisualManager.MOVE_VISUAL.SLIDE)->bool:
+func move_token_on_board(token:Token,new_pos:Vector2i,
+	move_visual:BoardVisualManager.MOVE_VISUAL = BoardVisualManager.MOVE_VISUAL.SLIDE,
+	extra_parallel_effects:Array[BoardVisualEffect] = []
+)->bool:
 	if token == null:
 		return false
 	
@@ -126,12 +129,36 @@ func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualM
 	add_token_to_board(token, new_pos)
 	
 	if visuals != null:
-		visuals.queue_token_move(token, slot_to_global_position(new_pos),move_visual)
+		var move_effect := TokenMoveVisualEffect.new(
+			token,
+			slot_to_global_position(new_pos),
+			move_visual
+		)
+		
+		move_effect.slide_duration = visuals.slide_duration
+		move_effect.min_fall_duration = visuals.min_fall_duration
+		move_effect.max_fall_duration = visuals.max_fall_duration
+		move_effect.fall_pixels_per_second = visuals.fall_pixels_per_second
+		
+		var effect_to_queue:BoardVisualEffect = move_effect
+		
+		if extra_parallel_effects.is_empty() == false:
+			var effects:Array[BoardVisualEffect] = [move_effect]
+			
+			for extra_effect in extra_parallel_effects:
+				if extra_effect != null:
+					effects.append(extra_effect)
+			
+			effect_to_queue = ParallelVisualEffect.new(effects)
+		
+		visuals.queue_effect(
+			effect_to_queue,
+			move_visual == BoardVisualManager.MOVE_VISUAL.FALL
+		)
 	else:
 		token.move_token_visual()
 	
 	return true
-
 func destroy_token(token:Token)->bool:
 	if token == null:
 		return false
@@ -148,7 +175,7 @@ func destroy_token(token:Token)->bool:
 	token.being_destroyed = true
 	
 	if visuals != null:
-		visuals.queue_token_destroy(token)
+		visuals.queue_effect(TokenDestroyVisualEffect.new(token,visuals.destroy_duration))
 	else:
 		token.queue_free()
 	

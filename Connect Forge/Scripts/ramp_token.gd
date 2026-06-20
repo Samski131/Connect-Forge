@@ -1,6 +1,8 @@
 extends Token
 #Ramp Token
 
+var wiggle_strength:float = 4.0
+var number_of_wiggles:int = 3
 func setup_special_token():
 	token_type = TokenType.RAMP
 	keywords = [Global.KEYWORD.ON_IMPACT]
@@ -24,4 +26,4 @@ func _on_impact(_context:Dictionary)->bool:
 	if board.get_token(ramp_drop_off_pos) != null:
 		return false
 	
-	return board.move_token_on_board(landing_token, ramp_drop_off_pos, BoardVisualManager.MOVE_VISUAL.SLIDE)
+	return board.move_token_on_board(landing_token, ramp_drop_off_pos, BoardVisualManager.MOVE_VISUAL.SLIDE,[WiggleVisualEffect.new(self,wiggle_strength,number_of_wiggles)])

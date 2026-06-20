@@ -110,24 +110,18 @@ func check_enough_charges(cost:int)->bool:
 func deduct_charges(cost:int):
 	if cost == 0:
 		return
-
+	
 	charges -= cost
-
+	
 	if board != null and board.visuals != null:
-		board.visuals.queue_token_darken(self, 0.3)
+		board.visuals.queue_effect(
+			ColorTweenVisualEffect.new(self,ColorTweenVisualEffect.MODE.DARKEN,board.visuals.darken_amount,board.visuals.darken_duration))
 	else:
 		apply_charge_darken(0.3)
 
 func apply_charge_darken(amount:float = 0.3):
 	if sprites != null and sprites.has_method("darken"):
 		sprites.darken(amount)
-
-
-func play_darken_tween(amount:float = 0.3, duration:float = 1.0)->Tween:
-	if sprites != null and sprites.has_method("tween_darken"):
-		return sprites.tween_darken(amount, duration)
-
-	return null
 
 func regain_charges(cost:int):
 	charges+=cost

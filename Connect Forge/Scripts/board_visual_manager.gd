@@ -3,312 +3,83 @@ extends Node
 
 enum MOVE_VISUAL {FALL, SLIDE}
 
+@export_group("Movement")
 @export var slide_duration:float = 0.12
 @export var min_fall_duration:float = 0.14
 @export var max_fall_duration:float = 0.55
 @export var fall_pixels_per_second:float = 2200.0
+
+@export_group("Token Effects")
 @export var destroy_duration:float = 0.2
 @export var shimmer_duration:float = 0.45
 @export var darken_duration:float = 0.12
+@export var darken_amount:float = 0.3
+@export var lighten_duration:float = 0.12
+@export var lighten_amount:float = 0.3
 
 var visual_busy:bool = false
-var visual_queue:Array[Dictionary] = []
+var visual_queue:Array[BoardVisualEffect] = []
+var current_effect:BoardVisualEffect = null
 
 var batching_moves:bool = false
-var move_batch:Array[Dictionary] = []
-var post_batch_events:Array[Dictionary] = []
-var active_batch_tweens:int = 0
+var batched_parallel_effects:Array[BoardVisualEffect] = []
+var post_batch_effects:Array[BoardVisualEffect] = []
 
 
-func is_busy()->bool:
+func is_busy() -> bool:
 	return visual_busy or visual_queue.is_empty() == false
 
 
-func queue_token_move(token:Token, target_global:Vector2, move_visual:MOVE_VISUAL):
-	if token == null:
+func queue_effect(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
+	if effect == null:
 		return
 	
-	if is_instance_valid(token) == false:
+	if batching_moves:
+		if batch_parallel:
+			batched_parallel_effects.append(effect)
+		else:
+			post_batch_effects.append(effect)
 		return
 	
-	var event := {
-		"type": "move",
-		"token": token,
-		"target_global": target_global,
-		"move_visual": move_visual
-	}
-	
-	if batching_moves and move_visual == MOVE_VISUAL.FALL:
-		move_batch.append(event)
-		return
-	
-	_queue_visual_event(event)
+	visual_queue.append(effect)
+	_start_next_visual_event()
 
-func queue_token_destroy(token:Token):
-	if token == null:
-		return
-	
-	if is_instance_valid(token) == false:
-		return
-	
-	var event := {
-		"type": "destroy",
-		"token": token
-	}
-	
-	_queue_visual_event(event)
 
-func queue_token_shimmer(
-	token:Token,
-	duration:float = shimmer_duration,
-	direction:Vector2 = Vector2(1.0, -1.0),
-	strength:float = 0.75
-):
-	if token == null:
-		return
-
-	if is_instance_valid(token) == false:
-		return
-
-	var event := {
-		"type": "shimmer",
-		"token": token,
-		"duration": duration,
-		"direction": direction,
-		"strength": strength
-	}
-
-	_queue_visual_event(event)
-
-func queue_token_darken(
-	token:Token,
-	amount:float = 0.3,
-	duration:float = darken_duration
-):
-	if token == null:
-		return
-
-	if is_instance_valid(token) == false:
-		return
-
-	var event := {
-		"type": "darken",
-		"token": token,
-		"amount": amount,
-		"duration": duration
-	}
-
-	_queue_visual_event(event)
-	
-func _start_next_visual_event():
+func _start_next_visual_event() -> void:
 	if visual_busy:
 		return
 	
 	if visual_queue.is_empty():
 		return
 	
-	var event:Dictionary = visual_queue.pop_front()
-	var event_type:String = event.get("type", "")
-	
+	current_effect = visual_queue.pop_front()
 	visual_busy = true
 	
-	match event_type:
-		"move_batch":
-			_play_move_batch_event(event)
-		
-		"move":
-			var token:Token = event.get("token", null)
-			
-			if token == null or is_instance_valid(token) == false:
-				_finish_visual_event()
-				return
-			
-			_play_move_event(event)
-		
-		"destroy":
-			var token:Token = event.get("token", null)
-			
-			if token == null or is_instance_valid(token) == false:
-				_finish_visual_event()
-				return
-			
-			_play_destroy_event(event)
-		"shimmer":
-			var token:Token = event.get("token", null)
-
-			if token == null or is_instance_valid(token) == false:
-				_finish_visual_event()
-				return
-
-			_play_shimmer_event(event)
-		"darken":
-			var token:Token = event.get("token", null)
-
-			if token == null or is_instance_valid(token) == false:
-				_finish_visual_event()
-				return
-
-			_play_darken_event(event)
-		_:
-			_finish_visual_event()
-
-func _play_move_event(event:Dictionary):
-	var token:Token = event["token"]
-	var target_global:Vector2 = event["target_global"]
-	var move_visual:MOVE_VISUAL = event["move_visual"]
-	
-	if token == null or is_instance_valid(token) == false:
-		_finish_visual_event()
-		return
-	
-	var distance : float = token.global_position.distance_to(target_global)
-	var duration : float = slide_duration
-	
-	if move_visual == MOVE_VISUAL.FALL:
-		duration = clamp(distance / fall_pixels_per_second, min_fall_duration, max_fall_duration)
-	
-	var tween := create_tween()
-	
-	if move_visual == MOVE_VISUAL.FALL:
-		tween.tween_property(token, "global_position", target_global, duration) \
-			.set_trans(Tween.TRANS_QUAD) \
-			.set_ease(Tween.EASE_IN)
-	else:
-		tween.tween_property(token, "global_position", target_global, duration) \
-			.set_trans(Tween.TRANS_SINE) \
-			.set_ease(Tween.EASE_OUT)
-	
-	tween.finished.connect(_finish_visual_event)
+	current_effect.play(self, _finish_visual_event)
 
 
-func _play_destroy_event(event:Dictionary):
-	var token:Token = event["token"]
-	
-	if token == null or is_instance_valid(token) == false:
-		_finish_visual_event()
-		return
-	
-	var tween := create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(token, "scale", Vector2.ZERO, destroy_duration) \
-		.set_trans(Tween.TRANS_BACK) \
-		.set_ease(Tween.EASE_IN)
-	tween.tween_property(token, "modulate:a", 0.0, destroy_duration)
-	
-	tween.finished.connect(_finish_destroy_event.bind(token))
-
-			
-func _play_shimmer_event(event:Dictionary):
-	var token:Token = event["token"]
-	var duration:float = event.get("duration", shimmer_duration)
-	var direction:Vector2 = event.get("direction", Vector2(1.0, -1.0))
-	var strength:float = event.get("strength", 0.75)
-
-	if token == null or is_instance_valid(token) == false:
-		_finish_visual_event()
-		return
-
-	token.play_shimmer(duration, direction, strength)
-
-	var timer := get_tree().create_timer(duration)
-	timer.timeout.connect(_finish_visual_event)
-
-
-func _play_darken_event(event:Dictionary):
-	var token:Token = event["token"]
-	var amount:float = event.get("amount", 0.3)
-	var duration:float = event.get("duration", darken_duration)
-
-	if token == null or is_instance_valid(token) == false:
-		_finish_visual_event()
-		return
-
-	token.apply_charge_darken(amount)
-
-	var timer := get_tree().create_timer(duration)
-	timer.timeout.connect(_finish_visual_event)
-	
-func _finish_destroy_event(token:Token):
-	if token != null and is_instance_valid(token):
-		token.queue_free()
-	
-	_finish_visual_event()
-
-
-func _finish_visual_event():
+func _finish_visual_event() -> void:
+	current_effect = null
 	visual_busy = false
 	_start_next_visual_event()
 
-func begin_move_batch():
+
+func begin_move_batch() -> void:
 	batching_moves = true
-	move_batch.clear()
-	post_batch_events.clear()
+	batched_parallel_effects.clear()
+	post_batch_effects.clear()
 
 
-func end_move_batch():
+func end_move_batch() -> void:
 	batching_moves = false
 	
-	if move_batch.is_empty() == false:
-		visual_queue.append({
-			"type": "move_batch",
-			"moves": move_batch.duplicate()
-		})
+	if batched_parallel_effects.is_empty() == false:
+		visual_queue.append(ParallelVisualEffect.new(batched_parallel_effects.duplicate()))
 	
-	for event in post_batch_events:
+	for event in post_batch_effects:
 		visual_queue.append(event)
 	
-	move_batch.clear()
-	post_batch_events.clear()
+	batched_parallel_effects.clear()
+	post_batch_effects.clear()
 	
 	_start_next_visual_event()
-	
-func _queue_visual_event(event:Dictionary):
-	if batching_moves:
-		post_batch_events.append(event)
-	else:
-		visual_queue.append(event)
-		_start_next_visual_event()
-		
-func _play_move_batch_event(event:Dictionary):
-	var moves:Array = event.get("moves", [])
-	active_batch_tweens = 0
-	
-	for move_event in moves:
-		var token:Token = move_event.get("token", null)
-		
-		if token == null or is_instance_valid(token) == false:
-			continue
-		
-		var target_global:Vector2 = move_event["target_global"]
-		var move_visual:MOVE_VISUAL = move_event["move_visual"]
-		
-		var distance:float = token.global_position.distance_to(target_global)
-		var duration:float = slide_duration
-		
-		if move_visual == MOVE_VISUAL.FALL:
-			duration = clamp(distance / fall_pixels_per_second, min_fall_duration, max_fall_duration)
-		
-		var tween := create_tween()
-		
-		if move_visual == MOVE_VISUAL.FALL:
-			tween.tween_property(token, "global_position", target_global, duration) \
-				.set_trans(Tween.TRANS_QUAD) \
-				.set_ease(Tween.EASE_IN)
-		else:
-			tween.tween_property(token, "global_position", target_global, duration) \
-				.set_trans(Tween.TRANS_SINE) \
-				.set_ease(Tween.EASE_OUT)
-		
-		active_batch_tweens += 1
-		tween.finished.connect(_on_batch_tween_finished)
-	
-	if active_batch_tweens == 0:
-		_finish_visual_event()
-
-
-func _on_batch_tween_finished():
-	active_batch_tweens -= 1
-	
-	if active_batch_tweens <= 0:
-		_finish_visual_event()
-		
