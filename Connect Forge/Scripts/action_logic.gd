@@ -66,36 +66,6 @@ func process_token(x:int,y:int):
 	if(report == Report.IN_PROGRESS):
 		all_resolved = false
 
-func get_positions_in_gravity_order()->Array[Vector2i]:
-	var positions:Array[Vector2i] = []
-	
-	var grav_dir:int = board.settings.gravity_direction
-	var rows:int = board.settings.rows
-	var columns:int = board.settings.columns 
-	var DIRECTION = BoardSetting.DIRECTION
-	
-	match grav_dir:
-		DIRECTION.DOWN:
-			for y in range(rows - 1, -1, -1):
-				for x in range(0, columns, 1):
-					positions.append(Vector2i(x, y))
-		
-		DIRECTION.UP:
-			for y in range(0, rows, 1):
-				for x in range(0, columns, 1):
-					positions.append(Vector2i(x, y))
-		
-		DIRECTION.LEFT:
-			for x in range(0, columns, 1):
-				for y in range(0, rows, 1):
-					positions.append(Vector2i(x, y))
-		
-		DIRECTION.RIGHT:
-			for x in range(columns - 1, -1, -1):
-				for y in range(0, rows, 1):
-					positions.append(Vector2i(x, y))
-	
-	return positions
 
 func process_movement_pass()->bool:
 	var moved_any_token := false
@@ -103,7 +73,7 @@ func process_movement_pass()->bool:
 	if board.visuals != null:
 		board.visuals.begin_move_batch()
 	
-	for pos in get_positions_in_gravity_order():
+	for pos in board.get_positions_in_gravity_order():
 		var token = board.get_token(pos)
 		
 		if token == null:
@@ -127,7 +97,7 @@ func process_movement_pass()->bool:
 func process_resolution_pass():
 	all_resolved = true
 	
-	for pos in get_positions_in_gravity_order():
+	for pos in board.get_positions_in_gravity_order():
 		process_token(pos.x, pos.y)
 		
 		if board.visuals != null and board.visuals.is_busy():

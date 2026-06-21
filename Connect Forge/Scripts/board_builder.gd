@@ -28,32 +28,31 @@ func clear_board():
 		child.queue_free()
 	
 	if not Engine.is_editor_hint():
-		board.board =[]
+		board.refresh_token_pool()
+		board.clear_board_state()
 		board.hovered_slot = null
 		
 func build_board():
-	#Creates a new board based on the rows and columns settings.
-	#Instantiates the appropraite number of slots.
-	#Sets the board array to be all null tiles.
 	if not Engine.is_editor_hint():
 		board.settings.columns = columns
 		board.settings.rows = rows
-		
+	
 	for x in range(columns):
 		for y in range(rows):
 			create_slot(x,y)
-			if not Engine.is_editor_hint():
-				board.board.append(null)
-
+	
+	if not Engine.is_editor_hint():
+		board.setup_empty_board_state()
 
 func setup_board_settings():
-	#picks up how big our slot textures are.
 	var new_slot = slot_instance.instantiate()
-	var texture:Texture2D= new_slot.find_child("Front").texture as Texture2D
+	var texture:Texture2D = new_slot.find_child("Front").texture as Texture2D
+	
 	if not Engine.is_editor_hint():
 		board.slot_size = Vector2(texture.get_width(), texture.get_height())
-	new_slot.queue_free()
+		board.refresh_geometry()
 	
+	new_slot.queue_free()
 	
 func create_slot(x:int, y:int):
 	var new_slot = slot_instance.instantiate()

@@ -3,7 +3,7 @@ extends Token
 
 func setup_special_token():
 	token_type = TokenType.PYRE
-	charges = 1
+	charges = 3
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_IMPACT]
 
