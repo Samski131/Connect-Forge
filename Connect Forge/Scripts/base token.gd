@@ -3,7 +3,7 @@ extends Area2D
 
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
-enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER}
+enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB}
 
 var player_id = 0
 var token_pos :Vector2i = Vector2i.ZERO

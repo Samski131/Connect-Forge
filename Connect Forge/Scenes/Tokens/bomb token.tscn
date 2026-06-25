@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://c265yo23mrf4i"]
+
+[ext_resource type="Script" uid="uid://4xsyo8k0ptf3" path="res://Scripts/bomb_token.gd" id="1_lml76"]
+[ext_resource type="Script" uid="uid://ddj8cqyx72gkn" path="res://Scripts/token sprite recolour.gd" id="2_6ku7o"]
+[ext_resource type="Texture2D" uid="uid://dx3rk037p4xdx" path="res://Assets/tokens/parts of tokens/Asset 79.png" id="3_oam3x"]
+[ext_resource type="Texture2D" uid="uid://bye1xdl4xnqry" path="res://Assets/tokens/parts of tokens/Asset 78.png" id="4_hubjj"]
+[ext_resource type="Texture2D" uid="uid://3sepmrl4nlv2" path="res://Assets/tokens/parts of tokens/Asset 76.png" id="5_267qn"]
+[ext_resource type="Texture2D" uid="uid://bddb6eysdayni" path="res://Assets/tokens/parts of tokens/Asset 77.png" id="6_aqb8e"]
+[ext_resource type="Texture2D" uid="uid://bm0yjjdpdyrss" path="res://Assets/tokens/parts of tokens/Asset 75.png" id="7_11x87"]
+[ext_resource type="Texture2D" uid="uid://cpj36d6rqcu7a" path="res://Assets/tokens/parts of tokens/Asset 74.png" id="8_udt31"]
+[ext_resource type="Texture2D" uid="uid://mnwwj7elq6lv" path="res://Assets/tokens/parts of tokens/token decoration/Bomb.png" id="9_6ku7o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1njb1"]
+size = Vector2(340, 340)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0ocfi"]
+load_path = "res://.godot/imported/Asset 80.png-b9fd4c1000c540fdfeb773a6ae500bd6.ctex"
+
+[sub_resource type="LabelSettings" id="LabelSettings_ju8ml"]
+font_size = 100
+
+[node name="Bomb Token" type="Area2D" unique_id=658385762 groups=["token"]]
+script = ExtResource("1_lml76")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
+shape = SubResource("RectangleShape2D_1njb1")
+
+[node name="Sprites" type="Node2D" parent="." unique_id=1434195102]
+script = ExtResource("2_6ku7o")
+
+[node name="red -outer bevel upper" type="Sprite2D" parent="Sprites" unique_id=393066544]
+modulate = Color(1, 0, 0, 1)
+texture = ExtResource("3_oam3x")
+offset = Vector2(0, -86)
+
+[node name="cyan - outer bevel lower" type="Sprite2D" parent="Sprites" unique_id=453642622]
+modulate = Color(0, 1, 1, 1)
+texture = SubResource("CompressedTexture2D_0ocfi")
+offset = Vector2(0, 86)
+
+[node name="green - main body" type="Sprite2D" parent="Sprites" unique_id=1111479988]
+modulate = Color(0, 1, 0, 1)
+texture = ExtResource("4_hubjj")
+
+[node name="red - center outer bevel dark" type="Sprite2D" parent="Sprites" unique_id=1542752131]
+modulate = Color(1, 0, 0, 1)
+texture = ExtResource("5_267qn")
+offset = Vector2(0, 60)
+
+[node name="yellow - centre innter bevel upper" type="Sprite2D" parent="Sprites" unique_id=1103856249]
+modulate = Color(1, 1, 0, 1)
+texture = ExtResource("6_aqb8e")
+offset = Vector2(0, -60)
+
+[node name="cyan - centre inner bevel lower" type="Sprite2D" parent="Sprites" unique_id=1318592803]
+modulate = Color(0, 1, 1, 1)
+texture = ExtResource("7_11x87")
+
+[node name="blue - center body" type="Sprite2D" parent="Sprites" unique_id=830925483]
+modulate = Color(0, 0, 1, 1)
+texture = ExtResource("8_udt31")
+
+[node name="cyan -bomb shadow" type="Sprite2D" parent="Sprites" unique_id=586332891]
+modulate = Color(0, 1, 1, 1)
+scale = Vector2(0.845, 0.845)
+texture = ExtResource("9_6ku7o")
+offset = Vector2(0, 4)
+
+[node name="red - bomb main body" type="Sprite2D" parent="Sprites" unique_id=427416080]
+modulate = Color(1, 0, 0, 1)
+scale = Vector2(0.845, 0.845)
+texture = ExtResource("9_6ku7o")
+
+[node name="Token_pos Label" type="Label" parent="." unique_id=1356980226]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -71.0
+offset_top = 50.0
+offset_right = 71.0
+offset_bottom = 187.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_ju8ml")
+horizontal_alignment = 1
