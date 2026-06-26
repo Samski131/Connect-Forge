@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" uid="uid://mnwwj7elq6lv" path="res://Assets/tokens/parts of tokens/token decoration/Bomb.png" id="22_o57li"]
 [ext_resource type="Texture2D" uid="uid://dhd6bj6q1m6c8" path="res://Assets/tokens/parts of tokens/token decoration/Drill.png" id="23_mc7rj"]
 [ext_resource type="Texture2D" uid="uid://dr1kdn4ovuiub" path="res://Assets/tokens/parts of tokens/token decoration/tetris body.png" id="24_d5nw7"]
+[ext_resource type="Texture2D" uid="uid://cvdnohvc8wunq" path="res://Assets/tokens/parts of tokens/token decoration/Rotate.png" id="25_d5nw7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_vw4oq"]
 
@@ -269,6 +270,20 @@ stretch_mode = 6
 [node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer8" unique_id=1950006985]
 layout_mode = 2
 text = "8"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1101203676]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer9" unique_id=660733405]
+layout_mode = 2
+texture = ExtResource("25_d5nw7")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer9" unique_id=798569438]
+layout_mode = 2
+text = "9"
 
 [connection signal="mouse_entered" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_exited"]

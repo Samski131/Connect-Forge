@@ -16,6 +16,7 @@ enum MOVE_VISUAL {FALL, SLIDE}
 @export var darken_amount:float = 0.3
 @export var lighten_duration:float = 0.12
 @export var lighten_amount:float = 0.3
+@export var gravity_rotate_duration:float = 0.18
 
 @export_group("Token Flip")
 @export var flip_duration:float = 0.4

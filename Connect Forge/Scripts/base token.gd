@@ -3,7 +3,7 @@ extends Area2D
 
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
-enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO}
+enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO, ROTATE_GRAVITY}
 
 var player_id = 0
 var token_pos :Vector2i = Vector2i.ZERO
@@ -14,6 +14,7 @@ var keywords:Array[Global.KEYWORD] = []
 var board:BoardManager
 var being_destroyed:bool = false
 var is_flipped:bool = false
+var gravity_visual_rotation:float = 0.0
 
 @onready var sprites = $Sprites
 @onready var token_pos_label = $"Token_pos Label"
@@ -221,3 +222,26 @@ func toggle_flipped(animate:bool = true) -> void:
 func apply_flipped_visual() -> void:
 	if sprites != null and sprites.has_method("set_flipped_visual"):
 		sprites.set_flipped_visual(is_flipped)
+
+func get_gravity_visual_rotation() -> float:
+	var DIRECTION = BoardSetting.DIRECTION
+	
+	match board.settings.gravity_direction:
+		DIRECTION.DOWN:
+			return 0.0
+		DIRECTION.LEFT:
+			return PI * 0.5
+		DIRECTION.UP:
+			return PI
+		DIRECTION.RIGHT:
+			return PI * 1.5
+	
+	return 0.0
+
+
+func apply_gravity_visual() -> void:
+	if sprites == null:
+		return
+	
+	gravity_visual_rotation = get_gravity_visual_rotation()
+	sprites.rotation = gravity_visual_rotation

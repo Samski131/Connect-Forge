@@ -66,23 +66,21 @@ func reset_game():
 	start_game()
 
 func debug_gravity_changes():
-	var change:bool = false
+	var changed:bool = false
 	var DIRECTION = BoardSetting.DIRECTION
-
-	if Input.is_action_just_pressed("right_arrow"):
-		board.settings.gravity_direction = DIRECTION.RIGHT
-		change = true
-	if Input.is_action_just_pressed("left_arrow"):
-		board.settings.gravity_direction = DIRECTION.LEFT
-		change = true
-	if Input.is_action_just_pressed("up_arrow"):
-		board.settings.gravity_direction = DIRECTION.UP
-		change = true
-	if Input.is_action_just_pressed("down_arrow"):
-		board.settings.gravity_direction = DIRECTION.DOWN
-		change = true
 	
-	if change:
-		get_tree().call_group("slot", "gravity_change")
+	if Input.is_action_just_pressed("right_arrow"):
+		changed = board.set_gravity_direction(DIRECTION.RIGHT)
+	
+	if Input.is_action_just_pressed("left_arrow"):
+		changed = board.set_gravity_direction(DIRECTION.LEFT)
+	
+	if Input.is_action_just_pressed("up_arrow"):
+		changed = board.set_gravity_direction(DIRECTION.UP)
+	
+	if Input.is_action_just_pressed("down_arrow"):
+		changed = board.set_gravity_direction(DIRECTION.DOWN)
+	
+	if changed:
 		placement_state.clear_placement_token()
 		action_state.enter_state()

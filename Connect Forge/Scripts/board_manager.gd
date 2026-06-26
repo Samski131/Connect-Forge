@@ -147,3 +147,97 @@ func get_positions_in_gravity_order() -> Array[Vector2i]:
 		gravity_order = BoardGravityOrder.new(settings)
 	
 	return gravity_order.get_positions_in_gravity_order()
+
+func rotate_gravity(clockwise:bool = true) -> void:
+	var DIRECTION = BoardSetting.DIRECTION
+	var gravity_order:Array = [
+		DIRECTION.UP,
+		DIRECTION.RIGHT,
+		DIRECTION.DOWN,
+		DIRECTION.LEFT
+	]
+	
+	var current_index:int = gravity_order.find(settings.gravity_direction)
+	
+	if current_index == -1:
+		set_gravity_direction(DIRECTION.DOWN)
+		return
+	
+	var step:int = 1
+	
+	if clockwise == false:
+		step = -1
+	
+	var new_index:int = current_index + step
+	
+	if new_index >= gravity_order.size():
+		new_index = 0
+	
+	if new_index < 0:
+		new_index = gravity_order.size() - 1
+	
+	var new_direction:BoardSetting.DIRECTION = gravity_order[new_index]
+	set_gravity_direction(new_direction)
+
+func queue_all_tokens_gravity_visual_rotation() -> void:
+	if visuals == null:
+		apply_all_tokens_gravity_visual_rotation()
+		return
+	
+	var effects:Array[BoardVisualEffect] = []
+	
+	for pos in get_positions_in_gravity_order():
+		var token:Token = get_token(pos)
+		
+		if token == null:
+			continue
+		
+		if is_instance_valid(token) == false:
+			continue
+		
+		if token.being_destroyed:
+			continue
+		
+		var target_rotation:float = token.get_gravity_visual_rotation()
+		var effect:TokenGravityAlignVisualEffect = TokenGravityAlignVisualEffect.new(
+			token,
+			target_rotation,
+			visuals.gravity_rotate_duration
+		)
+		
+		effects.append(effect)
+	
+	if effects.is_empty():
+		return
+	
+	visuals.queue_effect(ParallelVisualEffect.new(effects))
+
+
+func apply_all_tokens_gravity_visual_rotation() -> void:
+	for pos in get_positions_in_gravity_order():
+		var token:Token = get_token(pos)
+		
+		if token == null:
+			continue
+		
+		if is_instance_valid(token) == false:
+			continue
+		
+		token.apply_gravity_visual()
+
+func set_gravity_direction(new_direction:BoardSetting.DIRECTION, animate_visual:bool = true) -> bool:
+	if settings.gravity_direction == new_direction:
+		return false
+	
+	settings.gravity_direction = new_direction
+	
+	refresh_gravity_order()
+	get_tree().call_group("slot", "gravity_change")
+	get_tree().call_group("token", "reset_resolved")
+	
+	if animate_visual:
+		queue_all_tokens_gravity_visual_rotation()
+	else:
+		apply_all_tokens_gravity_visual_rotation()
+	
+	return true

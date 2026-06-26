@@ -11,6 +11,7 @@ var dagger_token: PackedScene = load("res://Scenes/Tokens/dagger token.tscn")
 var bomb_token: PackedScene = load("res://Scenes/Tokens/bomb token.tscn")
 var drill_token: PackedScene = load("res://Scenes/Tokens/drill token.tscn")
 var tetromino_token: PackedScene = load("res://Scenes/Tokens/tetromino token.tscn")
+var rotate_gravity_token: PackedScene = load("res://Scenes/Tokens/rotate gravity token.tscn")
 
 var game_manager:Node
 var board:BoardManager
@@ -55,6 +56,9 @@ func process_state():
 		place_attempt(drill_token)
 	elif Input.is_action_just_pressed("action_8"):
 		place_attempt(tetromino_token)
+	elif Input.is_action_just_pressed("action_9"):
+		place_attempt(rotate_gravity_token)
+		
 func place_attempt(token:PackedScene):
 	#checks that the hovered slot actually is a slot, ensures the hovered slot is on the top row
 	if try_to_place_token() == false:
