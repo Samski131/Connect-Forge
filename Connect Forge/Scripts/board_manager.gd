@@ -119,7 +119,10 @@ func has_passing_reactor_for_step(moving_token:Token, from_pos:Vector2i, to_pos:
 func resolve_landing_triggers(landing_token:Token) -> bool:
 	return trigger_resolver.resolve_landing_triggers(landing_token)
 
-
+func resolve_impact_trigger_for_token(landing_token:Token) -> bool:
+	return trigger_resolver.resolve_impact_trigger_for_token(landing_token)
+	
+	
 func resolve_passing_triggers(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i) -> bool:
 	return trigger_resolver.resolve_passing_triggers(moving_token, from_pos, to_pos)
 

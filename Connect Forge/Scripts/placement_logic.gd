@@ -12,6 +12,8 @@ var bomb_token: PackedScene = load("res://Scenes/Tokens/bomb token.tscn")
 var drill_token: PackedScene = load("res://Scenes/Tokens/drill token.tscn")
 var tetromino_token: PackedScene = load("res://Scenes/Tokens/tetromino token.tscn")
 var rotate_gravity_token: PackedScene = load("res://Scenes/Tokens/rotate gravity token.tscn")
+var fan_token : PackedScene = load("res://Scenes/Tokens/fan token.tscn")
+var chameleon_token: PackedScene = load("res://Scenes/Tokens/chameleon token.tscn")
 
 var game_manager:Node
 var board:BoardManager
@@ -58,6 +60,10 @@ func process_state():
 		place_attempt(tetromino_token)
 	elif Input.is_action_just_pressed("action_9"):
 		place_attempt(rotate_gravity_token)
+	elif Input.is_action_just_pressed("action_0"):
+		place_attempt(fan_token)
+	elif Input.is_action_just_pressed("action_-"):
+		place_attempt(chameleon_token)
 		
 func place_attempt(token:PackedScene):
 	#checks that the hovered slot actually is a slot, ensures the hovered slot is on the top row

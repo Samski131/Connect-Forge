@@ -3,7 +3,7 @@ extends Area2D
 
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
-enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO, ROTATE_GRAVITY}
+enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO, ROTATE_GRAVITY, FAN, CHAMELEON}
 
 var player_id = 0
 var token_pos :Vector2i = Vector2i.ZERO
@@ -35,6 +35,7 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	setup_special_token()
 	recolor()
 	apply_flipped_visual()
+	apply_gravity_visual()
 	move_token_visual()
 	
 func setup_special_token():

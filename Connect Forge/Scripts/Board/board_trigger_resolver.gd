@@ -109,28 +109,41 @@ func has_passing_reactor_for_step(
 	
 	return false
 
-
-func resolve_landing_triggers(landing_token:Token) -> bool:
+func resolve_impact_trigger_for_token(landing_token:Token) -> bool:
 	if landing_token == null:
 		return false
 	
-	var changed_board := false
+	if is_instance_valid(landing_token) == false:
+		return false
 	
-	var token_below := board.get_adjacent_token(
+	if landing_token.being_destroyed:
+		return false
+	
+	var token_below:Token = board.get_adjacent_token(
 		landing_token.token_pos.x,
 		landing_token.token_pos.y,
 		BoardSetting.DIRECTION.DOWN
 	)
 	
-	if token_below != null:
-		var impact_context := {
-			"landing_token": landing_token,
-			"impacted_token": token_below,
-			"board": board
-		}
-		
-		if token_below.trigger_keyword(Global.KEYWORD.ON_IMPACT, impact_context):
-			changed_board = true
+	if token_below == null:
+		return false
+	
+	var impact_context := {
+		"landing_token": landing_token,
+		"impacted_token": token_below,
+		"board": board
+	}
+	
+	return token_below.trigger_keyword(Global.KEYWORD.ON_IMPACT, impact_context)
+	
+func resolve_landing_triggers(landing_token:Token) -> bool:
+	if landing_token == null:
+		return false
+	
+	var changed_board:bool = false
+	
+	if resolve_impact_trigger_for_token(landing_token):
+		changed_board = true
 	
 	# The landing token may have been deleted or moved by On Impact.
 	if board.get_token(landing_token.token_pos) != landing_token:
@@ -145,7 +158,6 @@ func resolve_landing_triggers(landing_token:Token) -> bool:
 		changed_board = true
 	
 	return changed_board
-
 
 func resolve_passing_triggers(
 	moving_token:Token,
