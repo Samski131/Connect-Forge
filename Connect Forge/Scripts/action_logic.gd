@@ -30,7 +30,11 @@ func process_state():
 	if process_movement_pass():
 		return
 	
+	if board.resolve_line_full_triggers():
+		return
+	
 	process_resolution_pass()
+	
 
 func report_on_token(token)-> Report:
 	if token == null:

@@ -23,6 +23,7 @@ font_size = 100
 script = ExtResource("1_lml76")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
+visible = false
 shape = SubResource("RectangleShape2D_1njb1")
 
 [node name="Sprites" type="Node2D" parent="." unique_id=1434195102]
@@ -60,13 +61,15 @@ texture = ExtResource("7_11x87")
 modulate = Color(0, 0, 1, 1)
 texture = ExtResource("8_udt31")
 
-[node name="cyan -bomb shadow" type="Sprite2D" parent="Sprites" unique_id=586332891]
+[node name="Icon" type="Node2D" parent="Sprites" unique_id=90878842]
+
+[node name="cyan -bomb shadow" type="Sprite2D" parent="Sprites/Icon" unique_id=586332891]
 modulate = Color(0, 1, 1, 1)
 scale = Vector2(0.845, 0.845)
 texture = ExtResource("9_6ku7o")
 offset = Vector2(0, 4)
 
-[node name="red - bomb main body" type="Sprite2D" parent="Sprites" unique_id=427416080]
+[node name="red - bomb main body" type="Sprite2D" parent="Sprites/Icon" unique_id=427416080]
 modulate = Color(1, 0, 0, 1)
 scale = Vector2(0.845, 0.845)
 texture = ExtResource("9_6ku7o")

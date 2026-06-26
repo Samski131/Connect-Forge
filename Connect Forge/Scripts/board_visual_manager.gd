@@ -17,6 +17,11 @@ enum MOVE_VISUAL {FALL, SLIDE}
 @export var lighten_duration:float = 0.12
 @export var lighten_amount:float = 0.3
 
+@export_group("Token Flip")
+@export var flip_duration:float = 0.4
+@export var flip_min_scale_x:float = 0.08
+@export var flip_pop_scale_y:float = 1.08
+
 var visual_busy:bool = false
 var visual_queue:Array[BoardVisualEffect] = []
 var current_effect:BoardVisualEffect = null

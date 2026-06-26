@@ -203,6 +203,28 @@ func resolve_passing_triggers(
 	
 	return changed_board
 
+func resolve_line_full_triggers() -> bool:
+	for pos in board.get_positions_in_gravity_order():
+		var token := board.get_token(pos)
+		
+		if token == null:
+			continue
+		
+		if is_instance_valid(token) == false:
+			continue
+		
+		if token.being_destroyed:
+			continue
+		
+		var context := {
+			"line_token": token,
+			"board": board
+		}
+		
+		if token.trigger_keyword(Global.KEYWORD.ON_LINE_FULL, context):
+			return true
+	
+	return false
 
 func queue_passing_trigger(
 	moving_token:Token,

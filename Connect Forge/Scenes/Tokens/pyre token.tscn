@@ -63,20 +63,22 @@ texture = ExtResource("7_e8lf5")
 modulate = Color(0, 0, 1, 1)
 texture = ExtResource("8_4ljbe")
 
-[node name="cyan -pyre large shadow" type="Sprite2D" parent="Sprites" unique_id=586332891]
+[node name="Icon" type="Node2D" parent="Sprites" unique_id=175875467]
+
+[node name="cyan -pyre large shadow" type="Sprite2D" parent="Sprites/Icon" unique_id=586332891]
 modulate = Color(0, 1, 1, 1)
 position = Vector2(0, -3.3799973)
 scale = Vector2(0.92, 0.92)
 texture = ExtResource("9_54pe4")
 offset = Vector2(0, -4)
 
-[node name="red - pyre main body" type="Sprite2D" parent="Sprites" unique_id=427416080]
+[node name="red - pyre main body" type="Sprite2D" parent="Sprites/Icon" unique_id=427416080]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(0, -3.3799973)
 scale = Vector2(0.92, 0.92)
 texture = ExtResource("9_54pe4")
 
-[node name="cyan - pyre small flame" type="Sprite2D" parent="Sprites" unique_id=858228230]
+[node name="cyan - pyre small flame" type="Sprite2D" parent="Sprites/Icon" unique_id=858228230]
 modulate = Color(0, 1, 1, 1)
 position = Vector2(0, -3.3799973)
 scale = Vector2(0.92, 0.92)

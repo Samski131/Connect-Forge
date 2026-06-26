@@ -10,7 +10,8 @@ enum KEYWORD {
 	ON_PASS_LEFT,
 	ON_PASS_RIGHT,
 	ON_PASS_ABOVE,
-	ON_PASS_BELOW
+	ON_PASS_BELOW,
+	ON_LINE_FULL
 }
 func _ready():
 	pass
@@ -29,4 +30,6 @@ func get_keyword_display_name(keyword:KEYWORD)->String:
 			return "On Pass Above"
 		KEYWORD.ON_PASS_BELOW:
 			return "On Pass Below"
+		KEYWORD.ON_LINE_FULL:
+			return "On Line Full"
 	return "Unknown"

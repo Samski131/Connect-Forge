@@ -43,10 +43,15 @@ func darken(amount:float):
 
 func gather_sprites():
 	sprites.clear()
+	_collect_sprites(self)
 
-	for child in get_children(true):
+
+func _collect_sprites(node:Node):
+	for child in node.get_children():
 		if child is Sprite2D:
 			sprites.append(child)
+		
+		_collect_sprites(child)
 
 
 func setup_shimmer_materials():
@@ -160,3 +165,23 @@ func tween_darken(amount:float = 0.3, duration:float = 0.18)->Tween:
 	
 func get_part_color(part_id:int, player_id:int)->Color:
 	return game_manager.player_colours[player_id].colors[part_id]
+
+func set_flipped_visual(is_flipped:bool) -> void:
+	var icon:Node2D = get_icon_node()
+	
+	if icon == null:
+		return
+	
+	if is_flipped:
+		icon.scale.x = -1.0
+	else:
+		icon.scale.x = 1.0
+
+
+func get_icon_node() -> Node2D:
+	var icon = find_child("Icon", true, false)
+	
+	if icon is Node2D:
+		return icon
+	
+	return null

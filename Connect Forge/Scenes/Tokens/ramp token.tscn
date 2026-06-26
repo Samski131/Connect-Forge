@@ -24,6 +24,7 @@ font_size = 100
 script = ExtResource("1_bopni")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878520613]
+visible = false
 shape = SubResource("RectangleShape2D_1njb1")
 
 [node name="Sprites" type="Node2D" parent="." unique_id=1434195102]
@@ -61,14 +62,16 @@ texture = ExtResource("7_3ve8k")
 modulate = Color(0, 0, 1, 1)
 texture = ExtResource("8_sx3lu")
 
-[node name="cyan -ramp shadow" type="Sprite2D" parent="Sprites" unique_id=586332891]
+[node name="Icon" type="Node2D" parent="Sprites" unique_id=953039140]
+
+[node name="cyan -ramp shadow" type="Sprite2D" parent="Sprites/Icon" unique_id=586332891]
 modulate = Color(0, 1, 1, 1)
 position = Vector2(12.205002, -3.3799973)
 scale = Vector2(0.845, 0.845)
 texture = ExtResource("9_bopni")
 offset = Vector2(0, -4)
 
-[node name="red - ramp main body" type="Sprite2D" parent="Sprites" unique_id=427416080]
+[node name="red - ramp main body" type="Sprite2D" parent="Sprites/Icon" unique_id=427416080]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(-12.794998, -7)
 scale = Vector2(0.845, 0.845)

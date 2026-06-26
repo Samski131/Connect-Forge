@@ -22,6 +22,8 @@
 [ext_resource type="Texture2D" uid="uid://bhlafbl3l6aax" path="res://Assets/tokens/parts of tokens/token decoration/Ramp back.png" id="20_mc7rj"]
 [ext_resource type="Texture2D" uid="uid://bik5j8ijw3dhe" path="res://Assets/tokens/parts of tokens/token decoration/Dagger.png" id="21_d5nw7"]
 [ext_resource type="Texture2D" uid="uid://mnwwj7elq6lv" path="res://Assets/tokens/parts of tokens/token decoration/Bomb.png" id="22_o57li"]
+[ext_resource type="Texture2D" uid="uid://dhd6bj6q1m6c8" path="res://Assets/tokens/parts of tokens/token decoration/Drill.png" id="23_mc7rj"]
+[ext_resource type="Texture2D" uid="uid://dr1kdn4ovuiub" path="res://Assets/tokens/parts of tokens/token decoration/tetris body.png" id="24_d5nw7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_vw4oq"]
 
@@ -239,6 +241,34 @@ stretch_mode = 6
 [node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer6" unique_id=1587498666]
 layout_mode = 2
 text = "6"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=2056346178]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer7" unique_id=478649768]
+layout_mode = 2
+texture = ExtResource("23_mc7rj")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer7" unique_id=1861547452]
+layout_mode = 2
+text = "7"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1221826801]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer8" unique_id=1243287012]
+layout_mode = 2
+texture = ExtResource("24_d5nw7")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer8" unique_id=1950006985]
+layout_mode = 2
+text = "8"
 
 [connection signal="mouse_entered" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_exited"]

@@ -3,7 +3,7 @@ extends Area2D
 
 #This script is the basic behaviour for every single token.
 #All common functions of tokens should go here, even if some special ones will override the functions.
-enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB}
+enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO}
 
 var player_id = 0
 var token_pos :Vector2i = Vector2i.ZERO
@@ -13,6 +13,7 @@ var token_type
 var keywords:Array[Global.KEYWORD] = []
 var board:BoardManager
 var being_destroyed:bool = false
+var is_flipped:bool = false
 
 @onready var sprites = $Sprites
 @onready var token_pos_label = $"Token_pos Label"
@@ -27,12 +28,14 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	token_pos = new_pos
 	player_id = new_player_id
 	being_destroyed = false
+	is_flipped = false
 	scale = Vector2.ONE
 	modulate = Color.WHITE
 	setup_special_token()
 	recolor()
+	apply_flipped_visual()
 	move_token_visual()
-
+	
 func setup_special_token():
 	token_type = TokenType.BASIC
 	keywords = []
@@ -183,6 +186,10 @@ func _on_pass_above(_context:Dictionary)->bool:
 func _on_pass_below(_context:Dictionary)->bool:
 	return false
 
+func _on_line_full(_context:Dictionary)->bool:
+	return false
+	
+	
 func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->bool:
 	if has_keyword(keyword) == false:
 		return false
@@ -195,3 +202,22 @@ func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->boo
 func play_shimmer(duration:float = 0.45,direction:Vector2 = Vector2(1.0, -1.0), strength:float = 0.75):
 	if sprites != null and sprites.has_method("play_shimmer"):
 		sprites.play_shimmer(duration, direction, strength)
+
+func set_flipped(new_is_flipped:bool, animate:bool = true) -> void:
+	if is_flipped == new_is_flipped:
+		return
+	
+	if animate and board != null and board.visuals != null:
+		board.visuals.queue_effect(TokenFlipVisualEffect.new(self, new_is_flipped, board.visuals.flip_duration))
+	else:
+		is_flipped = new_is_flipped
+		apply_flipped_visual()
+
+
+func toggle_flipped(animate:bool = true) -> void:
+	set_flipped(!is_flipped, animate)
+
+
+func apply_flipped_visual() -> void:
+	if sprites != null and sprites.has_method("set_flipped_visual"):
+		sprites.set_flipped_visual(is_flipped)
