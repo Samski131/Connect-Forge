@@ -25,6 +25,7 @@ func _on_pass_right(context:Dictionary)->bool:
 	if board.get_token(moving_token.token_pos) != moving_token:
 		return false
 	
+	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	deduct_charges(ability_cost)
 	return board.destroy_token(moving_token)
 

@@ -13,6 +13,7 @@ extends Node
 var slot_instance:PackedScene = load("res://Scenes/Slot.tscn")
 
 func _ready():
+	clear_board()
 	setup_board_settings()
 	build_board()
 	

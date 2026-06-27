@@ -58,7 +58,7 @@ func _try_push_tokens() -> bool:
 	
 	if board.visuals != null:
 		if moved_tokens.is_empty() == false:
-			board.visuals.queue_effect(TokenShimmerVisualEffect.new(self), true)
+			queue_visual_effect(TokenShimmerVisualEffect.new(self), true)
 		
 		board.visuals.end_move_batch()
 	
@@ -84,7 +84,7 @@ func _resolve_push_impact(moved_token:Token) -> void:
 	if board.get_token(moved_token.token_pos) != moved_token:
 		return
 	
-	board.resolve_impact_trigger_for_token(moved_token)
+	board.trigger_resolver.resolve_impact_trigger_for_token(moved_token)
 
 
 func _get_push_direction() -> BoardSetting.DIRECTION:

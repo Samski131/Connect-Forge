@@ -21,7 +21,7 @@ func _on_land(_context:Dictionary)->bool:
 	if token_below == null:
 		return false
 
-	board.visuals.queue_effect(TokenShimmerVisualEffect.new(self))
+	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	
 	deduct_charges(ability_cost)
 	return board.destroy_token(token_below)

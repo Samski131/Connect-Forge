@@ -104,37 +104,6 @@ func slot_to_global_position(slot_pos:Vector2i) -> Vector2:
 func global_position_to_slot(global_pos:Vector2) -> Vector2i:
 	return geometry.global_position_to_slot(global_pos)
 
-func get_fall_path(token:Token) -> Array[Vector2i]:
-	return trigger_resolver.get_fall_path(token)
-
-
-func find_first_pass_trigger_step(moving_token:Token, start_pos:Vector2i, path:Array[Vector2i]) -> Dictionary:
-	return trigger_resolver.find_first_pass_trigger_step(moving_token, start_pos, path)
-
-
-func has_passing_reactor_for_step(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i) -> bool:
-	return trigger_resolver.has_passing_reactor_for_step(moving_token, from_pos, to_pos)
-
-
-func resolve_landing_triggers(landing_token:Token) -> bool:
-	return trigger_resolver.resolve_landing_triggers(landing_token)
-
-func resolve_impact_trigger_for_token(landing_token:Token) -> bool:
-	return trigger_resolver.resolve_impact_trigger_for_token(landing_token)
-	
-	
-func resolve_passing_triggers(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i) -> bool:
-	return trigger_resolver.resolve_passing_triggers(moving_token, from_pos, to_pos)
-
-func resolve_line_full_triggers() -> bool:
-	return trigger_resolver.resolve_line_full_triggers()
-	
-func queue_passing_trigger(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i) -> void:
-	trigger_resolver.queue_passing_trigger( moving_token, from_pos, to_pos)
-
-
-func resolve_pending_pass_triggers() -> bool:
-	return trigger_resolver.resolve_pending_pass_triggers()
 
 func refresh_token_pool() -> void:
 	token_pool = get_tree().get_first_node_in_group("token pool")
@@ -201,10 +170,10 @@ func queue_all_tokens_gravity_visual_rotation() -> void:
 		if token.being_destroyed:
 			continue
 		
-		var target_rotation:float = token.get_gravity_visual_rotation()
+		var target_rotation_degrees:float = get_gravity_visual_rotation_degrees()
 		var effect:TokenGravityAlignVisualEffect = TokenGravityAlignVisualEffect.new(
 			token,
-			target_rotation,
+			target_rotation_degrees,
 			visuals.gravity_rotate_duration
 		)
 		
@@ -226,7 +195,7 @@ func apply_all_tokens_gravity_visual_rotation() -> void:
 		if is_instance_valid(token) == false:
 			continue
 		
-		token.apply_gravity_visual()
+		apply_token_gravity_visual(token)
 
 func set_gravity_direction(new_direction:BoardSetting.DIRECTION, animate_visual:bool = true) -> bool:
 	if settings.gravity_direction == new_direction:
@@ -244,3 +213,32 @@ func set_gravity_direction(new_direction:BoardSetting.DIRECTION, animate_visual:
 		apply_all_tokens_gravity_visual_rotation()
 	
 	return true
+
+func get_gravity_visual_rotation_degrees() -> float:
+	var DIRECTION = BoardSetting.DIRECTION
+	
+	match settings.gravity_direction:
+		DIRECTION.DOWN:
+			return 0.0
+		DIRECTION.LEFT:
+			return 90.0
+		DIRECTION.UP:
+			return 180.0
+		DIRECTION.RIGHT:
+			return 270.0
+	
+	return 0.0
+	
+func apply_token_gravity_visual(token:Token) -> void:
+	if token == null:
+		return
+	
+	if is_instance_valid(token) == false:
+		return
+	
+	if token.sprites == null:
+		return
+	
+	var target_rotation_degrees:float = get_gravity_visual_rotation_degrees()
+	token.gravity_visual_rotation_degrees = target_rotation_degrees
+	token.sprites.rotation_degrees = target_rotation_degrees

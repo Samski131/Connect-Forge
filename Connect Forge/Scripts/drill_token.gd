@@ -22,13 +22,12 @@ func _on_land(_context:Dictionary) -> bool:
 	if token_below == null:
 		return false
 	
-	if board.visuals != null:
-		var effects:Array[BoardVisualEffect] = [
-			TokenShimmerVisualEffect.new(self),
-			WiggleVisualEffect.new(token_below, drill_wiggle_strength, drill_wiggles, drill_wiggle_duration)
-		]
-		
-		board.visuals.queue_effect(ParallelVisualEffect.new(effects))
+	var effects:Array[BoardVisualEffect] = [
+		TokenShimmerVisualEffect.new(self),
+		WiggleVisualEffect.new(token_below, drill_wiggle_strength, drill_wiggles, drill_wiggle_duration)
+	]
+	
+	queue_visual_effect(ParallelVisualEffect.new(effects))
 	
 	landed = false
 	

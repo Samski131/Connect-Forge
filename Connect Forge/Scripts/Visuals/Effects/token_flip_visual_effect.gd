@@ -29,7 +29,6 @@ func _play_valid(runner:Node) -> void:
 	
 	if _sprites == null:
 		_token.is_flipped = new_is_flipped
-		_token.apply_flipped_visual()
 		_finish()
 		return
 	
@@ -50,4 +49,9 @@ func _swap_side() -> void:
 		return
 	
 	_token.is_flipped = new_is_flipped
-	_token.apply_flipped_visual()
+	
+	if _token.sprites == null:
+		return
+	
+	if _token.sprites.has_method("set_flipped_visual"):
+		_token.sprites.set_flipped_visual(_token.is_flipped)

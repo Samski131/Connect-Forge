@@ -21,11 +21,10 @@ func _on_impact(context:Dictionary)->bool:
 	if landing_token == null:
 		return false
 	
-	if board.visuals != null:
-		board.visuals.queue_effect(TokenShimmerVisualEffect.new(self))
-		
+	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	deduct_charges(ability_cost)
 	
+	return board.destroy_token(landing_token)
 
 	
 	return board.destroy_token(landing_token)

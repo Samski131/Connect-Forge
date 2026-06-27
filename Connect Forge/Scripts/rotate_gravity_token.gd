@@ -17,9 +17,7 @@ func _on_land(_context:Dictionary) -> bool:
 	if check_enough_charges(ability_cost) == false:
 		return false
 	
-	if board.visuals != null:
-		board.visuals.queue_effect(TokenShimmerVisualEffect.new(self))
-	
+	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	deduct_charges(ability_cost)
 	
 	var clockwise:bool = true

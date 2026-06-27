@@ -111,3 +111,76 @@ func _combine_with_extra_parallel_effects(move_effect:BoardVisualEffect, extra_p
 			effects.append(extra_effect)
 	
 	return ParallelVisualEffect.new(effects)
+
+func try_apply_gravity_to_token(token:Token) -> bool:
+	if token == null:
+		return false
+	
+	if is_instance_valid(token) == false:
+		return false
+	
+	if token.being_destroyed:
+		return false
+	
+	var old_pos:Vector2i = token.token_pos
+	var fall_path:Array[Vector2i] = board.trigger_resolver.get_fall_path(token)
+	
+	if fall_path.is_empty():
+		if board.get_token(token.token_pos) == token:
+			token.debug_token()
+		return false
+	
+	var pass_step:Dictionary = board.trigger_resolver.find_first_pass_trigger_step(token, old_pos, fall_path)
+	var destination:Vector2i = pass_step["to_pos"]
+	
+	var moved:bool = move_token_on_board(token, destination, BoardVisualManager.MOVE_VISUAL.FALL)
+	
+	if moved and pass_step["has_pass_trigger"]:
+		board.trigger_resolver.queue_passing_trigger(token, pass_step["from_pos"], pass_step["to_pos"])
+	
+	if board.get_token(token.token_pos) == token:
+		token.debug_token()
+	
+	return moved
+
+func is_token_supported(token:Token) -> bool:
+	if token == null:
+		return false
+	
+	if is_instance_valid(token) == false:
+		return false
+	
+	var supported:bool = false
+	var DIRECTION = BoardSetting.DIRECTION
+	
+	match board.settings.gravity_direction:
+		DIRECTION.UP:
+			if token.token_pos.y == 0:
+				supported = true
+		
+		DIRECTION.RIGHT:
+			if token.token_pos.x == board.settings.columns - 1:
+				supported = true
+		
+		DIRECTION.DOWN:
+			if token.token_pos.y == board.settings.rows - 1:
+				supported = true
+		
+		DIRECTION.LEFT:
+			if token.token_pos.x == 0:
+				supported = true
+	
+	var token_below:Token = board.get_adjacent_token(
+		token.token_pos.x,
+		token.token_pos.y,
+		BoardSetting.DIRECTION.DOWN
+	)
+	
+	if token_below != null:
+		if token_below.landed:
+			supported = true
+	
+	if supported:
+		token.landed = true
+	
+	return supported

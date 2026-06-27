@@ -24,13 +24,13 @@ func process_state():
 	if board.visuals != null and board.visuals.is_busy():
 		return
 	
-	if board.resolve_pending_pass_triggers():
+	if board.trigger_resolver.resolve_pending_pass_triggers():
 		return
 	
 	if process_movement_pass():
 		return
 	
-	if board.resolve_line_full_triggers():
+	if board.trigger_resolver.resolve_line_full_triggers():
 		return
 	
 	process_resolution_pass()
@@ -43,12 +43,12 @@ func report_on_token(token)-> Report:
 	if token.resolved:
 		return Report.RESOLVED
 	
-	var reached_limit:bool = token.check_if_token_at_limits()
+	var reached_limit:bool = board.token_mover.is_token_supported(token)
 	
 	if reached_limit == false:
 		return Report.IN_PROGRESS
 	
-	var trigger_was_used:bool = board.resolve_landing_triggers(token)
+	var trigger_was_used:bool = board.trigger_resolver.resolve_landing_triggers(token)
 
 	if trigger_was_used:
 		return Report.IN_PROGRESS
@@ -89,8 +89,8 @@ func process_movement_pass()->bool:
 		if token.being_destroyed:
 			continue
 		
-		if token.check_if_token_at_limits() == false:
-			if token.update_token_position():
+		if board.token_mover.is_token_supported(token) == false:
+			if board.token_mover.try_apply_gravity_to_token(token):
 				moved_any_token = true
 	
 	if board.visuals != null:

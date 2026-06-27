@@ -1,12 +1,12 @@
 class_name TokenGravityAlignVisualEffect
 extends VisualTweenEffect
 
-var target_rotation:float = 0.0
+var target_rotation_degrees:float = 0.0
 
 
-func _init(new_token:Token, new_target_rotation:float, new_duration:float = 0.18):
+func _init(new_token:Token, new_target_rotation_degrees:float, new_duration:float = 0.18):
 	target = new_token
-	target_rotation = new_target_rotation
+	target_rotation_degrees = new_target_rotation_degrees
 	duration = new_duration
 	
 	trans_type = Tween.TRANS_SINE
@@ -22,11 +22,11 @@ func _build_tween(tween:Tween) -> void:
 	if token.sprites == null:
 		return
 	
-	token.gravity_visual_rotation = target_rotation
+	token.gravity_visual_rotation_degrees = target_rotation_degrees
 	
 	add_property_tween(
 		tween,
 		token.sprites,
-		"rotation",
-		target_rotation
+		"rotation_degrees",
+		target_rotation_degrees
 	)

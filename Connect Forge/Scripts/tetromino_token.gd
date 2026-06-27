@@ -65,7 +65,6 @@ func _get_line_positions() -> Array[Vector2i]:
 	
 	return positions
 
-
 func _clear_line_tokens(line_tokens:Array[Token]) -> void:
 	for token in line_tokens:
 		if token == null:
@@ -96,7 +95,7 @@ func _clear_line_tokens(line_tokens:Array[Token]) -> void:
 			ParallelVisualEffect.new(destroy_effects)
 		]
 		
-		board.visuals.queue_effect(SequenceVisualEffect.new(effect_sequence))
+		queue_visual_effect(SequenceVisualEffect.new(effect_sequence))
 	else:
 		for token in line_tokens:
 			if token != null and is_instance_valid(token):

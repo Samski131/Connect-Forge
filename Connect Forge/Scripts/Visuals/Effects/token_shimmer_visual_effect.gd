@@ -19,13 +19,21 @@ func _init(
 
 
 func _play_valid(runner:Node) -> void:
-	var token := target as Token
+	var token:Token = target as Token
 	
 	if token == null or is_instance_valid(token) == false:
 		_finish()
 		return
 	
-	token.play_shimmer(duration, direction, strength)
+	if token.sprites == null:
+		_finish()
+		return
 	
-	var timer := runner.get_tree().create_timer(duration)
+	if token.sprites.has_method("play_shimmer") == false:
+		_finish()
+		return
+	
+	token.sprites.play_shimmer(duration, direction, strength)
+	
+	var timer:SceneTreeTimer = runner.get_tree().create_timer(duration)
 	timer.timeout.connect(_finish)

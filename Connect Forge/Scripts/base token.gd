@@ -14,7 +14,7 @@ var keywords:Array[Global.KEYWORD] = []
 var board:BoardManager
 var being_destroyed:bool = false
 var is_flipped:bool = false
-var gravity_visual_rotation:float = 0.0
+var gravity_visual_rotation_degrees:float = 0.0
 
 @onready var sprites = $Sprites
 @onready var token_pos_label = $"Token_pos Label"
@@ -34,73 +34,23 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	modulate = Color.WHITE
 	setup_special_token()
 	recolor()
-	apply_flipped_visual()
-	apply_gravity_visual()
+	apply_starting_flipped_visual()
+
+	if board != null:
+		board.apply_token_gravity_visual(self)
+
 	move_token_visual()
 	
 func setup_special_token():
 	token_type = TokenType.BASIC
 	keywords = []
 	
-func update_token_position():
-	var old_pos := token_pos
-	var fall_path = board.get_fall_path(self)
-	
-	if fall_path.is_empty():
-		if board.get_token(token_pos) == self:
-			debug_token()
-		return
-	
-	var pass_step = board.find_first_pass_trigger_step(self, old_pos, fall_path)
-	var destination:Vector2i = pass_step["to_pos"]
-	
-	if board.move_token_on_board(
-		self,
-		destination,
-		BoardVisualManager.MOVE_VISUAL.FALL
-	):
-		if pass_step["has_pass_trigger"]:
-			board.queue_passing_trigger(
-				self,
-				pass_step["from_pos"],
-				pass_step["to_pos"]
-			)
-	
-	if board.get_token(token_pos) == self:
-		debug_token()
 
 func _try_to_use_ability()->bool:
 	return false #no ability to try it is always false
 	
 func move_token_visual(): #move the token to the correct location on the board
 	global_position = board.slot_to_global_position(token_pos)
-	
-func check_if_token_at_limits()->bool: #check if the token is at the edge of the board based on the gravity direction.
-	var limits:bool = false
-	var direction = BoardSetting.DIRECTION
-	match board.settings.gravity_direction:
-		direction.UP: 
-			if(token_pos.y == 0):
-				limits=true
-		direction.RIGHT: 
-			if(token_pos.x == board.settings.columns-1):
-				limits=true
-		direction.DOWN: 
-			if(token_pos.y == board.settings.rows-1):
-				limits=true
-		direction.LEFT: 
-			if(token_pos.x == 0):
-				limits=true
-	var token_below =  board.get_adjacent_token(token_pos.x,token_pos.y, BoardSetting.DIRECTION.DOWN)
-	if(token_below!=null):
-		if(token_below.landed == true):
-			limits = true
-			
-	if(limits):
-		landed = true
-	return limits
-	
-		
 	
 func reset_resolved():
 	landed = false
@@ -119,18 +69,24 @@ func deduct_charges(cost:int):
 	charges -= cost
 	
 	if board != null and board.visuals != null:
-		board.visuals.queue_effect(
-			ColorTweenVisualEffect.new(self,ColorTweenVisualEffect.MODE.DARKEN,board.visuals.darken_amount,board.visuals.darken_duration))
-	else:
-		apply_charge_darken(0.3)
-
-func apply_charge_darken(amount:float = 0.3):
+		var darken_effect:ColorTweenVisualEffect = ColorTweenVisualEffect.new(
+			self,
+			ColorTweenVisualEffect.MODE.DARKEN,
+			board.visuals.darken_amount,
+			board.visuals.darken_duration
+		)
+		
+		queue_visual_effect(darken_effect)
+		return
+	
 	if sprites != null and sprites.has_method("darken"):
-		sprites.darken(amount)
+		sprites.darken(0.3)
 
-func regain_charges(cost:int):
-	charges+=cost
-	sprites.recolor()
+func regain_charges(cost:int) -> void:
+	charges += cost
+	
+	if sprites != null and sprites.has_method("recolor"):
+		sprites.recolor(player_id)
 	
 func recolor():
 	sprites.recolor(player_id)
@@ -145,7 +101,7 @@ func has_keyword(keyword:Global.KEYWORD)->bool:
 	return keyword in keywords
 
 
-func trigger_keyword(keyword:Global.KEYWORD, context:Dictionary)->bool:
+func trigger_keyword(keyword:Global.KEYWORD, context:Dictionary) -> bool:
 	if has_keyword(keyword) == false:
 		return false
 	
@@ -162,6 +118,8 @@ func trigger_keyword(keyword:Global.KEYWORD, context:Dictionary)->bool:
 			return _on_pass_above(context)
 		Global.KEYWORD.ON_PASS_BELOW:
 			return _on_pass_below(context)
+		Global.KEYWORD.ON_LINE_FULL:
+			return _on_line_full(context)
 	
 	return false
 	
@@ -201,48 +159,45 @@ func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->boo
 	
 	return true
 
-func play_shimmer(duration:float = 0.45,direction:Vector2 = Vector2(1.0, -1.0), strength:float = 0.75):
-	if sprites != null and sprites.has_method("play_shimmer"):
-		sprites.play_shimmer(duration, direction, strength)
-
 func set_flipped(new_is_flipped:bool, animate:bool = true) -> void:
 	if is_flipped == new_is_flipped:
 		return
 	
 	if animate and board != null and board.visuals != null:
-		board.visuals.queue_effect(TokenFlipVisualEffect.new(self, new_is_flipped, board.visuals.flip_duration))
-	else:
-		is_flipped = new_is_flipped
-		apply_flipped_visual()
-
-
-func toggle_flipped(animate:bool = true) -> void:
-	set_flipped(!is_flipped, animate)
+		var flip_effect:TokenFlipVisualEffect = TokenFlipVisualEffect.new(
+			self,
+			new_is_flipped,
+			board.visuals.flip_duration
+		)
+		
+		queue_visual_effect(flip_effect)
+		return
+	
+	is_flipped = new_is_flipped
+	
+	if sprites != null and sprites.has_method("set_flipped_visual"):
+		sprites.set_flipped_visual(is_flipped)
 
 
 func apply_flipped_visual() -> void:
 	if sprites != null and sprites.has_method("set_flipped_visual"):
 		sprites.set_flipped_visual(is_flipped)
 
-func get_gravity_visual_rotation() -> float:
-	var DIRECTION = BoardSetting.DIRECTION
+func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
+	if effect == null:
+		return
 	
-	match board.settings.gravity_direction:
-		DIRECTION.DOWN:
-			return 0.0
-		DIRECTION.LEFT:
-			return PI * 0.5
-		DIRECTION.UP:
-			return PI
-		DIRECTION.RIGHT:
-			return PI * 1.5
+	if board == null:
+		return
 	
-	return 0.0
+	if board.visuals == null:
+		return
+	
+	board.visuals.queue_effect(effect, batch_parallel)
 
-
-func apply_gravity_visual() -> void:
+func apply_starting_flipped_visual() -> void:
 	if sprites == null:
 		return
 	
-	gravity_visual_rotation = get_gravity_visual_rotation()
-	sprites.rotation = gravity_visual_rotation
+	if sprites.has_method("set_flipped_visual"):
+		sprites.set_flipped_visual(is_flipped)

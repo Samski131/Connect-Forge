@@ -20,14 +20,14 @@ func _on_impact(_context:Dictionary) -> bool:
 	if landing_token == null:
 		return false
 	
-	
 	var drop_direction:BoardSetting.DIRECTION
-	if(is_flipped):
+	
+	if is_flipped:
 		drop_direction = BoardSetting.DIRECTION.RIGHT
 	else:
 		drop_direction = BoardSetting.DIRECTION.LEFT
 	
-	var ramp_drop_off_pos = board.get_adjacent_pos(token_pos.x, token_pos.y, drop_direction)
+	var ramp_drop_off_pos:Vector2i = board.get_adjacent_pos(token_pos.x, token_pos.y, drop_direction)
 	
 	if board.is_position_in_bounds(ramp_drop_off_pos) == false:
 		return false
