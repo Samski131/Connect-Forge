@@ -150,37 +150,61 @@ func is_token_supported(token:Token) -> bool:
 	if is_instance_valid(token) == false:
 		return false
 	
-	var supported:bool = false
+	if token.being_destroyed:
+		return false
+	
+	if is_token_at_gravity_edge(token):
+		return true
+	
+	var support_token:Token = get_supporting_token(token)
+	
+	if support_token == null:
+		return false
+	
+	return true
+
+func is_token_at_gravity_edge(token:Token) -> bool:
+	if token == null:
+		return false
+	
 	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
 	
 	match board.settings.gravity_direction:
 		GRID_DIRECTION.UP:
 			if token.token_pos.y == 0:
-				supported = true
+				return true
 		
 		GRID_DIRECTION.RIGHT:
 			if token.token_pos.x == board.settings.columns - 1:
-				supported = true
+				return true
 		
 		GRID_DIRECTION.DOWN:
 			if token.token_pos.y == board.settings.rows - 1:
-				supported = true
+				return true
 		
 		GRID_DIRECTION.LEFT:
 			if token.token_pos.x == 0:
-				supported = true
+				return true
 	
-	var token_below:Token = board.get_relative_adjacent_token(
-		token.token_pos.x,
-		token.token_pos.y,
-		BoardSetting.RELATIVE_DIRECTION.DOWN
-	)
+	return false
+
+
+func get_supporting_token(token:Token) -> Token:
+	if token == null:
+		return null
 	
-	if token_below != null:
-		if token_below.landed:
-			supported = true
+	if is_instance_valid(token) == false:
+		return null
 	
-	if supported:
-		token.landed = true
+	var support_token:Token = board.get_relative_adjacent_token(token.token_pos.x, token.token_pos.y, BoardSetting.RELATIVE_DIRECTION.DOWN)
 	
-	return supported
+	if support_token == null:
+		return null
+	
+	if is_instance_valid(support_token) == false:
+		return null
+	
+	if support_token.being_destroyed:
+		return null
+	
+	return support_token

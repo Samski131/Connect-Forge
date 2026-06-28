@@ -9,7 +9,6 @@ enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO, ROTATE_
 var player_id:int = 0
 var token_pos:Vector2i = Vector2i.ZERO
 var resolved:bool = false
-var landed:bool = false
 var token_type
 var keywords:Array[Global.KEYWORD] = []
 var board:BoardManager
@@ -22,10 +21,20 @@ var gravity_visual_rotation_degrees:float = 0.0
 
 var debug_label_visibility:bool = false
 
+@export_group("Charges")
 @export var charges:int = 0
 @export var ability_cost:int = 0
 
+@export_group("Visual Effects")
+@export var destroy_duration:float = 0.2
+@export var shimmer_duration:float = 0.45
+@export var charge_darken_duration:float = 0.12
+@export var charge_darken_amount:float = 0.3
 
+@export_group("Flip Visual")
+@export var flip_duration:float = 0.4
+@export var flip_min_scale_x:float = 0.08
+@export var flip_pop_scale_y:float = 1.08
 func _ready():
 	pass
 
@@ -65,7 +74,6 @@ func move_token_visual():
 
 
 func reset_resolved():
-	landed = false
 	resolved = false
 
 

@@ -28,6 +28,5 @@ func _on_land(_context:Dictionary) -> bool:
 	]
 	
 	queue_visual_effect(ParallelVisualEffect.new(effects))
-	landed = false
 	
 	return board.destroy_token(token_below)

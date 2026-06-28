@@ -1,0 +1,402 @@
+[gd_scene format=3 uid="uid://6cxy0ihx263q"]
+
+[ext_resource type="Script" uid="uid://bd85kf7sdt0xe" path="res://Scripts/board_builder.gd" id="1_tnbny"]
+[ext_resource type="Script" uid="uid://cexepp4ka05qc" path="res://Scripts/game_manager.gd" id="2_2wvcj"]
+[ext_resource type="Script" uid="uid://7rr5e3m0xk0h" path="res://Scripts/board_manager.gd" id="2_bh37u"]
+[ext_resource type="Script" uid="uid://c0mkt6s1srrg1" path="res://Scripts/board_visual_manager.gd" id="3_7iy1p"]
+[ext_resource type="Script" uid="uid://cnbxdsojq88tt" path="res://Scripts/placement_logic.gd" id="3_uh3b8"]
+[ext_resource type="ColorPalette" uid="uid://dvw71uakjgcn6" path="res://Scenes/Tokens/token colour resources/yellow.tres" id="4_iehwj"]
+[ext_resource type="Script" uid="uid://c8qp3vqse121a" path="res://Scripts/action_logic.gd" id="4_s4i1f"]
+[ext_resource type="ColorPalette" uid="uid://cdy127afbwosf" path="res://Scenes/Tokens/token colour resources/red.tres" id="5_7iy1p"]
+[ext_resource type="Script" uid="uid://dogor60gt0dw1" path="res://Scripts/resolution_logic.gd" id="5_bh37u"]
+[ext_resource type="ColorPalette" uid="uid://cha8nmwll5vme" path="res://Scenes/Tokens/token colour resources/blue.tres" id="6_o5s4g"]
+[ext_resource type="ColorPalette" uid="uid://v38sgi0dh64o" path="res://Scenes/Tokens/token colour resources/green.tres" id="7_2cdyc"]
+[ext_resource type="Script" uid="uid://c68iqyp7kuuju" path="res://Scripts/players_ui.gd" id="7_d8vyx"]
+[ext_resource type="Script" uid="uid://bb2u8kjrewyet" path="res://Scripts/game_over_logic.gd" id="7_vw4oq"]
+[ext_resource type="ColorPalette" uid="uid://dtk2y800v5vfs" path="res://Scenes/Tokens/token colour resources/pink.tres" id="8_qjv7d"]
+[ext_resource type="Script" uid="uid://c7si6rd3ogeyg" path="res://Scripts/winner_display.gd" id="8_vw4oq"]
+[ext_resource type="ColorPalette" uid="uid://yw8l0l4ienur" path="res://Scenes/Tokens/token colour resources/violet.tres" id="9_ardhx"]
+[ext_resource type="Texture2D" uid="uid://blt8dxurt5cl7" path="res://Assets/tokens/parts of tokens/Asset 73.png" id="17_bb5wj"]
+[ext_resource type="Texture2D" uid="uid://o7y661in2b8" path="res://Assets/tokens/parts of tokens/token decoration/Anvil.png" id="18_o57li"]
+[ext_resource type="Texture2D" uid="uid://cq8d0vr6o3rwi" path="res://Assets/tokens/parts of tokens/token decoration/pyre - main.png" id="19_abmxi"]
+[ext_resource type="Texture2D" uid="uid://bhlafbl3l6aax" path="res://Assets/tokens/parts of tokens/token decoration/Ramp back.png" id="20_mc7rj"]
+[ext_resource type="Texture2D" uid="uid://bik5j8ijw3dhe" path="res://Assets/tokens/parts of tokens/token decoration/Dagger.png" id="21_d5nw7"]
+[ext_resource type="Texture2D" uid="uid://mnwwj7elq6lv" path="res://Assets/tokens/parts of tokens/token decoration/Bomb.png" id="22_o57li"]
+[ext_resource type="Texture2D" uid="uid://dhd6bj6q1m6c8" path="res://Assets/tokens/parts of tokens/token decoration/Drill.png" id="23_mc7rj"]
+[ext_resource type="Texture2D" uid="uid://dr1kdn4ovuiub" path="res://Assets/tokens/parts of tokens/token decoration/tetris body.png" id="24_d5nw7"]
+[ext_resource type="Texture2D" uid="uid://cvdnohvc8wunq" path="res://Assets/tokens/parts of tokens/token decoration/Rotate.png" id="25_d5nw7"]
+[ext_resource type="Texture2D" uid="uid://d14wt8o1terf0" path="res://Assets/tokens/parts of tokens/token decoration/Fan.png" id="26_cvsqo"]
+[ext_resource type="Texture2D" uid="uid://bvnso6cbmdygf" path="res://Assets/tokens/parts of tokens/token decoration/Chameleon.png" id="27_gxals"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_vw4oq"]
+
+[node name="World" type="Node2D" unique_id=1895785283]
+
+[node name="Token Pool" type="Node2D" parent="." unique_id=1697406012 groups=["token pool"]]
+
+[node name="Board Builder" type="Node" parent="." unique_id=6529522]
+script = ExtResource("1_tnbny")
+
+[node name="Board Manager" type="Node2D" parent="." unique_id=397328331 groups=["board pool"]]
+script = ExtResource("2_bh37u")
+
+[node name="Board Visual Manager" type="Node2D" parent="." unique_id=500994368]
+script = ExtResource("3_7iy1p")
+
+[node name="Game Manager" type="Node" parent="." unique_id=1217688198 groups=["game manager"]]
+script = ExtResource("2_2wvcj")
+player_colours = Array[ColorPalette]([ExtResource("4_iehwj"), ExtResource("5_7iy1p"), ExtResource("6_o5s4g"), ExtResource("7_2cdyc"), ExtResource("8_qjv7d"), ExtResource("9_ardhx")])
+
+[node name="Placement State" type="Node" parent="Game Manager" unique_id=133202691]
+script = ExtResource("3_uh3b8")
+
+[node name="Action State" type="Node" parent="Game Manager" unique_id=1405517346]
+script = ExtResource("4_s4i1f")
+
+[node name="Resolution State" type="Node" parent="Game Manager" unique_id=1565146920]
+script = ExtResource("5_bh37u")
+
+[node name="Game Over State" type="Node" parent="Game Manager" unique_id=480060321]
+script = ExtResource("7_vw4oq")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1023481867]
+zoom = Vector2(0.25, 0.25)
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1529322116]
+layer = 0
+
+[node name="Control" type="Control" parent="UI" unique_id=173170904]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Players Panel" type="Panel" parent="UI/Control" unique_id=696490779]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Players Panel" unique_id=1695492532]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 77.0
+grow_horizontal = 2
+
+[node name="Reset Board Button" type="Button" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1746495731]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Reset Board"
+
+[node name="Winner Display" type="VBoxContainer" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1398040347 groups=["winner ui"]]
+layout_mode = 2
+script = ExtResource("8_vw4oq")
+
+[node name="Winner" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Winner Display" unique_id=1307753811]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Winner:"
+horizontal_alignment = 1
+
+[node name="Winner Result" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Winner Display" unique_id=1433037511]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 23
+label_settings = SubResource("LabelSettings_vw4oq")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1756463395]
+layout_mode = 2
+
+[node name="Players" type="VBoxContainer" parent="UI/Control/Players Panel/VBoxContainer" unique_id=1519201100]
+layout_mode = 2
+script = ExtResource("7_d8vyx")
+
+[node name="Player Label" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Players" unique_id=310037578]
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+text = "Players:"
+horizontal_alignment = 1
+
+[node name="Number of Players" type="HBoxContainer" parent="UI/Control/Players Panel/VBoxContainer/Players" unique_id=1329709113]
+layout_mode = 2
+alignment = 1
+
+[node name="-" type="Button" parent="UI/Control/Players Panel/VBoxContainer/Players/Number of Players" unique_id=653735120]
+layout_mode = 2
+text = "-
+"
+
+[node name="number of players label" type="Label" parent="UI/Control/Players Panel/VBoxContainer/Players/Number of Players" unique_id=160624191]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "0"
+
+[node name="+" type="Button" parent="UI/Control/Players Panel/VBoxContainer/Players/Number of Players" unique_id=1505526666]
+layout_mode = 2
+text = "+"
+
+[node name="Panel" type="Panel" parent="UI/Control" unique_id=1106794498]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Control/Panel" unique_id=1645323971]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=285750839]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer" unique_id=950320675]
+layout_mode = 2
+texture = ExtResource("17_bb5wj")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer" unique_id=1135273675]
+layout_mode = 2
+text = "1"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1742702136]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer2" unique_id=872496548]
+layout_mode = 2
+texture = ExtResource("18_o57li")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer2" unique_id=1228317770]
+layout_mode = 2
+text = "2"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1468386088]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer3" unique_id=1893195306]
+layout_mode = 2
+texture = ExtResource("19_abmxi")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer3" unique_id=424403802]
+layout_mode = 2
+text = "3"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=394710638]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer4" unique_id=211233819]
+layout_mode = 2
+texture = ExtResource("20_mc7rj")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer4" unique_id=2098167547]
+layout_mode = 2
+text = "4"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1856150622]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer5" unique_id=408855798]
+layout_mode = 2
+texture = ExtResource("21_d5nw7")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer5" unique_id=597378249]
+layout_mode = 2
+text = "5"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=146052596]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer6" unique_id=998644498]
+layout_mode = 2
+texture = ExtResource("22_o57li")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer6" unique_id=1587498666]
+layout_mode = 2
+text = "6"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=2056346178]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer7" unique_id=478649768]
+layout_mode = 2
+texture = ExtResource("23_mc7rj")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer7" unique_id=1861547452]
+layout_mode = 2
+text = "7"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1221826801]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer8" unique_id=1243287012]
+layout_mode = 2
+texture = ExtResource("24_d5nw7")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer8" unique_id=1950006985]
+layout_mode = 2
+text = "8"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1101203676]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer9" unique_id=660733405]
+layout_mode = 2
+texture = ExtResource("25_d5nw7")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer9" unique_id=798569438]
+layout_mode = 2
+text = "9"
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=533852435]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer10" unique_id=87089538]
+layout_mode = 2
+texture = ExtResource("26_cvsqo")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer10" unique_id=1146266454]
+layout_mode = 2
+text = "0"
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="UI/Control/Panel/VBoxContainer" unique_id=1049539347]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UI/Control/Panel/VBoxContainer/HBoxContainer11" unique_id=1240353568]
+layout_mode = 2
+texture = ExtResource("27_gxals")
+expand_mode = 3
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="UI/Control/Panel/VBoxContainer/HBoxContainer11" unique_id=2137960132]
+layout_mode = 2
+text = "-"
+
+[connection signal="mouse_entered" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18932" to="Board Manager/@Area2D@18932" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18932" to="Board Manager/@Area2D@18932" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18933" to="Board Manager/@Area2D@18933" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18933" to="Board Manager/@Area2D@18933" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18934" to="Board Manager/@Area2D@18934" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18934" to="Board Manager/@Area2D@18934" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18935" to="Board Manager/@Area2D@18935" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18935" to="Board Manager/@Area2D@18935" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18936" to="Board Manager/@Area2D@18936" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18936" to="Board Manager/@Area2D@18936" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18937" to="Board Manager/@Area2D@18937" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18937" to="Board Manager/@Area2D@18937" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18938" to="Board Manager/@Area2D@18938" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18938" to="Board Manager/@Area2D@18938" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18939" to="Board Manager/@Area2D@18939" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18939" to="Board Manager/@Area2D@18939" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18940" to="Board Manager/@Area2D@18940" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18940" to="Board Manager/@Area2D@18940" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18941" to="Board Manager/@Area2D@18941" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18941" to="Board Manager/@Area2D@18941" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18942" to="Board Manager/@Area2D@18942" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18942" to="Board Manager/@Area2D@18942" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18943" to="Board Manager/@Area2D@18943" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18943" to="Board Manager/@Area2D@18943" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18944" to="Board Manager/@Area2D@18944" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18944" to="Board Manager/@Area2D@18944" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18945" to="Board Manager/@Area2D@18945" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18945" to="Board Manager/@Area2D@18945" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18946" to="Board Manager/@Area2D@18946" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18946" to="Board Manager/@Area2D@18946" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18947" to="Board Manager/@Area2D@18947" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18947" to="Board Manager/@Area2D@18947" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18948" to="Board Manager/@Area2D@18948" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18948" to="Board Manager/@Area2D@18948" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18949" to="Board Manager/@Area2D@18949" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18949" to="Board Manager/@Area2D@18949" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18950" to="Board Manager/@Area2D@18950" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18950" to="Board Manager/@Area2D@18950" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18951" to="Board Manager/@Area2D@18951" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18951" to="Board Manager/@Area2D@18951" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18952" to="Board Manager/@Area2D@18952" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18952" to="Board Manager/@Area2D@18952" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18953" to="Board Manager/@Area2D@18953" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18953" to="Board Manager/@Area2D@18953" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18954" to="Board Manager/@Area2D@18954" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18954" to="Board Manager/@Area2D@18954" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18955" to="Board Manager/@Area2D@18955" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18955" to="Board Manager/@Area2D@18955" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18956" to="Board Manager/@Area2D@18956" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18956" to="Board Manager/@Area2D@18956" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18957" to="Board Manager/@Area2D@18957" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18957" to="Board Manager/@Area2D@18957" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18958" to="Board Manager/@Area2D@18958" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18958" to="Board Manager/@Area2D@18958" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18959" to="Board Manager/@Area2D@18959" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18959" to="Board Manager/@Area2D@18959" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18960" to="Board Manager/@Area2D@18960" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18960" to="Board Manager/@Area2D@18960" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18961" to="Board Manager/@Area2D@18961" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18961" to="Board Manager/@Area2D@18961" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18962" to="Board Manager/@Area2D@18962" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18962" to="Board Manager/@Area2D@18962" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18963" to="Board Manager/@Area2D@18963" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18963" to="Board Manager/@Area2D@18963" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18964" to="Board Manager/@Area2D@18964" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18964" to="Board Manager/@Area2D@18964" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18965" to="Board Manager/@Area2D@18965" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18965" to="Board Manager/@Area2D@18965" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18966" to="Board Manager/@Area2D@18966" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18966" to="Board Manager/@Area2D@18966" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18967" to="Board Manager/@Area2D@18967" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18967" to="Board Manager/@Area2D@18967" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18968" to="Board Manager/@Area2D@18968" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18968" to="Board Manager/@Area2D@18968" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18969" to="Board Manager/@Area2D@18969" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18969" to="Board Manager/@Area2D@18969" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18970" to="Board Manager/@Area2D@18970" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18970" to="Board Manager/@Area2D@18970" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18971" to="Board Manager/@Area2D@18971" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18971" to="Board Manager/@Area2D@18971" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Board Manager/@Area2D@18972" to="Board Manager/@Area2D@18972" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Board Manager/@Area2D@18972" to="Board Manager/@Area2D@18972" method="_on_mouse_exited"]
+[connection signal="pressed" from="UI/Control/Players Panel/VBoxContainer/Reset Board Button" to="Game Manager" method="reset_game"]
