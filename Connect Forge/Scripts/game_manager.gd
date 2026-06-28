@@ -4,11 +4,13 @@ extends Node
 # Stores settings but mostly directs the game's turn order and state machine.
 
 @export var starting_number_of_players:int = 2
+@export var minimum_number_of_players:int = 2
 @export var max_number_of_players:int = 6
+@export var default_player_names:Array[String] = ["Sam", "Jordan"]
 @export var player_colours:Array[ColorPalette]
 
 var number_of_players:int = 0
-var player_names:Array = []
+var player_names:Array[String] = []
 var current_turn_phase:Global.TURN_PHASE = Global.TURN_PHASE.NONE
 var current_player_id:int = 0
 
@@ -24,6 +26,7 @@ var winner_ui:VBoxContainer
 
 func _ready():
 	gather_groups()
+	setup_default_players()
 	setup_states()
 	start_game()
 
@@ -39,7 +42,78 @@ func gather_groups():
 	winner_ui = get_tree().get_first_node_in_group("winner ui")
 
 
+func setup_default_players() -> void:
+	player_names.clear()
+	number_of_players = 0
+	
+	var players_to_add:int = clamp(starting_number_of_players, minimum_number_of_players, max_number_of_players)
+	
+	for i in range(players_to_add):
+		add_player()
+
+
+func add_player() -> bool:
+	if number_of_players >= max_number_of_players:
+		return false
+	
+	var new_player_id:int = number_of_players
+	number_of_players += 1
+	player_names.append(get_default_player_name(new_player_id))
+	
+	return true
+
+
+func remove_player() -> bool:
+	if number_of_players <= minimum_number_of_players:
+		return false
+	
+	number_of_players -= 1
+	
+	if player_names.size() > number_of_players:
+		player_names.resize(number_of_players)
+	
+	if current_player_id >= number_of_players:
+		current_player_id = 0
+	
+	return true
+
+
+func set_player_name(player_id:int, new_name:String) -> bool:
+	if player_id < 0:
+		return false
+	
+	if player_id >= number_of_players:
+		return false
+	
+	if player_id >= player_names.size():
+		return false
+	
+	player_names[player_id] = new_name
+	
+	return true
+
+
+func get_player_name(player_id:int) -> String:
+	if player_id < 0:
+		return ""
+	
+	if player_id >= player_names.size():
+		return get_default_player_name(player_id)
+	
+	return player_names[player_id]
+
+
+func get_default_player_name(player_id:int) -> String:
+	if player_id >= 0 and player_id < default_player_names.size():
+		return default_player_names[player_id]
+	
+	return "Player " + str(player_id + 1)
+
+
 func start_game():
+	if number_of_players <= 0:
+		setup_default_players()
+	
 	start_turn(0)
 
 
@@ -54,6 +128,9 @@ func end_turn():
 
 
 func get_next_player_id()->int:
+	if number_of_players <= 0:
+		return 0
+	
 	var next_player_id:int = (current_player_id + 1) % number_of_players
 	return next_player_id
 

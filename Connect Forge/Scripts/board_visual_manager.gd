@@ -33,9 +33,23 @@ var post_batch_effects:Array[BoardVisualEffect] = []
 
 
 func is_busy() -> bool:
-	return visual_busy or visual_queue.is_empty() == false
-
-
+	if visual_busy:
+		return true
+	
+	if visual_queue.is_empty() == false:
+		return true
+	
+	if batching_moves:
+		return true
+	
+	if batched_parallel_effects.is_empty() == false:
+		return true
+	
+	if post_batch_effects.is_empty() == false:
+		return true
+	
+	return false
+	
 func queue_effect(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
 	if effect == null:
 		return

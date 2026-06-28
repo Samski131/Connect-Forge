@@ -2,67 +2,91 @@ extends VBoxContainer
 
 var game_manager:Node
 var player_entry_ui:PackedScene = load("res://Scenes/User Interface/Player Name Input.tscn")
-var player_entries = []
-@onready var number_of_players_label = $"Number of Players/number of players label"
-@onready var remove_player_button = $"Number of Players/-"
-@onready var add_player_button = $"Number of Players/+"
+var player_entries:Array[Node] = []
+
+@onready var number_of_players_label:Label = $"Number of Players/number of players label"
+@onready var remove_player_button:Button = $"Number of Players/-"
+@onready var add_player_button:Button = $"Number of Players/+"
+
 
 func _ready():
-	game_manager= get_tree().get_first_node_in_group("game manager")
-	remove_player_button.connect("pressed",remove_player)
-	add_player_button.connect("pressed",add_player)
-	
-	for i in range(game_manager.starting_number_of_players):
-		add_player()
-	
-	set_default_names()
-	
-func set_default_names():
-	if(game_manager.starting_number_of_players==2):
-		var text_edits=[]
-		for child in get_children(true):
-			for baby in child.get_children(true):
-				if(baby.name == "TextEdit"):
-					text_edits.push_back(baby)
-		text_edits[0].text = "Sam"
-		text_edits[1].text = "Jordan"
-		
-	update_players_names()
-	
+	game_manager = get_tree().get_first_node_in_group("game manager")
+	remove_player_button.pressed.connect(remove_player)
+	add_player_button.pressed.connect(add_player)
+	sync_from_game_manager()
+
+
 func add_player():
-	if(game_manager.number_of_players <game_manager.max_number_of_players):
-		var new_player_entry = player_entry_ui.instantiate()
-		new_player_entry.find_child("label").text = "Player: " + str(game_manager.number_of_players+1)
-		new_player_entry.find_child("TextEdit").connect("text_changed",update_players_names)
-		player_entries.push_back(new_player_entry)
-		game_manager.number_of_players +=1
-		add_child(new_player_entry)
-		update_players_names()
-		update_player_counter()
+	if game_manager == null:
+		return
 	
+	if game_manager.add_player():
+		sync_from_game_manager()
+
+
 func remove_player():
+	if game_manager == null:
+		return
+	
+	if game_manager.remove_player():
+		sync_from_game_manager()
 
-	if(game_manager.number_of_players >2):
-		player_entries.back().queue_free()
-		game_manager.number_of_players -=1
-		player_entries.pop_back()
-		update_players_names()
+
+func sync_from_game_manager() -> void:
+	clear_player_entries()
+	
+	if game_manager == null:
 		update_player_counter()
+		return
 	
-func update_players_names():
-	var text_edits=[]
-	for child in get_children(true):
-		for baby in child.get_children(true):
-			if(baby.name == "TextEdit"):
-				text_edits.push_back(baby)
+	for i in range(game_manager.number_of_players):
+		create_player_entry(i)
 	
-	for i in range(text_edits.size()):
-		if(game_manager.player_names.size()<=i):
-			game_manager.player_names.append("")
-		game_manager.player_names[i] = text_edits[i].text
+	update_player_counter()
+
+
+func clear_player_entries() -> void:
+	for entry in player_entries:
+		if entry == null:
+			continue
+		
+		if is_instance_valid(entry) == false:
+			continue
+		
+		entry.queue_free()
 	
-func update_player_counter():
+	player_entries.clear()
+
+
+func create_player_entry(player_id:int) -> void:
+	var new_player_entry:Node = player_entry_ui.instantiate()
+	var label:Label = new_player_entry.find_child("label") as Label
+	var text_edit:TextEdit = new_player_entry.find_child("TextEdit") as TextEdit
+	
+	if label != null:
+		label.text = "Player: " + str(player_id + 1)
+	
+	if text_edit != null:
+		text_edit.text = game_manager.get_player_name(player_id)
+		text_edit.text_changed.connect(_on_player_name_changed.bind(player_id, text_edit))
+	
+	player_entries.append(new_player_entry)
+	add_child(new_player_entry)
+
+
+func _on_player_name_changed(player_id:int, text_edit:TextEdit) -> void:
+	if game_manager == null:
+		return
+	
+	if text_edit == null:
+		return
+	
+	game_manager.set_player_name(player_id, text_edit.text)
+
+
+func update_player_counter() -> void:
+	if game_manager == null:
+		number_of_players_label.text = "0"
+		return
+	
 	number_of_players_label.text = str(game_manager.number_of_players)
-
-
-			
