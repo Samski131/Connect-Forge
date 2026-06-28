@@ -1,5 +1,5 @@
 extends Token
-#Pyre Token
+# Pyre Token
 
 func setup_special_token():
 	token_type = TokenType.PYRE
@@ -23,8 +23,5 @@ func _on_impact(context:Dictionary)->bool:
 	
 	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	deduct_charges(ability_cost)
-	
-	return board.destroy_token(landing_token)
-
 	
 	return board.destroy_token(landing_token)

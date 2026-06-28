@@ -63,11 +63,11 @@ func get_token(pos:Vector2i) -> Token:
 	
 	return state.get_token(pos)
 
-func get_adjacent_pos(x:int,y:int,direction:BoardSetting.DIRECTION) -> Vector2i:
-	return geometry.get_adjacent_pos(Vector2i(x, y), direction)
+func get_relative_adjacent_pos(x:int, y:int, direction:BoardSetting.RELATIVE_DIRECTION) -> Vector2i:
+	return geometry.get_relative_adjacent_pos(Vector2i(x, y), direction)
 
-func get_adjacent_token(x:int,y:int,direction:BoardSetting.DIRECTION) -> Token:
-	var check_token_pos := get_adjacent_pos(x, y, direction)
+func get_relative_adjacent_token(x:int, y:int, direction:BoardSetting.RELATIVE_DIRECTION) -> Token:
+	var check_token_pos:Vector2i = get_relative_adjacent_pos(x, y, direction)
 	return get_token(check_token_pos)
 	
 func add_token_to_board(new_token:Token, slot_pos:Vector2i) -> bool:
@@ -121,18 +121,18 @@ func get_positions_in_gravity_order() -> Array[Vector2i]:
 	return gravity_order.get_positions_in_gravity_order()
 
 func rotate_gravity(clockwise:bool = true) -> void:
-	var DIRECTION = BoardSetting.DIRECTION
-	var gravity_order:Array = [
-		DIRECTION.UP,
-		DIRECTION.RIGHT,
-		DIRECTION.DOWN,
-		DIRECTION.LEFT
+	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
+	var gravity_order:Array[BoardSetting.GRID_DIRECTION] = [
+		GRID_DIRECTION.UP,
+		GRID_DIRECTION.RIGHT,
+		GRID_DIRECTION.DOWN,
+		GRID_DIRECTION.LEFT
 	]
 	
 	var current_index:int = gravity_order.find(settings.gravity_direction)
 	
 	if current_index == -1:
-		set_gravity_direction(DIRECTION.DOWN)
+		set_gravity_direction(GRID_DIRECTION.DOWN)
 		return
 	
 	var step:int = 1
@@ -148,8 +148,9 @@ func rotate_gravity(clockwise:bool = true) -> void:
 	if new_index < 0:
 		new_index = gravity_order.size() - 1
 	
-	var new_direction:BoardSetting.DIRECTION = gravity_order[new_index]
+	var new_direction:BoardSetting.GRID_DIRECTION = gravity_order[new_index]
 	set_gravity_direction(new_direction)
+	
 
 func queue_all_tokens_gravity_visual_rotation() -> void:
 	if visuals == null:
@@ -197,7 +198,7 @@ func apply_all_tokens_gravity_visual_rotation() -> void:
 		
 		apply_token_gravity_visual(token)
 
-func set_gravity_direction(new_direction:BoardSetting.DIRECTION, animate_visual:bool = true) -> bool:
+func set_gravity_direction(new_direction:BoardSetting.GRID_DIRECTION, animate_visual:bool = true) -> bool:
 	if settings.gravity_direction == new_direction:
 		return false
 	
@@ -215,16 +216,16 @@ func set_gravity_direction(new_direction:BoardSetting.DIRECTION, animate_visual:
 	return true
 
 func get_gravity_visual_rotation_degrees() -> float:
-	var DIRECTION = BoardSetting.DIRECTION
+	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
 	
 	match settings.gravity_direction:
-		DIRECTION.DOWN:
+		GRID_DIRECTION.DOWN:
 			return 0.0
-		DIRECTION.LEFT:
+		GRID_DIRECTION.LEFT:
 			return 90.0
-		DIRECTION.UP:
+		GRID_DIRECTION.UP:
 			return 180.0
-		DIRECTION.RIGHT:
+		GRID_DIRECTION.RIGHT:
 			return 270.0
 	
 	return 0.0

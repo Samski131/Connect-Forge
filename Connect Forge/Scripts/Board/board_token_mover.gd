@@ -151,29 +151,29 @@ func is_token_supported(token:Token) -> bool:
 		return false
 	
 	var supported:bool = false
-	var DIRECTION = BoardSetting.DIRECTION
+	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
 	
 	match board.settings.gravity_direction:
-		DIRECTION.UP:
+		GRID_DIRECTION.UP:
 			if token.token_pos.y == 0:
 				supported = true
 		
-		DIRECTION.RIGHT:
+		GRID_DIRECTION.RIGHT:
 			if token.token_pos.x == board.settings.columns - 1:
 				supported = true
 		
-		DIRECTION.DOWN:
+		GRID_DIRECTION.DOWN:
 			if token.token_pos.y == board.settings.rows - 1:
 				supported = true
 		
-		DIRECTION.LEFT:
+		GRID_DIRECTION.LEFT:
 			if token.token_pos.x == 0:
 				supported = true
 	
-	var token_below:Token = board.get_adjacent_token(
+	var token_below:Token = board.get_relative_adjacent_token(
 		token.token_pos.x,
 		token.token_pos.y,
-		BoardSetting.DIRECTION.DOWN
+		BoardSetting.RELATIVE_DIRECTION.DOWN
 	)
 	
 	if token_below != null:

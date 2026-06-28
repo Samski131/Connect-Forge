@@ -1,5 +1,5 @@
 extends Token
-#Anvil Token
+# Anvil Token
 
 func setup_special_token():
 	token_type = TokenType.ANVIL
@@ -15,13 +15,13 @@ func _try_to_use_ability()->bool:
 func _on_land(_context:Dictionary)->bool:
 	if check_enough_charges(ability_cost) == false:
 		return false
-
-	var token_below = board.get_adjacent_token(token_pos.x, token_pos.y, BoardSetting.DIRECTION.DOWN)
-
+	
+	var token_below:Token = board.get_relative_adjacent_token(token_pos.x, token_pos.y, BoardSetting.RELATIVE_DIRECTION.DOWN)
+	
 	if token_below == null:
 		return false
-
-	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	
+	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	deduct_charges(ability_cost)
+	
 	return board.destroy_token(token_below)

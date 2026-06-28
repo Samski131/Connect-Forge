@@ -22,20 +22,20 @@ func get_fall_path(token:Token) -> Array[Vector2i]:
 	if is_instance_valid(token) == false:
 		return path
 	
-	var current_pos := token.token_pos
-	var next_pos := board.get_adjacent_pos(
+	var current_pos:Vector2i = token.token_pos
+	var next_pos:Vector2i = board.get_relative_adjacent_pos(
 		current_pos.x,
 		current_pos.y,
-		BoardSetting.DIRECTION.DOWN
+		BoardSetting.RELATIVE_DIRECTION.DOWN
 	)
 	
 	while board.is_position_in_bounds(next_pos) and board.get_token(next_pos) == null:
 		path.append(next_pos)
 		current_pos = next_pos
-		next_pos = board.get_adjacent_pos(
+		next_pos = board.get_relative_adjacent_pos(
 			current_pos.x,
 			current_pos.y,
-			BoardSetting.DIRECTION.DOWN
+			BoardSetting.RELATIVE_DIRECTION.DOWN
 		)
 	
 	return path
@@ -65,27 +65,23 @@ func find_first_pass_trigger_step(
 	}
 
 
-func has_passing_reactor_for_step(
-	moving_token:Token,
-	from_pos:Vector2i,
-	to_pos:Vector2i
-) -> bool:
-	var pass_checks := [
-		[BoardSetting.DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
-		[BoardSetting.DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
-		[BoardSetting.DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
-		[BoardSetting.DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
-	]
+func has_passing_reactor_for_step(moving_token:Token,from_pos:Vector2i,to_pos:Vector2i) -> bool:
+	var pass_checks:Array = [
+	[BoardSetting.RELATIVE_DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
+	[BoardSetting.RELATIVE_DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
+	[BoardSetting.RELATIVE_DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
+	[BoardSetting.RELATIVE_DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
+]
 	
 	for check in pass_checks:
-		var neighbour_direction:BoardSetting.DIRECTION = check[0]
+		var neighbour_direction:BoardSetting.RELATIVE_DIRECTION = check[0]
 		var keyword:Global.KEYWORD = check[1]
 		
-		var reacting_pos := board.get_adjacent_pos(
-			to_pos.x,
-			to_pos.y,
-			neighbour_direction
-		)
+		var reacting_pos:Vector2i = board.get_relative_adjacent_pos(
+	to_pos.x,
+	to_pos.y,
+	neighbour_direction
+)
 		
 		var reacting_token := board.get_token(reacting_pos)
 		
@@ -119,10 +115,10 @@ func resolve_impact_trigger_for_token(landing_token:Token) -> bool:
 	if landing_token.being_destroyed:
 		return false
 	
-	var token_below:Token = board.get_adjacent_token(
+	var token_below:Token = board.get_relative_adjacent_token(
 		landing_token.token_pos.x,
 		landing_token.token_pos.y,
-		BoardSetting.DIRECTION.DOWN
+		BoardSetting.RELATIVE_DIRECTION.DOWN
 	)
 	
 	if token_below == null:
@@ -172,22 +168,22 @@ func resolve_passing_triggers(
 	
 	var changed_board := false
 	
-	var pass_checks := [
-		[BoardSetting.DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
-		[BoardSetting.DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
-		[BoardSetting.DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
-		[BoardSetting.DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
+	var pass_checks:Array = [
+		[BoardSetting.RELATIVE_DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
+		[BoardSetting.RELATIVE_DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
+		[BoardSetting.RELATIVE_DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
+		[BoardSetting.RELATIVE_DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
 	]
 	
 	for check in pass_checks:
-		var neighbour_direction:BoardSetting.DIRECTION = check[0]
+		var neighbour_direction:BoardSetting.RELATIVE_DIRECTION = check[0]
 		var keyword:Global.KEYWORD = check[1]
 		
-		var reacting_pos := board.get_adjacent_pos(
-			to_pos.x,
-			to_pos.y,
-			neighbour_direction
-		)
+		var reacting_pos:Vector2i = board.get_relative_adjacent_pos(
+	to_pos.x,
+	to_pos.y,
+	neighbour_direction
+)
 		
 		var reacting_token := board.get_token(reacting_pos)
 		

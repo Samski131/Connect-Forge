@@ -17,7 +17,7 @@ func _try_to_use_ability() -> bool:
 
 
 func _on_land(_context:Dictionary) -> bool:
-	var token_below:Token = board.get_adjacent_token(token_pos.x, token_pos.y, BoardSetting.DIRECTION.DOWN)
+	var token_below:Token = board.get_relative_adjacent_token(token_pos.x, token_pos.y, BoardSetting.RELATIVE_DIRECTION.DOWN)
 	
 	if token_below == null:
 		return false
@@ -28,7 +28,6 @@ func _on_land(_context:Dictionary) -> bool:
 	]
 	
 	queue_visual_effect(ParallelVisualEffect.new(effects))
-	
 	landed = false
 	
 	return board.destroy_token(token_below)

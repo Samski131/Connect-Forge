@@ -1,5 +1,5 @@
 extends Token
-#Ramp Token
+# Ramp Token
 
 var wiggle_strength:float = 4.0
 var number_of_wiggles:int = 3
@@ -20,14 +20,14 @@ func _on_impact(_context:Dictionary) -> bool:
 	if landing_token == null:
 		return false
 	
-	var drop_direction:BoardSetting.DIRECTION
+	var drop_direction:BoardSetting.RELATIVE_DIRECTION
 	
 	if is_flipped:
-		drop_direction = BoardSetting.DIRECTION.RIGHT
+		drop_direction = BoardSetting.RELATIVE_DIRECTION.RIGHT
 	else:
-		drop_direction = BoardSetting.DIRECTION.LEFT
+		drop_direction = BoardSetting.RELATIVE_DIRECTION.LEFT
 	
-	var ramp_drop_off_pos:Vector2i = board.get_adjacent_pos(token_pos.x, token_pos.y, drop_direction)
+	var ramp_drop_off_pos:Vector2i = board.get_relative_adjacent_pos(token_pos.x, token_pos.y, drop_direction)
 	
 	if board.is_position_in_bounds(ramp_drop_off_pos) == false:
 		return false
@@ -36,10 +36,14 @@ func _on_impact(_context:Dictionary) -> bool:
 		return false
 	
 	var target_flipped_state:bool = not is_flipped
-
+	var flip_duration:float = 0.4
+	
+	if board.visuals != null:
+		flip_duration = board.visuals.flip_duration
+	
 	var effects:Array[BoardVisualEffect] = [
 		WiggleVisualEffect.new(self, wiggle_strength, number_of_wiggles),
-		TokenFlipVisualEffect.new(self, target_flipped_state, board.visuals.flip_duration)
+		TokenFlipVisualEffect.new(self, target_flipped_state, flip_duration)
 	]
 	
 	return board.move_token_on_board(landing_token, ramp_drop_off_pos, BoardVisualManager.MOVE_VISUAL.SLIDE, effects)

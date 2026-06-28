@@ -32,13 +32,10 @@ func _on_land(_context:Dictionary) -> bool:
 	
 	fake_player_id = chosen_player_id
 	has_transformed = true
-	
-	# Do not call deduct_charges().
-	# Chameleon spends its charge without darkening.
 	charges -= ability_cost
 	
 	if board.visuals != null:
-		board.visuals.queue_effect(ChameleonTransformVisualEffect.new(self, fake_player_id, transform_duration))
+		queue_visual_effect(ChameleonTransformVisualEffect.new(self, fake_player_id, transform_duration))
 	else:
 		prepare_chameleon_transform(fake_player_id)
 		set_chameleon_dissolve_progress(1.0)
@@ -63,6 +60,7 @@ func pick_fake_player_id() -> int:
 		return -1
 	
 	var random_index:int = randi_range(0, valid_player_ids.size() - 1)
+	
 	return valid_player_ids[random_index]
 
 

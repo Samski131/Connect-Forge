@@ -16,36 +16,32 @@ func _init(
 	slot_size = new_slot_size
 
 
-func get_adjacent_pos(
-	pos:Vector2i,
-	direction:BoardSetting.DIRECTION
-) -> Vector2i:
-	var grav_direction = settings.gravity_direction
-	var grav_vector = settings.get_direction_vector(grav_direction)
-	var right_vector = settings.get_right_relative_vector(grav_vector)
+func get_relative_adjacent_pos(pos:Vector2i, direction:BoardSetting.RELATIVE_DIRECTION) -> Vector2i:
+	var gravity_direction:BoardSetting.GRID_DIRECTION = settings.gravity_direction
+	var gravity_vector:Vector2i = settings.get_grid_direction_vector(gravity_direction)
+	var right_vector:Vector2i = settings.get_right_relative_vector(gravity_vector)
 	var offset:Vector2i = Vector2i.ZERO
-	var DIRECTION = BoardSetting.DIRECTION
+	var RELATIVE_DIRECTION = BoardSetting.RELATIVE_DIRECTION
 	
 	match direction:
-		DIRECTION.DOWN:
-			offset = grav_vector
-		DIRECTION.UP:
-			offset = -grav_vector
-		DIRECTION.RIGHT:
+		RELATIVE_DIRECTION.DOWN:
+			offset = gravity_vector
+		RELATIVE_DIRECTION.UP:
+			offset = -gravity_vector
+		RELATIVE_DIRECTION.RIGHT:
 			offset = right_vector
-		DIRECTION.LEFT:
+		RELATIVE_DIRECTION.LEFT:
 			offset = -right_vector
-		DIRECTION.UP_RIGHT:
-			offset = -grav_vector + right_vector
-		DIRECTION.UP_LEFT:
-			offset = -grav_vector - right_vector
-		DIRECTION.DOWN_RIGHT:
-			offset = grav_vector + right_vector
-		DIRECTION.DOWN_LEFT:
-			offset = grav_vector - right_vector
+		RELATIVE_DIRECTION.DOWN_RIGHT:
+			offset = gravity_vector + right_vector
+		RELATIVE_DIRECTION.DOWN_LEFT:
+			offset = gravity_vector - right_vector
+		RELATIVE_DIRECTION.UP_RIGHT:
+			offset = -gravity_vector + right_vector
+		RELATIVE_DIRECTION.UP_LEFT:
+			offset = -gravity_vector - right_vector
 	
 	return pos + offset
-
 
 func slot_to_global_position(slot_pos:Vector2i) -> Vector2:
 	var local_pos := Vector2(

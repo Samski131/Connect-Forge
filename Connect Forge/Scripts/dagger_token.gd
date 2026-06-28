@@ -27,7 +27,9 @@ func _on_pass_right(context:Dictionary)->bool:
 	
 	queue_visual_effect(TokenShimmerVisualEffect.new(self))
 	deduct_charges(ability_cost)
+	
 	return board.destroy_token(moving_token)
+
 
 func _can_trigger_keyword(keyword:Global.KEYWORD, context:Dictionary = {})->bool:
 	if keyword != Global.KEYWORD.ON_PASS_RIGHT:

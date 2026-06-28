@@ -1,12 +1,13 @@
 class_name Token
 extends Area2D
 
-#This script is the basic behaviour for every single token.
-#All common functions of tokens should go here, even if some special ones will override the functions.
+# This script is the basic behaviour for every single token.
+# All common functions of tokens should go here, even if some special ones will override the functions.
+
 enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO, ROTATE_GRAVITY, FAN, CHAMELEON}
 
-var player_id = 0
-var token_pos :Vector2i = Vector2i.ZERO
+var player_id:int = 0
+var token_pos:Vector2i = Vector2i.ZERO
 var resolved:bool = false
 var landed:bool = false
 var token_type
@@ -16,13 +17,18 @@ var being_destroyed:bool = false
 var is_flipped:bool = false
 var gravity_visual_rotation_degrees:float = 0.0
 
-@onready var sprites = $Sprites
-@onready var token_pos_label = $"Token_pos Label"
+@onready var sprites:Node2D = $Sprites
+@onready var token_pos_label:Label = $"Token_pos Label"
+
 var debug_label_visibility:bool = false
-@export var charges:int =0
-@export var ability_cost:int=0
+
+@export var charges:int = 0
+@export var ability_cost:int = 0
+
+
 func _ready():
 	pass
+
 
 func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	board = new_board
@@ -35,33 +41,41 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	setup_special_token()
 	recolor()
 	apply_starting_flipped_visual()
-
+	
 	if board != null:
 		board.apply_token_gravity_visual(self)
-
-	move_token_visual()
 	
+	move_token_visual()
+
+
 func setup_special_token():
 	token_type = TokenType.BASIC
 	keywords = []
-	
+
 
 func _try_to_use_ability()->bool:
-	return false #no ability to try it is always false
+	return false
+
+
+func move_token_visual():
+	if board == null:
+		return
 	
-func move_token_visual(): #move the token to the correct location on the board
 	global_position = board.slot_to_global_position(token_pos)
-	
+
+
 func reset_resolved():
 	landed = false
 	resolved = false
 
+
 func check_enough_charges(cost:int)->bool:
-	if charges >=cost:
+	if charges >= cost:
 		return true
-	else:
-		return false
-		
+	
+	return false
+
+
 func deduct_charges(cost:int):
 	if cost == 0:
 		return
@@ -69,33 +83,33 @@ func deduct_charges(cost:int):
 	charges -= cost
 	
 	if board != null and board.visuals != null:
-		var darken_effect:ColorTweenVisualEffect = ColorTweenVisualEffect.new(
-			self,
-			ColorTweenVisualEffect.MODE.DARKEN,
-			board.visuals.darken_amount,
-			board.visuals.darken_duration
-		)
-		
+		var darken_effect:ColorTweenVisualEffect = ColorTweenVisualEffect.new(self, ColorTweenVisualEffect.MODE.DARKEN, board.visuals.darken_amount, board.visuals.darken_duration)
 		queue_visual_effect(darken_effect)
 		return
 	
 	if sprites != null and sprites.has_method("darken"):
 		sprites.darken(0.3)
 
+
 func regain_charges(cost:int) -> void:
 	charges += cost
 	
 	if sprites != null and sprites.has_method("recolor"):
 		sprites.recolor(player_id)
-	
+
+
 func recolor():
-	sprites.recolor(player_id)
+	if sprites == null:
+		return
+	
+	if sprites.has_method("recolor"):
+		sprites.recolor(player_id)
+
 
 func debug_token():
 	token_pos_label.visible = debug_label_visibility
-	#token_pos_label.text = str(int(token_pos.x)) + "," + str(int(token_pos.y))
-	#token_pos_label.text =str(token_pos.y * board.settings.columns + token_pos.x)
 	token_pos_label.text = str(player_id)
+
 
 func has_keyword(keyword:Global.KEYWORD)->bool:
 	return keyword in keywords
@@ -122,7 +136,8 @@ func trigger_keyword(keyword:Global.KEYWORD, context:Dictionary) -> bool:
 			return _on_line_full(context)
 	
 	return false
-	
+
+
 func _on_land(_context:Dictionary)->bool:
 	return false
 
@@ -146,10 +161,11 @@ func _on_pass_above(_context:Dictionary)->bool:
 func _on_pass_below(_context:Dictionary)->bool:
 	return false
 
+
 func _on_line_full(_context:Dictionary)->bool:
 	return false
-	
-	
+
+
 func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->bool:
 	if has_keyword(keyword) == false:
 		return false
@@ -159,17 +175,13 @@ func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->boo
 	
 	return true
 
+
 func set_flipped(new_is_flipped:bool, animate:bool = true) -> void:
 	if is_flipped == new_is_flipped:
 		return
 	
 	if animate and board != null and board.visuals != null:
-		var flip_effect:TokenFlipVisualEffect = TokenFlipVisualEffect.new(
-			self,
-			new_is_flipped,
-			board.visuals.flip_duration
-		)
-		
+		var flip_effect:TokenFlipVisualEffect = TokenFlipVisualEffect.new(self, new_is_flipped, board.visuals.flip_duration)
 		queue_visual_effect(flip_effect)
 		return
 	
@@ -179,9 +191,17 @@ func set_flipped(new_is_flipped:bool, animate:bool = true) -> void:
 		sprites.set_flipped_visual(is_flipped)
 
 
-func apply_flipped_visual() -> void:
-	if sprites != null and sprites.has_method("set_flipped_visual"):
+func toggle_flipped(animate:bool = true) -> void:
+	set_flipped(not is_flipped, animate)
+
+
+func apply_starting_flipped_visual() -> void:
+	if sprites == null:
+		return
+	
+	if sprites.has_method("set_flipped_visual"):
 		sprites.set_flipped_visual(is_flipped)
+
 
 func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
 	if effect == null:
@@ -194,10 +214,3 @@ func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) 
 		return
 	
 	board.visuals.queue_effect(effect, batch_parallel)
-
-func apply_starting_flipped_visual() -> void:
-	if sprites == null:
-		return
-	
-	if sprites.has_method("set_flipped_visual"):
-		sprites.set_flipped_visual(is_flipped)

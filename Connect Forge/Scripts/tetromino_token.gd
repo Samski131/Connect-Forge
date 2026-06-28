@@ -20,21 +20,22 @@ func _on_line_full(_context:Dictionary) -> bool:
 
 
 func _try_clear_full_line() -> bool:
-	var line_tokens := _get_full_line_tokens()
+	var line_tokens:Array[Token] = _get_full_line_tokens()
 	
 	if line_tokens.is_empty():
 		return false
 	
 	_clear_line_tokens(line_tokens)
+	
 	return true
 
 
 func _get_full_line_tokens() -> Array[Token]:
 	var line_tokens:Array[Token] = []
-	var positions := _get_line_positions()
+	var positions:Array[Vector2i] = _get_line_positions()
 	
 	for pos in positions:
-		var token := board.get_token(pos)
+		var token:Token = board.get_token(pos)
 		
 		if token == null:
 			return []
@@ -52,18 +53,19 @@ func _get_full_line_tokens() -> Array[Token]:
 
 func _get_line_positions() -> Array[Vector2i]:
 	var positions:Array[Vector2i] = []
-	var DIRECTION = BoardSetting.DIRECTION
+	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
 	
 	match board.settings.gravity_direction:
-		DIRECTION.DOWN, DIRECTION.UP:
+		GRID_DIRECTION.DOWN, GRID_DIRECTION.UP:
 			for x in range(board.settings.columns):
 				positions.append(Vector2i(x, token_pos.y))
 		
-		DIRECTION.LEFT, DIRECTION.RIGHT:
+		GRID_DIRECTION.LEFT, GRID_DIRECTION.RIGHT:
 			for y in range(board.settings.rows):
 				positions.append(Vector2i(token_pos.x, y))
 	
 	return positions
+
 
 func _clear_line_tokens(line_tokens:Array[Token]) -> void:
 	for token in line_tokens:

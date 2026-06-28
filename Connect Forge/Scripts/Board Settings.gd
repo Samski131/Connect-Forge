@@ -1,32 +1,55 @@
 class_name BoardSetting
-#Stores various bits of board information
+# Stores board configuration and direction helpers.
 
-enum DIRECTION {UP, RIGHT, DOWN, LEFT, UP_RIGHT,UP_LEFT,DOWN_RIGHT, DOWN_LEFT}
+enum GRID_DIRECTION {
+	UP,
+	RIGHT,
+	DOWN,
+	LEFT,
+	UP_RIGHT,
+	UP_LEFT,
+	DOWN_RIGHT,
+	DOWN_LEFT
+}
 
-var gravity_direction = DIRECTION.DOWN
-var rows:int =0
-var columns:int=0
-var tokens_to_win:int = 4 #how many tokens must be adjacent to win.
+enum RELATIVE_DIRECTION {
+	DOWN,
+	RIGHT,
+	UP,
+	LEFT,
+	DOWN_RIGHT,
+	DOWN_LEFT,
+	UP_RIGHT,
+	UP_LEFT
+}
 
-func get_direction_vector(direction:DIRECTION)->Vector2i:
+var gravity_direction:GRID_DIRECTION = GRID_DIRECTION.DOWN
+var rows:int = 0
+var columns:int = 0
+var tokens_to_win:int = 4
+
+
+func get_grid_direction_vector(direction:GRID_DIRECTION) -> Vector2i:
 	match direction:
-		DIRECTION.UP:
+		GRID_DIRECTION.UP:
 			return Vector2i(0, -1)
-		DIRECTION.RIGHT:
+		GRID_DIRECTION.RIGHT:
 			return Vector2i(1, 0)
-		DIRECTION.DOWN:
+		GRID_DIRECTION.DOWN:
 			return Vector2i(0, 1)
-		DIRECTION.LEFT:
+		GRID_DIRECTION.LEFT:
 			return Vector2i(-1, 0)
-		DIRECTION.UP_RIGHT:
+		GRID_DIRECTION.UP_RIGHT:
 			return Vector2i(1, -1)
-		DIRECTION.UP_LEFT:
+		GRID_DIRECTION.UP_LEFT:
 			return Vector2i(-1, -1)
-		DIRECTION.DOWN_RIGHT:
+		GRID_DIRECTION.DOWN_RIGHT:
 			return Vector2i(1, 1)
-		DIRECTION.DOWN_LEFT:
+		GRID_DIRECTION.DOWN_LEFT:
 			return Vector2i(-1, 1)
+	
 	return Vector2i.ZERO
 
-func get_right_relative_vector(direction_vector:Vector2i)->Vector2i:
+
+func get_right_relative_vector(direction_vector:Vector2i) -> Vector2i:
 	return Vector2i(direction_vector.y, -direction_vector.x)

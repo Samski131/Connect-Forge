@@ -15,7 +15,7 @@ func _try_to_use_ability() -> bool:
 
 
 func _try_push_tokens() -> bool:
-	var push_direction:BoardSetting.DIRECTION = _get_push_direction()
+	var push_direction:BoardSetting.RELATIVE_DIRECTION = _get_push_direction()
 	var check_positions:Array[Vector2i] = _get_positions_in_range(push_direction)
 	var moved_tokens:Array[Token] = []
 	
@@ -41,11 +41,7 @@ func _try_push_tokens() -> bool:
 		if pushed_token.being_destroyed:
 			continue
 		
-		var target_pos:Vector2i = board.get_adjacent_pos(
-			pushed_token.token_pos.x,
-			pushed_token.token_pos.y,
-			push_direction
-		)
+		var target_pos:Vector2i = board.get_relative_adjacent_pos(pushed_token.token_pos.x, pushed_token.token_pos.y, push_direction)
 		
 		if board.is_position_in_bounds(target_pos) == false:
 			continue
@@ -87,23 +83,19 @@ func _resolve_push_impact(moved_token:Token) -> void:
 	board.trigger_resolver.resolve_impact_trigger_for_token(moved_token)
 
 
-func _get_push_direction() -> BoardSetting.DIRECTION:
+func _get_push_direction() -> BoardSetting.RELATIVE_DIRECTION:
 	if is_flipped:
-		return BoardSetting.DIRECTION.LEFT
+		return BoardSetting.RELATIVE_DIRECTION.LEFT
 	
-	return BoardSetting.DIRECTION.RIGHT
+	return BoardSetting.RELATIVE_DIRECTION.RIGHT
 
 
-func _get_positions_in_range(push_direction:BoardSetting.DIRECTION) -> Array[Vector2i]:
+func _get_positions_in_range(push_direction:BoardSetting.RELATIVE_DIRECTION) -> Array[Vector2i]:
 	var positions:Array[Vector2i] = []
 	var current_pos:Vector2i = token_pos
 	
 	for i in range(fan_range):
-		current_pos = board.get_adjacent_pos(
-			current_pos.x,
-			current_pos.y,
-			push_direction
-		)
+		current_pos = board.get_relative_adjacent_pos(current_pos.x, current_pos.y, push_direction)
 		
 		if board.is_position_in_bounds(current_pos) == false:
 			break
