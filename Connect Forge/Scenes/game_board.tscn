@@ -24,6 +24,8 @@
 [ext_resource type="Texture2D" uid="uid://bam4msago30gp" path="res://Assets/User Interface/Styles/Pause.png" id="20_sygxm"]
 [ext_resource type="StyleBox" uid="uid://bdexh1k6igmq2" path="res://Assets/User Interface/Styles/Blue panel.stylebox" id="20_y1aqv"]
 [ext_resource type="PackedScene" uid="uid://b32dnof88lxri" path="res://Scenes/User Interface/Token Tray/player_token_tray.tscn" id="21_8pmni"]
+[ext_resource type="Script" uid="uid://bu1xm0yun08fs" path="res://Scripts/User Interface/turn_counter_ui_label.gd" id="22_547an"]
+[ext_resource type="Script" uid="uid://d2jplsmib7346" path="res://Scripts/User Interface/time_counter_ui_label.gd" id="23_02cq3"]
 [ext_resource type="Script" uid="uid://dg3fsfahrpr70" path="res://Scripts/User Interface/current_player_ui_label.gd" id="23_iilvt"]
 [ext_resource type="Script" uid="uid://cfpun1657r1aw" path="res://Scripts/User Interface/Token Trays/player_token_trays_ui.gd" id="23_o6jnn"]
 [ext_resource type="Script" uid="uid://drml0evch0llu" path="res://Scripts/debug mouse position.gd" id="23_y1aqv"]
@@ -237,59 +239,62 @@ texture_normal = ExtResource("18_y1aqv")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer" unique_id=1641123479]
+[node name="Center Scoreboard" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer" unique_id=1641123479]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="PanelContainer" type="PanelContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer" unique_id=22012604]
+[node name="PanelContainer" type="PanelContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard" unique_id=22012604]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = ExtResource("20_y1aqv")
 
-[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer" unique_id=1743050165]
+[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer" unique_id=1743050165]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer" unique_id=497995455]
+[node name="HBoxContainer" type="HBoxContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer" unique_id=497995455]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="VSeparator4" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=140079081]
+[node name="VSeparator4" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=140079081]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_y1aqv")
 
-[node name="Turn Counter" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=491089293]
+[node name="Turn Counter" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=491089293]
 layout_mode = 2
 text = "Turn 1"
 label_settings = SubResource("LabelSettings_8pmni")
 horizontal_alignment = 1
+script = ExtResource("22_547an")
 
-[node name="VSeparator" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1391797036]
+[node name="VSeparator" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=1391797036]
 layout_mode = 2
 
-[node name="Time Counter" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1935816332]
+[node name="Time Counter" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=1935816332]
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "00:00"
 label_settings = SubResource("LabelSettings_8pmni")
 horizontal_alignment = 1
+script = ExtResource("23_02cq3")
 
-[node name="VSeparator2" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1635038459]
+[node name="VSeparator2" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=1635038459]
 layout_mode = 2
 
-[node name="Time Counter2" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1842529506]
+[node name="Time Counter2" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=1842529506]
 layout_mode = 2
 text = "Score:   1:0"
 label_settings = SubResource("LabelSettings_8pmni")
 horizontal_alignment = 1
 
-[node name="VSeparator3" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=2084845988]
+[node name="VSeparator3" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=2084845988]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_y1aqv")
 
@@ -380,6 +385,7 @@ size_flags_vertical = 3
 theme_override_constants/margin_top = 8
 
 [node name="Token Tray Scroll (Scroll)" type="ScrollContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer" unique_id=1223870353]
+clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -403,85 +409,85 @@ horizontal_alignment = 1
 
 [connection signal="mouse_entered" from="Game Board/Board Manager/Slot" to="Game Board/Board Manager/Slot" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Game Board/Board Manager/Slot" to="Game Board/Board Manager/Slot" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18934" to="Game Board/Board Manager/@Area2D@18934" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18934" to="Game Board/Board Manager/@Area2D@18934" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18935" to="Game Board/Board Manager/@Area2D@18935" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18935" to="Game Board/Board Manager/@Area2D@18935" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18936" to="Game Board/Board Manager/@Area2D@18936" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18936" to="Game Board/Board Manager/@Area2D@18936" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18937" to="Game Board/Board Manager/@Area2D@18937" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18937" to="Game Board/Board Manager/@Area2D@18937" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18938" to="Game Board/Board Manager/@Area2D@18938" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18938" to="Game Board/Board Manager/@Area2D@18938" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18939" to="Game Board/Board Manager/@Area2D@18939" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18939" to="Game Board/Board Manager/@Area2D@18939" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18940" to="Game Board/Board Manager/@Area2D@18940" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18940" to="Game Board/Board Manager/@Area2D@18940" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18941" to="Game Board/Board Manager/@Area2D@18941" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18941" to="Game Board/Board Manager/@Area2D@18941" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18942" to="Game Board/Board Manager/@Area2D@18942" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18942" to="Game Board/Board Manager/@Area2D@18942" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18943" to="Game Board/Board Manager/@Area2D@18943" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18943" to="Game Board/Board Manager/@Area2D@18943" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18944" to="Game Board/Board Manager/@Area2D@18944" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18944" to="Game Board/Board Manager/@Area2D@18944" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18945" to="Game Board/Board Manager/@Area2D@18945" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18945" to="Game Board/Board Manager/@Area2D@18945" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18946" to="Game Board/Board Manager/@Area2D@18946" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18946" to="Game Board/Board Manager/@Area2D@18946" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18947" to="Game Board/Board Manager/@Area2D@18947" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18947" to="Game Board/Board Manager/@Area2D@18947" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18948" to="Game Board/Board Manager/@Area2D@18948" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18948" to="Game Board/Board Manager/@Area2D@18948" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18949" to="Game Board/Board Manager/@Area2D@18949" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18949" to="Game Board/Board Manager/@Area2D@18949" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18950" to="Game Board/Board Manager/@Area2D@18950" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18950" to="Game Board/Board Manager/@Area2D@18950" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18951" to="Game Board/Board Manager/@Area2D@18951" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18951" to="Game Board/Board Manager/@Area2D@18951" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18952" to="Game Board/Board Manager/@Area2D@18952" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18952" to="Game Board/Board Manager/@Area2D@18952" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18953" to="Game Board/Board Manager/@Area2D@18953" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18953" to="Game Board/Board Manager/@Area2D@18953" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18954" to="Game Board/Board Manager/@Area2D@18954" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18954" to="Game Board/Board Manager/@Area2D@18954" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18955" to="Game Board/Board Manager/@Area2D@18955" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18955" to="Game Board/Board Manager/@Area2D@18955" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18956" to="Game Board/Board Manager/@Area2D@18956" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18956" to="Game Board/Board Manager/@Area2D@18956" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18957" to="Game Board/Board Manager/@Area2D@18957" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18957" to="Game Board/Board Manager/@Area2D@18957" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18958" to="Game Board/Board Manager/@Area2D@18958" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18958" to="Game Board/Board Manager/@Area2D@18958" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18959" to="Game Board/Board Manager/@Area2D@18959" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18959" to="Game Board/Board Manager/@Area2D@18959" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18960" to="Game Board/Board Manager/@Area2D@18960" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18960" to="Game Board/Board Manager/@Area2D@18960" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18961" to="Game Board/Board Manager/@Area2D@18961" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18961" to="Game Board/Board Manager/@Area2D@18961" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18962" to="Game Board/Board Manager/@Area2D@18962" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18962" to="Game Board/Board Manager/@Area2D@18962" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18963" to="Game Board/Board Manager/@Area2D@18963" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18963" to="Game Board/Board Manager/@Area2D@18963" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18964" to="Game Board/Board Manager/@Area2D@18964" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18964" to="Game Board/Board Manager/@Area2D@18964" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18965" to="Game Board/Board Manager/@Area2D@18965" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18965" to="Game Board/Board Manager/@Area2D@18965" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18966" to="Game Board/Board Manager/@Area2D@18966" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18966" to="Game Board/Board Manager/@Area2D@18966" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18967" to="Game Board/Board Manager/@Area2D@18967" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18967" to="Game Board/Board Manager/@Area2D@18967" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18968" to="Game Board/Board Manager/@Area2D@18968" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18968" to="Game Board/Board Manager/@Area2D@18968" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18969" to="Game Board/Board Manager/@Area2D@18969" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18969" to="Game Board/Board Manager/@Area2D@18969" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18970" to="Game Board/Board Manager/@Area2D@18970" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18970" to="Game Board/Board Manager/@Area2D@18970" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18971" to="Game Board/Board Manager/@Area2D@18971" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18971" to="Game Board/Board Manager/@Area2D@18971" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18972" to="Game Board/Board Manager/@Area2D@18972" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18972" to="Game Board/Board Manager/@Area2D@18972" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18973" to="Game Board/Board Manager/@Area2D@18973" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18973" to="Game Board/Board Manager/@Area2D@18973" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18974" to="Game Board/Board Manager/@Area2D@18974" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18974" to="Game Board/Board Manager/@Area2D@18974" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36937" to="Game Board/Board Manager/@Area2D@36937" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36937" to="Game Board/Board Manager/@Area2D@36937" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36938" to="Game Board/Board Manager/@Area2D@36938" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36938" to="Game Board/Board Manager/@Area2D@36938" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36939" to="Game Board/Board Manager/@Area2D@36939" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36939" to="Game Board/Board Manager/@Area2D@36939" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36940" to="Game Board/Board Manager/@Area2D@36940" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36940" to="Game Board/Board Manager/@Area2D@36940" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36941" to="Game Board/Board Manager/@Area2D@36941" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36941" to="Game Board/Board Manager/@Area2D@36941" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36942" to="Game Board/Board Manager/@Area2D@36942" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36942" to="Game Board/Board Manager/@Area2D@36942" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36943" to="Game Board/Board Manager/@Area2D@36943" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36943" to="Game Board/Board Manager/@Area2D@36943" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36944" to="Game Board/Board Manager/@Area2D@36944" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36944" to="Game Board/Board Manager/@Area2D@36944" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36945" to="Game Board/Board Manager/@Area2D@36945" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36945" to="Game Board/Board Manager/@Area2D@36945" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36946" to="Game Board/Board Manager/@Area2D@36946" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36946" to="Game Board/Board Manager/@Area2D@36946" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36947" to="Game Board/Board Manager/@Area2D@36947" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36947" to="Game Board/Board Manager/@Area2D@36947" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36948" to="Game Board/Board Manager/@Area2D@36948" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36948" to="Game Board/Board Manager/@Area2D@36948" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36949" to="Game Board/Board Manager/@Area2D@36949" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36949" to="Game Board/Board Manager/@Area2D@36949" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36950" to="Game Board/Board Manager/@Area2D@36950" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36950" to="Game Board/Board Manager/@Area2D@36950" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36951" to="Game Board/Board Manager/@Area2D@36951" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36951" to="Game Board/Board Manager/@Area2D@36951" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36952" to="Game Board/Board Manager/@Area2D@36952" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36952" to="Game Board/Board Manager/@Area2D@36952" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36953" to="Game Board/Board Manager/@Area2D@36953" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36953" to="Game Board/Board Manager/@Area2D@36953" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36954" to="Game Board/Board Manager/@Area2D@36954" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36954" to="Game Board/Board Manager/@Area2D@36954" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36955" to="Game Board/Board Manager/@Area2D@36955" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36955" to="Game Board/Board Manager/@Area2D@36955" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36956" to="Game Board/Board Manager/@Area2D@36956" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36956" to="Game Board/Board Manager/@Area2D@36956" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36957" to="Game Board/Board Manager/@Area2D@36957" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36957" to="Game Board/Board Manager/@Area2D@36957" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36958" to="Game Board/Board Manager/@Area2D@36958" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36958" to="Game Board/Board Manager/@Area2D@36958" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36959" to="Game Board/Board Manager/@Area2D@36959" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36959" to="Game Board/Board Manager/@Area2D@36959" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36960" to="Game Board/Board Manager/@Area2D@36960" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36960" to="Game Board/Board Manager/@Area2D@36960" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36961" to="Game Board/Board Manager/@Area2D@36961" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36961" to="Game Board/Board Manager/@Area2D@36961" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36962" to="Game Board/Board Manager/@Area2D@36962" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36962" to="Game Board/Board Manager/@Area2D@36962" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36963" to="Game Board/Board Manager/@Area2D@36963" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36963" to="Game Board/Board Manager/@Area2D@36963" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36964" to="Game Board/Board Manager/@Area2D@36964" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36964" to="Game Board/Board Manager/@Area2D@36964" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36965" to="Game Board/Board Manager/@Area2D@36965" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36965" to="Game Board/Board Manager/@Area2D@36965" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36966" to="Game Board/Board Manager/@Area2D@36966" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36966" to="Game Board/Board Manager/@Area2D@36966" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36967" to="Game Board/Board Manager/@Area2D@36967" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36967" to="Game Board/Board Manager/@Area2D@36967" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36968" to="Game Board/Board Manager/@Area2D@36968" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36968" to="Game Board/Board Manager/@Area2D@36968" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36969" to="Game Board/Board Manager/@Area2D@36969" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36969" to="Game Board/Board Manager/@Area2D@36969" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36970" to="Game Board/Board Manager/@Area2D@36970" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36970" to="Game Board/Board Manager/@Area2D@36970" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36971" to="Game Board/Board Manager/@Area2D@36971" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36971" to="Game Board/Board Manager/@Area2D@36971" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36972" to="Game Board/Board Manager/@Area2D@36972" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36972" to="Game Board/Board Manager/@Area2D@36972" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36973" to="Game Board/Board Manager/@Area2D@36973" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36973" to="Game Board/Board Manager/@Area2D@36973" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36974" to="Game Board/Board Manager/@Area2D@36974" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36974" to="Game Board/Board Manager/@Area2D@36974" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36975" to="Game Board/Board Manager/@Area2D@36975" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36975" to="Game Board/Board Manager/@Area2D@36975" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36976" to="Game Board/Board Manager/@Area2D@36976" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36976" to="Game Board/Board Manager/@Area2D@36976" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@36977" to="Game Board/Board Manager/@Area2D@36977" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@36977" to="Game Board/Board Manager/@Area2D@36977" method="_on_mouse_exited"]

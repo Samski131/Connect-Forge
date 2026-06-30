@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dqgswqs7ya38d"]
 
 [ext_resource type="Script" uid="uid://c0cywxa4o1tl1" path="res://Scripts/User Interface/Token Trays/token_tray_item_ui.gd" id="1_nkme4"]
-[ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="2_l8c5t"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="2_l8c5t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_odcin"]
 bg_color = Color(0.92156863, 0.88235295, 0.8039216, 1)
@@ -54,17 +54,14 @@ layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="Icon (Texture Rect)" type="TextureRect" parent="Margin/Root (Vbox)/Icon Control" unique_id=1242793369]
+[node name="Token Visual Display" type="Control" parent="Margin/Root (Vbox)/Icon Control" unique_id=1939147189]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("2_l8c5t")
-expand_mode = 1
-stretch_mode = 5
+script = ExtResource("2_l8c5t")
 
 [node name="Count Badge Panel" type="PanelContainer" parent="Margin/Root (Vbox)/Icon Control" unique_id=388965093]
 layout_mode = 1

@@ -15,7 +15,9 @@ func _ready():
 	game_manager = get_tree().get_first_node_in_group("game manager")
 	gather_sprites()
 	setup_shimmer_materials()
-	recolor(game_manager.current_player_id)
+	
+	if game_manager != null:
+		recolor(game_manager.current_player_id)
 
 
 func recolor(player_id:int):

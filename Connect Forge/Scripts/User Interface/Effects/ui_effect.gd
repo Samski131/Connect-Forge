@@ -36,6 +36,17 @@ func _has_valid_target() -> bool:
 	return true
 
 
+func _enable_offset_transform(control:Control, visual_only:bool = true) -> void:
+	if control == null:
+		return
+	
+	if is_instance_valid(control) == false:
+		return
+	
+	control.offset_transform_enabled = true
+	control.offset_transform_visual_only = visual_only
+
+
 func _finish() -> void:
 	if _finished_callback.is_valid():
 		_finished_callback.call()

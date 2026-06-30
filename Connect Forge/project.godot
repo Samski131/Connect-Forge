@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="4 In a row"
 run/main_scene="uid://bfute7mee47il"
-config/features=PackedStringArray("4.6", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -38,6 +38,7 @@ enabled=PackedStringArray("res://addons/flatten_for_llm/plugin.cfg", "res://addo
 [gui]
 
 theme/default_font_multichannel_signed_distance_field=true
+theme/custom="uid://c50qjd772br1q"
 theme/custom_font="uid://dehtpv13sux26"
 
 [input]

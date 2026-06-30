@@ -4,17 +4,23 @@ extends Node
 # Stores settings but mostly directs the game's turn order and state machine.
 signal current_player_changed(player_id:int)
 signal player_names_changed
+signal turn_number_changed(turn_number:int)
+signal game_time_changed(total_seconds:int)
 
 @export var starting_number_of_players:int = 2
 @export var minimum_number_of_players:int = 2
 @export var max_number_of_players:int = 6
-@export var default_player_names:Array[String] = ["Sam", "Jack", "Ross"]
+@export var default_player_names:Array[String] = ["Sam", "Jordan", "Harry"]
 @export var player_colours:Array[ColorPalette]
 
 var number_of_players:int = 0
 var player_names:Array[String] = []
 var current_turn_phase:Global.TURN_PHASE = Global.TURN_PHASE.NONE
 var current_player_id:int = 0
+var current_turn_number:int = 1
+var elapsed_game_time:float = 0.0
+var elapsed_game_seconds:int = 0
+var game_timer_running:bool = false
 
 @onready var placement_state:Node = $"Placement State"
 @onready var action_state:Node = $"Action State"
@@ -131,6 +137,10 @@ func get_default_player_name(player_id:int) -> String:
 
 
 func start_game():
+	current_turn_number = 1
+	turn_number_changed.emit(current_turn_number)
+	reset_game_timer()
+	start_game_timer()
 	start_turn(0)
 
 
@@ -140,9 +150,23 @@ func start_turn(player_id:int):
 	placement_state.enter_state()
 
 func end_turn():
-	current_player_id = get_next_player_id()
-	start_turn(current_player_id)
+	var next_player_id:int = get_next_player_id()
+	
+	if has_completed_full_turn(next_player_id):
+		current_turn_number += 1
+		turn_number_changed.emit(current_turn_number)
+	
+	start_turn(next_player_id)
 
+
+func has_completed_full_turn(next_player_id:int) -> bool:
+	if number_of_players <= 1:
+		return true
+	
+	if next_player_id == 0 and current_player_id != 0:
+		return true
+	
+	return false
 
 func get_next_player_id()->int:
 	if number_of_players <= 0:
@@ -152,7 +176,8 @@ func get_next_player_id()->int:
 	return next_player_id
 
 
-func _process(_delta):
+func _process(delta:float) -> void:
+	update_game_timer(delta)
 	debug_gravity_changes()
 	
 	match current_turn_phase:
@@ -168,7 +193,6 @@ func reset_game():
 	board_builder.rebuild_board()
 	winner_ui.clear_winner()
 	start_game()
-
 
 func debug_gravity_changes():
 	var changed:bool = false
@@ -220,3 +244,48 @@ func rebuild_player_trays() -> void:
 		return
 	
 	player_token_trays_ui.rebuild_trays()
+
+func reset_game_timer() -> void:
+	elapsed_game_time = 0.0
+	elapsed_game_seconds = 0
+	game_time_changed.emit(elapsed_game_seconds)
+
+
+func start_game_timer() -> void:
+	game_timer_running = true
+
+
+func stop_game_timer() -> void:
+	game_timer_running = false
+	game_time_changed.emit(elapsed_game_seconds)
+
+
+func update_game_timer(delta:float) -> void:
+	if game_timer_running == false:
+		return
+	
+	if current_turn_phase == Global.TURN_PHASE.GAME_OVER:
+		stop_game_timer()
+		return
+	
+	elapsed_game_time += delta
+	
+	var new_elapsed_seconds:int = int(floor(elapsed_game_time))
+	
+	if new_elapsed_seconds == elapsed_game_seconds:
+		return
+	
+	elapsed_game_seconds = new_elapsed_seconds
+	game_time_changed.emit(elapsed_game_seconds)
+
+
+func get_elapsed_time_text() -> String:
+	return format_seconds_as_minutes_seconds(elapsed_game_seconds)
+
+
+func format_seconds_as_minutes_seconds(total_seconds:int) -> String:
+	var used_seconds:int = max(total_seconds, 0)
+	var minutes:int = int(used_seconds / 60)
+	var seconds:int = used_seconds % 60
+	
+	return "%02d:%02d" % [minutes, seconds]

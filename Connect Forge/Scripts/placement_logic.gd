@@ -35,30 +35,7 @@ func exit_state():
 
 
 func process_state():
-	move_placement_token()
-	
-	if Input.is_action_just_pressed("action_1"):
-		place_attempt(TokenLibrary.TokenType.BASIC)
-	elif Input.is_action_just_pressed("action_2"):
-		place_attempt(TokenLibrary.TokenType.ANVIL)
-	elif Input.is_action_just_pressed("action_3"):
-		place_attempt(TokenLibrary.TokenType.PYRE)
-	elif Input.is_action_just_pressed("action_4"):
-		place_attempt(TokenLibrary.TokenType.RAMP)
-	elif Input.is_action_just_pressed("action_5"):
-		place_attempt(TokenLibrary.TokenType.DAGGER)
-	elif Input.is_action_just_pressed("action_6"):
-		place_attempt(TokenLibrary.TokenType.BOMB)
-	elif Input.is_action_just_pressed("action_7"):
-		place_attempt(TokenLibrary.TokenType.DRILL)
-	elif Input.is_action_just_pressed("action_8"):
-		place_attempt(TokenLibrary.TokenType.TETROMINO)
-	elif Input.is_action_just_pressed("action_9"):
-		place_attempt(TokenLibrary.TokenType.ROTATE_GRAVITY)
-	elif Input.is_action_just_pressed("action_0"):
-		place_attempt(TokenLibrary.TokenType.FAN)
-	elif Input.is_action_just_pressed("action_-"):
-		place_attempt(TokenLibrary.TokenType.CHAMELEON)
+	pass
 
 
 func place_attempt(token_type:int) -> void:
@@ -71,23 +48,6 @@ func place_attempt(token_type:int) -> void:
 	var slot_pos:Vector2i = board.hovered_slot.slot_position
 	try_place_dragged_token(token_type, slot_pos, false)
 
-
-func move_placement_token():
-	if current_placement_token == null:
-		return
-	
-	if board.hovered_slot == null:
-		current_placement_token.visible = false
-		return
-	
-	var valid_slot_type:Global.SLOT_TYPE = get_valid_placement_slot_type()
-	
-	if valid_slot_type not in board.hovered_slot.slot_types:
-		current_placement_token.visible = false
-		return
-	
-	current_placement_token.visible = true
-	current_placement_token.global_position = board.slot_to_global_position(board.hovered_slot.slot_position)
 
 
 func try_to_place_token()->bool:

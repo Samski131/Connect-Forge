@@ -1,0 +1,8 @@
+[gd_resource type="Theme" format=3 uid="uid://c50qjd772br1q"]
+
+[ext_resource type="StyleBox" uid="uid://bdexh1k6igmq2" path="res://Assets/User Interface/Styles/Blue panel.stylebox" id="1_aow1l"]
+
+[resource]
+TooltipLabel/font_sizes/font_size = 25
+TooltipPanel/font_sizes/title_font_size = 40
+TooltipPanel/styles/panel = ExtResource("1_aow1l")

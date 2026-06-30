@@ -1,5 +1,5 @@
 class_name PlayerTokenTrayUI
-extends MarginContainer
+extends EffectControl
 
 @export var player_id:int = 0
 @export var item_scene:PackedScene
@@ -11,7 +11,7 @@ var item_uis:Dictionary = {}
 @onready var color_indicator:Panel = $"Token Tray (Outline)/Token Tray (Hbox)/Color Indicator"
 @onready var player_name_label:Label = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)/Player Name"
 @onready var token_grid:GridContainer = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid"
-
+@onready var header_token_visual_display:TokenVisualDisplay = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)/Header Token Visual Display"
 
 func _ready() -> void:
 	game_manager = get_tree().get_first_node_in_group("game manager")
@@ -38,6 +38,7 @@ func setup_tray(new_game_manager:Node, new_player_id:int) -> void:
 func refresh_player_details() -> void:
 	set_player_name()
 	set_color_indicator()
+	set_header_token_visual()
 
 
 func set_player_name() -> void:
@@ -175,3 +176,8 @@ func _on_token_type_added(changed_player_id:int, token_type:int) -> void:
 func _on_trays_reset() -> void:
 	clear_existing_items()
 	rebuild_from_inventory()
+
+func set_header_token_visual() -> void:
+	if header_token_visual_display == null:
+		return
+	header_token_visual_display.setup(TokenLibrary.TokenType.BASIC, player_id)

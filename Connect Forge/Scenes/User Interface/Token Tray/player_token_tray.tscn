@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b32dnof88lxri"]
 
-[ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="1_4yeoc"]
 [ext_resource type="Script" uid="uid://jrvp7ofvol5f" path="res://Scripts/User Interface/Token Trays/player_token_tray_ui.gd" id="1_p7v6v"]
 [ext_resource type="PackedScene" uid="uid://dqgswqs7ya38d" path="res://Scenes/User Interface/Token Tray/token_tray_item_ui.tscn" id="2_p7v6v"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="3_c72vp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sygxm"]
 border_width_left = 2
@@ -87,12 +87,12 @@ theme_override_constants/margin_bottom = 4
 [node name="Header content (Hbox)" type="HBoxContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin" unique_id=739182254]
 layout_mode = 2
 
-[node name="Token Image (Texture rect)" type="TextureRect" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=1746433975]
+[node name="Header Token Visual Display" type="Control" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=272457849]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-texture = ExtResource("1_4yeoc")
-expand_mode = 1
-stretch_mode = 5
+size_flags_horizontal = 0
+script = ExtResource("3_c72vp")
+visual_scale = 0.11
 
 [node name="Player Name" type="Label" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=1054507943]
 layout_mode = 2
