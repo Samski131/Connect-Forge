@@ -5,18 +5,6 @@ extends Node
 var placement_token_sprite:PackedScene = load("res://Scenes/Tokens/placement token sprite.tscn")
 var current_placement_token:Node2D = null
 
-var base_token:PackedScene = load("res://Scenes/Tokens/base token.tscn")
-var anvil_token:PackedScene = load("res://Scenes/Tokens/anvil token.tscn")
-var pyre_token:PackedScene = load("res://Scenes/Tokens/pyre token.tscn")
-var ramp_token:PackedScene = load("res://Scenes/Tokens/ramp token.tscn")
-var dagger_token:PackedScene = load("res://Scenes/Tokens/dagger token.tscn")
-var bomb_token:PackedScene = load("res://Scenes/Tokens/bomb token.tscn")
-var drill_token:PackedScene = load("res://Scenes/Tokens/drill token.tscn")
-var tetromino_token:PackedScene = load("res://Scenes/Tokens/tetromino token.tscn")
-var rotate_gravity_token:PackedScene = load("res://Scenes/Tokens/rotate gravity token.tscn")
-var fan_token:PackedScene = load("res://Scenes/Tokens/fan token.tscn")
-var chameleon_token:PackedScene = load("res://Scenes/Tokens/chameleon token.tscn")
-
 var game_manager:Node
 var board:BoardManager
 
@@ -50,38 +38,38 @@ func process_state():
 	move_placement_token()
 	
 	if Input.is_action_just_pressed("action_1"):
-		place_attempt(base_token)
+		place_attempt(TokenLibrary.TokenType.BASIC)
 	elif Input.is_action_just_pressed("action_2"):
-		place_attempt(anvil_token)
+		place_attempt(TokenLibrary.TokenType.ANVIL)
 	elif Input.is_action_just_pressed("action_3"):
-		place_attempt(pyre_token)
+		place_attempt(TokenLibrary.TokenType.PYRE)
 	elif Input.is_action_just_pressed("action_4"):
-		place_attempt(ramp_token)
+		place_attempt(TokenLibrary.TokenType.RAMP)
 	elif Input.is_action_just_pressed("action_5"):
-		place_attempt(dagger_token)
+		place_attempt(TokenLibrary.TokenType.DAGGER)
 	elif Input.is_action_just_pressed("action_6"):
-		place_attempt(bomb_token)
+		place_attempt(TokenLibrary.TokenType.BOMB)
 	elif Input.is_action_just_pressed("action_7"):
-		place_attempt(drill_token)
+		place_attempt(TokenLibrary.TokenType.DRILL)
 	elif Input.is_action_just_pressed("action_8"):
-		place_attempt(tetromino_token)
+		place_attempt(TokenLibrary.TokenType.TETROMINO)
 	elif Input.is_action_just_pressed("action_9"):
-		place_attempt(rotate_gravity_token)
+		place_attempt(TokenLibrary.TokenType.ROTATE_GRAVITY)
 	elif Input.is_action_just_pressed("action_0"):
-		place_attempt(fan_token)
+		place_attempt(TokenLibrary.TokenType.FAN)
 	elif Input.is_action_just_pressed("action_-"):
-		place_attempt(chameleon_token)
+		place_attempt(TokenLibrary.TokenType.CHAMELEON)
 
 
-func place_attempt(token_scene:PackedScene):
-	if try_to_place_token() == false:
+func place_attempt(token_type:int) -> void:
+	if board == null:
+		return
+	
+	if board.hovered_slot == null:
 		return
 	
 	var slot_pos:Vector2i = board.hovered_slot.slot_position
-	
-	if board.get_token(slot_pos) == null:
-		board.create_new_token(token_scene, slot_pos, game_manager.current_player_id)
-		exit_state()
+	try_place_dragged_token(token_type, slot_pos, false)
 
 
 func move_placement_token():
@@ -151,3 +139,61 @@ func clear_placement_token():
 	if current_placement_token != null:
 		current_placement_token.queue_free()
 		current_placement_token = null
+
+func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bool) -> bool:
+	if game_manager == null:
+		return false
+	
+	if board == null:
+		return false
+	
+	if game_manager.current_turn_phase != Global.TURN_PHASE.PLACEMENT:
+		return false
+	
+	if is_valid_starting_slot(slot_pos) == false:
+		return false
+	
+	var token_scene:PackedScene = TokenLibrary.get_token_scene(token_type)
+	
+	if token_scene == null:
+		return false
+	
+	var new_token:Token = board.create_new_token(token_scene, slot_pos, game_manager.current_player_id, start_flipped)
+	
+	if new_token == null:
+		return false
+	
+	exit_state()
+	return true
+
+
+func is_valid_starting_slot(slot_pos:Vector2i) -> bool:
+	if board == null:
+		return false
+	
+	if board.is_position_in_bounds(slot_pos) == false:
+		return false
+	
+	if board.get_token(slot_pos) != null:
+		return false
+	
+	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
+	
+	match board.settings.gravity_direction:
+		GRID_DIRECTION.DOWN:
+			if slot_pos.y == 0:
+				return true
+		
+		GRID_DIRECTION.UP:
+			if slot_pos.y == board.settings.rows - 1:
+				return true
+		
+		GRID_DIRECTION.RIGHT:
+			if slot_pos.x == 0:
+				return true
+		
+		GRID_DIRECTION.LEFT:
+			if slot_pos.x == board.settings.columns - 1:
+				return true
+	
+	return false

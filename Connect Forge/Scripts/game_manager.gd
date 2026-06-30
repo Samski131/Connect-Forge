@@ -6,7 +6,7 @@ extends Node
 @export var starting_number_of_players:int = 2
 @export var minimum_number_of_players:int = 2
 @export var max_number_of_players:int = 6
-@export var default_player_names:Array[String] = ["Sam", "Jordan"]
+@export var default_player_names:Array[String] = ["Sam", "Jordan", "Harry", "Jack"]
 @export var player_colours:Array[ColorPalette]
 
 var number_of_players:int = 0
@@ -24,14 +24,17 @@ var current_player_id:int = 0
 
 
 var winner_ui:VBoxContainer
-var token_tray_model:TokenTrayModel = null
+var token_tray_inventory:TokenTrayInventory = null
+var player_token_trays_ui:PlayerTokenTraysUI = null
 
 func _ready():
 	gather_groups()
 	setup_default_players()
-	setup_token_tray_model()
+	setup_token_tray_inventory()
 	setup_states()
+	rebuild_player_trays()
 	start_game()
+	give_test_tokens()
 
 
 func setup_states():
@@ -45,7 +48,7 @@ func gather_groups():
 	board = get_tree().get_first_node_in_group("board pool")
 	board_builder = get_tree().get_first_node_in_group("board builder")
 	winner_ui = get_tree().get_first_node_in_group("winner ui")
-
+	player_token_trays_ui = get_tree().get_first_node_in_group("player token trays ui") as PlayerTokenTraysUI
 
 func setup_default_players() -> void:
 	player_names.clear()
@@ -65,9 +68,11 @@ func add_player() -> bool:
 	number_of_players += 1
 	player_names.append(get_default_player_name(new_player_id))
 	
-	if token_tray_model != null:
-		token_tray_model.resize_for_players(number_of_players)
-		
+	if token_tray_inventory != null:
+		token_tray_inventory.resize_for_players(number_of_players)
+	
+	rebuild_player_trays()
+	
 	return true
 
 
@@ -78,13 +83,16 @@ func remove_player() -> bool:
 	number_of_players -= 1
 	
 	if player_names.size() > number_of_players:
-		player_names.resize(number_of_players)
+		player_names.pop_back()
+	
+	if token_tray_inventory != null:
+		token_tray_inventory.resize_for_players(number_of_players)
 	
 	if current_player_id >= number_of_players:
 		current_player_id = 0
-		
-	if token_tray_model != null:
-		token_tray_model.resize_for_players(number_of_players)
+	
+	rebuild_player_trays()
+	
 	return true
 
 
@@ -121,9 +129,6 @@ func get_default_player_name(player_id:int) -> String:
 
 
 func start_game():
-	if token_tray_model != null:
-		token_tray_model.setup_for_players(number_of_players)
-	
 	start_turn(0)
 
 
@@ -183,12 +188,33 @@ func debug_gravity_changes():
 		placement_state.clear_placement_token()
 		action_state.enter_state()
 
-func setup_token_tray_model() -> void:
-	token_tray_model = get_node_or_null("Token Tray Model") as TokenTrayModel
+func setup_token_tray_inventory() -> void:
+	token_tray_inventory = get_tree().get_first_node_in_group("token tray inventory") as TokenTrayInventory
 	
-	if token_tray_model == null:
-		token_tray_model = TokenTrayModel.new()
-		token_tray_model.name = "Token Tray Model"
-		add_child(token_tray_model)
+	if token_tray_inventory == null:
+		token_tray_inventory = TokenTrayInventory.new()
+		token_tray_inventory.add_to_group("token tray inventory")
+		add_child(token_tray_inventory)
 	
-	token_tray_model.setup_for_players(number_of_players)
+	token_tray_inventory.setup_for_players(number_of_players)
+	
+func give_test_tokens() -> void:
+	if token_tray_inventory == null:
+		return
+	
+	for player_id in range(number_of_players):
+		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.BASIC, 99)
+		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.ANVIL, 3)
+		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.BOMB, 3)
+		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.FAN, 3)
+		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.RAMP, 3)
+		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.TETROMINO, 3)
+
+func rebuild_player_trays() -> void:
+	if player_token_trays_ui == null:
+		player_token_trays_ui = get_tree().get_first_node_in_group("player token trays ui") as PlayerTokenTraysUI
+	
+	if player_token_trays_ui == null:
+		return
+	
+	player_token_trays_ui.rebuild_trays()

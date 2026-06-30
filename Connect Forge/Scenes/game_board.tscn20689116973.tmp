@@ -117,6 +117,10 @@ script = ExtResource("3_02cq3")
 
 [node name="Game Manager" type="Node" parent="." unique_id=1217688198 groups=["game manager"]]
 script = ExtResource("4_byhpu")
+starting_number_of_players = null
+minimum_number_of_players = null
+max_number_of_players = null
+default_player_names = null
 player_colours = Array[ColorPalette]([ExtResource("5_0iu65"), ExtResource("6_ssvmx"), ExtResource("8_8yoh8"), ExtResource("9_15wax"), ExtResource("10_k1xih"), ExtResource("7_lif33")])
 
 [node name="Placement State" type="Node" parent="Game Manager" unique_id=133202691]
@@ -383,6 +387,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("23_o6jnn")
 player_tray_scene = ExtResource("21_8pmni")
+
+[node name="Player Token Tray" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)" unique_id=1041809594 instance=ExtResource("21_8pmni")]
+layout_mode = 2
+
+[node name="Player Token Tray2" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)" unique_id=1097507763 instance=ExtResource("21_8pmni")]
+layout_mode = 2
+player_id = 1
 
 [node name="Mouse Position Debug" type="Node2D" parent="." unique_id=1753000040]
 visible = false

@@ -182,31 +182,10 @@ func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->boo
 	return true
 
 
-func set_flipped(new_is_flipped:bool, animate:bool = true) -> void:
-	if is_flipped == new_is_flipped:
-		return
-	
-	if animate and board != null and board.visuals != null:
-		var flip_effect:TokenFlipVisualEffect = TokenFlipVisualEffect.new(self, new_is_flipped, board.visuals.flip_duration)
-		queue_visual_effect(flip_effect)
-		return
-	
-	is_flipped = new_is_flipped
-	
-	if sprites != null and sprites.has_method("set_flipped_visual"):
-		sprites.set_flipped_visual(is_flipped)
 
+func toggle_flipped() -> void:
+	set_flipped(not is_flipped)
 
-func toggle_flipped(animate:bool = true) -> void:
-	set_flipped(not is_flipped, animate)
-
-
-func apply_starting_flipped_visual() -> void:
-	if sprites == null:
-		return
-	
-	if sprites.has_method("set_flipped_visual"):
-		sprites.set_flipped_visual(is_flipped)
 
 
 func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
@@ -220,3 +199,29 @@ func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) 
 		return
 	
 	board.visuals.queue_effect(effect, batch_parallel)
+
+
+func set_flipped(new_is_flipped:bool) -> void:
+	is_flipped = new_is_flipped
+	apply_flipped_visual()
+
+
+func flip_token() -> void:
+	if is_flipped:
+		set_flipped(false)
+	else:
+		set_flipped(true)
+
+
+func apply_starting_flipped_visual() -> void:
+	apply_flipped_visual()
+
+
+func apply_flipped_visual() -> void:
+	if sprites == null:
+		return
+	
+	if is_flipped:
+		sprites.scale.x = -abs(sprites.scale.x)
+	else:
+		sprites.scale.x = abs(sprites.scale.x)

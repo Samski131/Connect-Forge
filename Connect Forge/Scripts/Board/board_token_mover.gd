@@ -8,7 +8,7 @@ func _init(new_board:BoardManager):
 	board = new_board
 
 
-func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int) -> Token:
+func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int, start_flipped:bool = false) -> Token:
 	if token_scene == null:
 		return null
 	
@@ -28,6 +28,12 @@ func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int)
 	board.token_pool.add_child(new_token)
 	
 	new_token.setup(board, slot_pos, player_id)
+	
+	if new_token.has_method("set_flipped"):
+		new_token.set_flipped(start_flipped)
+	else:
+		new_token.is_flipped = start_flipped
+	
 	board.add_token_to_board(new_token, slot_pos)
 	
 	new_token.visible = true

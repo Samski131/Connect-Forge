@@ -1,0 +1,192 @@
+class_name TokenDragController
+extends Node2D
+
+var game_manager:Node = null
+var board:BoardManager = null
+var token_tray_inventory:TokenTrayInventory = null
+var preview_parent:Node = null
+
+var is_dragging:bool = false
+var dragged_player_id:int = -1
+var dragged_token_type:int = -1
+var dragged_is_flipped:bool = false
+var preview_token:Token = null
+
+
+func _ready() -> void:
+	add_to_group("token drag controller")
+	
+	game_manager = get_tree().get_first_node_in_group("game manager")
+	board = get_tree().get_first_node_in_group("board pool") as BoardManager
+	token_tray_inventory = get_tree().get_first_node_in_group("token tray inventory") as TokenTrayInventory
+	
+	if board != null:
+		preview_parent = board.token_pool
+	
+	if preview_parent == null:
+		preview_parent = self
+
+
+func begin_drag(player_id:int, token_type:int) -> void:
+	if is_dragging:
+		cancel_drag()
+	
+	if game_manager == null:
+		return
+	
+	if board == null:
+		return
+	
+	if token_tray_inventory == null:
+		return
+	
+	if game_manager.current_turn_phase != Global.TURN_PHASE.PLACEMENT:
+		return
+	
+	if token_tray_inventory.can_player_drag_token(player_id, token_type, game_manager.current_player_id) == false:
+		return
+	
+	if token_tray_inventory.spend_token(player_id, token_type) == false:
+		return
+	
+	dragged_player_id = player_id
+	dragged_token_type = token_type
+	dragged_is_flipped = false
+	
+	if create_preview_token() == false:
+		token_tray_inventory.refund_token(dragged_player_id, dragged_token_type)
+		clear_drag_state()
+		return
+	
+	is_dragging = true
+	update_preview_position()
+
+
+func create_preview_token() -> bool:
+	var token_scene:PackedScene = token_tray_inventory.get_token_scene(dragged_token_type)
+	
+	if token_scene == null:
+		return false
+	
+	var new_preview:Token = token_scene.instantiate() as Token
+	
+	if new_preview == null:
+		return false
+	
+	preview_parent.add_child(new_preview)
+	preview_token = new_preview
+	
+	preview_token.remove_from_group("token")
+	preview_token.setup(board, Vector2i.ZERO, dragged_player_id)
+	preview_token.modulate = Color(1.0, 1.0, 1.0, 0.75)
+	preview_token.z_index = 1000
+	
+	disable_preview_collision(preview_token)
+	
+	return true
+
+
+func disable_preview_collision(node:Node) -> void:
+	if node is CollisionShape2D:
+		var collision_shape:CollisionShape2D = node as CollisionShape2D
+		collision_shape.disabled = true
+	
+	if node is Area2D:
+		var area:Area2D = node as Area2D
+		area.monitoring = false
+		area.monitorable = false
+		area.collision_layer = 0
+		area.collision_mask = 0
+	
+	for child in node.get_children():
+		disable_preview_collision(child)
+
+
+func _process(_delta:float) -> void:
+	if is_dragging == false:
+		return
+	
+	update_preview_position()
+
+
+func _input(event:InputEvent) -> void:
+	if is_dragging == false:
+		return
+	
+	if event is InputEventMouseButton:
+		var mouse_event:InputEventMouseButton = event as InputEventMouseButton
+		
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed == false:
+			try_drop_dragged_token()
+			get_viewport().set_input_as_handled()
+			return
+	
+	if event is InputEventKey:
+		var key_event:InputEventKey = event as InputEventKey
+		
+		if key_event.pressed and key_event.echo == false and key_event.keycode == KEY_F:
+			flip_dragged_token()
+			get_viewport().set_input_as_handled()
+			return
+		
+		if key_event.pressed and key_event.echo == false and key_event.keycode == KEY_ESCAPE:
+			cancel_drag()
+			get_viewport().set_input_as_handled()
+			return
+
+
+func update_preview_position() -> void:
+	if preview_token == null:
+		return
+	
+	preview_token.global_position = get_global_mouse_position()
+
+
+func flip_dragged_token() -> void:
+	if token_tray_inventory == null:
+		return
+	
+	if token_tray_inventory.can_token_flip(dragged_token_type) == false:
+		return
+	
+	if preview_token == null:
+		return
+	
+	dragged_is_flipped = !dragged_is_flipped
+	
+	if preview_token.has_method("set_flipped"):
+		preview_token.set_flipped(dragged_is_flipped)
+	else:
+		preview_token.is_flipped = dragged_is_flipped
+
+
+func try_drop_dragged_token() -> void:
+	var placement_state:Node = game_manager.placement_state
+	var slot_pos:Vector2i = board.global_position_to_slot(get_global_mouse_position())
+	var placed:bool = false
+	
+	if placement_state != null and placement_state.has_method("try_place_dragged_token"):
+		placed = placement_state.try_place_dragged_token(dragged_token_type, slot_pos, dragged_is_flipped)
+	
+	if placed == false:
+		token_tray_inventory.refund_token(dragged_player_id, dragged_token_type)
+	
+	clear_drag_state()
+
+
+func cancel_drag() -> void:
+	if token_tray_inventory != null and dragged_player_id != -1 and dragged_token_type != -1:
+		token_tray_inventory.refund_token(dragged_player_id, dragged_token_type)
+	
+	clear_drag_state()
+
+
+func clear_drag_state() -> void:
+	if preview_token != null and is_instance_valid(preview_token):
+		preview_token.queue_free()
+	
+	is_dragging = false
+	dragged_player_id = -1
+	dragged_token_type = -1
+	dragged_is_flipped = false
+	preview_token = null

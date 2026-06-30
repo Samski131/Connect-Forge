@@ -82,8 +82,8 @@ func replace_token_on_board(new_token:Token, slot_pos:Vector2i) -> bool:
 func is_position_in_bounds(pos:Vector2i) -> bool:
 	return state.is_position_in_bounds(pos)
 	
-func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int) -> Token:
-	return token_mover.create_new_token(token_scene, slot_pos, player_id)
+func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int, is_flipped:bool) -> Token:
+	return token_mover.create_new_token(token_scene, slot_pos, player_id, is_flipped)
 
 func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualManager.MOVE_VISUAL = BoardVisualManager.MOVE_VISUAL.SLIDE, extra_parallel_effects:Array[BoardVisualEffect] = []) -> bool:
 	return token_mover.move_token_on_board(token, new_pos, move_visual, extra_parallel_effects)

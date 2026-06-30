@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b32dnof88lxri"]
 
 [ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="1_4yeoc"]
+[ext_resource type="Script" uid="uid://jrvp7ofvol5f" path="res://Scripts/User Interface/Token Trays/player_token_tray_ui.gd" id="1_p7v6v"]
 [ext_resource type="PackedScene" uid="uid://dqgswqs7ya38d" path="res://Scenes/User Interface/Token Tray/token_tray_item_ui.tscn" id="2_p7v6v"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sygxm"]
@@ -18,15 +19,15 @@ shadow_size = 7
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iilvt"]
 bg_color = Color(0.99215686, 0.7294118, 0.11764706, 1)
-corner_radius_top_left = 8
-corner_radius_bottom_left = 8
+corner_radius_top_left = 6
+corner_radius_bottom_left = 6
 shadow_color = Color(0, 0, 0, 0.29411766)
 shadow_size = 2
 shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ui7d2"]
 bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
-corner_radius_top_right = 8
+corner_radius_top_right = 6
 
 [sub_resource type="LabelSettings" id="LabelSettings_y1aqv"]
 font_size = 29
@@ -34,7 +35,7 @@ font_color = Color(0.16862746, 0.28235295, 0.41568628, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8pmni"]
 bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
-corner_radius_bottom_right = 8
+corner_radius_bottom_right = 6
 shadow_color = Color(0, 0, 0, 0.29411766)
 shadow_size = 2
 shadow_offset = Vector2(2, 4)
@@ -48,6 +49,8 @@ corner_radius_bottom_left = 8
 
 [node name="Player Token Tray" type="MarginContainer" unique_id=1041809594]
 theme_override_constants/margin_top = 8
+script = ExtResource("1_p7v6v")
+item_scene = ExtResource("2_p7v6v")
 
 [node name="Token Tray (Outline)" type="PanelContainer" parent="." unique_id=161270509]
 layout_mode = 2
@@ -120,18 +123,3 @@ layout_mode = 2
 [node name="Token Grid" type="GridContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer" unique_id=1957782513]
 layout_mode = 2
 columns = 5
-
-[node name="TokenTrayItemUI" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1590710358 instance=ExtResource("2_p7v6v")]
-layout_mode = 2
-
-[node name="TokenTrayItemUI2" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1830924624 instance=ExtResource("2_p7v6v")]
-layout_mode = 2
-
-[node name="TokenTrayItemUI3" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1181256757 instance=ExtResource("2_p7v6v")]
-layout_mode = 2
-
-[node name="TokenTrayItemUI5" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1824955682 instance=ExtResource("2_p7v6v")]
-layout_mode = 2
-
-[node name="TokenTrayItemUI4" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1429492305 instance=ExtResource("2_p7v6v")]
-layout_mode = 2

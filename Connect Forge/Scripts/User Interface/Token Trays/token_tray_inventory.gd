@@ -1,8 +1,9 @@
-class_name TokenTrayModel
+class_name TokenTrayInventory
 extends Node
 
 signal trays_reset
 signal tray_changed(player_id:int)
+signal token_type_added(player_id:int, token_type:int)
 signal token_count_changed(player_id:int, token_type:int, new_count:int)
 
 var player_trays:Array[PlayerTokenTrayData] = []
@@ -46,16 +47,6 @@ func reset_all_trays() -> void:
 	trays_reset.emit()
 
 
-func reset_player_tray(player_id:int) -> void:
-	var tray:PlayerTokenTrayData = get_player_tray(player_id)
-	
-	if tray == null:
-		return
-	
-	tray.reset_counts()
-	tray_changed.emit(player_id)
-
-
 func get_player_tray(player_id:int) -> PlayerTokenTrayData:
 	if player_id < 0:
 		return null
@@ -66,8 +57,29 @@ func get_player_tray(player_id:int) -> PlayerTokenTrayData:
 	return player_trays[player_id]
 
 
-func get_token_types() -> Array[int]:
-	return TokenLibrary.get_token_types_in_tray_order()
+func player_has_token_type(player_id:int, token_type:int) -> bool:
+	var tray:PlayerTokenTrayData = get_player_tray(player_id)
+	
+	if tray == null:
+		return false
+	
+	return tray.has_token_type(token_type)
+
+
+func get_token_types_for_player(player_id:int) -> Array[int]:
+	var tray:PlayerTokenTrayData = get_player_tray(player_id)
+	
+	if tray == null:
+		return []
+	
+	var result:Array[int] = []
+	var ordered_types:Array[int] = TokenLibrary.get_token_types_in_tray_order()
+	
+	for token_type in ordered_types:
+		if tray.has_token_type(token_type):
+			result.append(token_type)
+	
+	return result
 
 
 func get_token_count(player_id:int, token_type:int) -> int:
@@ -85,7 +97,15 @@ func set_token_count(player_id:int, token_type:int, amount:int) -> void:
 	if tray == null:
 		return
 	
+	var was_new_token_type:bool = false
+	
+	if tray.has_token_type(token_type) == false:
+		was_new_token_type = true
+	
 	tray.set_count(token_type, amount)
+	
+	if was_new_token_type:
+		token_type_added.emit(player_id, token_type)
 	
 	var new_count:int = tray.get_count(token_type)
 	token_count_changed.emit(player_id, token_type, new_count)
@@ -138,7 +158,39 @@ func refund_token(player_id:int, token_type:int, amount:int = 1) -> void:
 	if tray == null:
 		return
 	
+	var was_new_token_type:bool = false
+	
+	if tray.has_token_type(token_type) == false:
+		was_new_token_type = true
+	
 	tray.refund_token(token_type, amount)
+	
+	if was_new_token_type:
+		token_type_added.emit(player_id, token_type)
+	
+	var new_count:int = tray.get_count(token_type)
+	token_count_changed.emit(player_id, token_type, new_count)
+	tray_changed.emit(player_id)
+
+
+func add_tokens(player_id:int, token_type:int, amount:int = 1) -> void:
+	var tray:PlayerTokenTrayData = get_player_tray(player_id)
+	
+	if tray == null:
+		return
+	
+	if amount <= 0:
+		return
+	
+	var was_new_token_type:bool = false
+	
+	if tray.has_token_type(token_type) == false:
+		was_new_token_type = true
+	
+	tray.add_tokens(token_type, amount)
+	
+	if was_new_token_type:
+		token_type_added.emit(player_id, token_type)
 	
 	var new_count:int = tray.get_count(token_type)
 	token_count_changed.emit(player_id, token_type, new_count)
@@ -163,15 +215,3 @@ func get_token_icon(token_type:int) -> Texture2D:
 
 func can_token_flip(token_type:int) -> bool:
 	return TokenLibrary.can_flip(token_type)
-
-func add_tokens(player_id:int, token_type:int, amount:int = 1) -> void:
-	var tray:PlayerTokenTrayData = get_player_tray(player_id)
-	
-	if tray == null:
-		return
-	
-	tray.add_tokens(token_type, amount)
-	
-	var new_count:int = tray.get_count(token_type)
-	token_count_changed.emit(player_id, token_type, new_count)
-	tray_changed.emit(player_id)

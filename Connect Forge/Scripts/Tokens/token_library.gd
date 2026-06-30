@@ -67,7 +67,7 @@ static func get_all_token_data() -> Dictionary:
 		},
 		TokenType.BOMB: {
 			KEY_DISPLAY_NAME: "Bomb",
-			KEY_DESCRIPTION: "Destroys itself and adjacent tokens when it lands.",
+			KEY_DESCRIPTION: "On land, destroys itself and adjacent tokens.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/bomb token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Bomb.png",
 			KEY_CAN_FLIP: false,
