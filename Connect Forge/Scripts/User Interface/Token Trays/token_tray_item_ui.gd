@@ -1,5 +1,5 @@
 class_name TokenTrayItemUI
-extends PanelContainer
+extends EffectControl
 
 var player_id:int = -1
 var token_type:int = -1
@@ -74,5 +74,5 @@ func _on_token_count_changed(changed_player_id:int, changed_token_type:int, _new
 	
 	if changed_token_type != token_type:
 		return
-	
+	pulse()
 	refresh()

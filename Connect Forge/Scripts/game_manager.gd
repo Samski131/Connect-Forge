@@ -2,11 +2,13 @@ extends Node
 
 # Game Management
 # Stores settings but mostly directs the game's turn order and state machine.
+signal current_player_changed(player_id:int)
+signal player_names_changed
 
 @export var starting_number_of_players:int = 2
 @export var minimum_number_of_players:int = 2
 @export var max_number_of_players:int = 6
-@export var default_player_names:Array[String] = ["Sam", "Jordan", "Harry", "Jack"]
+@export var default_player_names:Array[String] = ["Sam", "Jack", "Ross"]
 @export var player_colours:Array[ColorPalette]
 
 var number_of_players:int = 0
@@ -107,9 +109,9 @@ func set_player_name(player_id:int, new_name:String) -> bool:
 		return false
 	
 	player_names[player_id] = new_name
+	player_names_changed.emit()
 	
 	return true
-
 
 func get_player_name(player_id:int) -> String:
 	if player_id < 0:
@@ -134,8 +136,8 @@ func start_game():
 
 func start_turn(player_id:int):
 	current_player_id = player_id
+	current_player_changed.emit(current_player_id)
 	placement_state.enter_state()
-
 
 func end_turn():
 	current_player_id = get_next_player_id()
