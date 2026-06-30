@@ -6,11 +6,9 @@ var token_type:int = -1
 var game_manager:Node = null
 var token_tray_model:TokenTrayModel = null
 
-@onready var icon_rect:TextureRect =$"Margin/Root (Vbox)/Icon Control/Icon (Texture Rect)"
-@onready var count_label:Label =$"Margin/Root (Vbox)/Icon Control/CountBadge (Panel Container)/CountLabel (Label)"
-@onready var name_label:Label = $"Margin/Root (Vbox)/Name Label (Label)"
-@onready var count_badge:PanelContainer = $"Margin/Root (Vbox)/Icon Control/CountBadge (Panel Container)"
-
+@onready var icon_rect = $"Margin/Root (Vbox)/Icon Control/Icon (Texture Rect)"
+@onready var count_label = $"Margin/Root (Vbox)/Icon Control/PanelContainer/Count Label"
+@onready var count_badge = $"Margin/Root (Vbox)/Icon Control/Count Badge Panel"
 
 func setup(new_game_manager:Node, new_player_id:int, new_token_type:int) -> void:
 	game_manager = new_game_manager
@@ -36,7 +34,6 @@ func refresh() -> void:
 	
 	icon_rect.texture = icon_texture
 	count_label.text = str(token_count)
-	name_label.text = token_name
 	tooltip_text = token_tray_model.get_token_description(token_type)
 	
 	apply_count_visual(token_count)

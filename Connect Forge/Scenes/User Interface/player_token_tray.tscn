@@ -1,0 +1,137 @@
+[gd_scene format=3 uid="uid://b32dnof88lxri"]
+
+[ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="1_4yeoc"]
+[ext_resource type="PackedScene" uid="uid://dqgswqs7ya38d" path="res://Scenes/User Interface/Token Tray/token_tray_item_ui.tscn" id="2_p7v6v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sygxm"]
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.24705882)
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iilvt"]
+bg_color = Color(0.99215686, 0.7294118, 0.11764706, 1)
+corner_radius_top_left = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.29411766)
+shadow_size = 2
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ui7d2"]
+bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
+corner_radius_top_right = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_y1aqv"]
+font_size = 29
+font_color = Color(0.16862746, 0.28235295, 0.41568628, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8pmni"]
+bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
+corner_radius_bottom_right = 8
+shadow_color = Color(0, 0, 0, 0.29411766)
+shadow_size = 2
+shadow_offset = Vector2(2, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1aqv"]
+bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Player Token Tray" type="MarginContainer" unique_id=1041809594]
+theme_override_constants/margin_top = 8
+
+[node name="Token Tray (Outline)" type="PanelContainer" parent="." unique_id=161270509]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_sygxm")
+
+[node name="Token Tray (Hbox)" type="HBoxContainer" parent="Token Tray (Outline)" unique_id=129000899]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Color Indicator" type="Panel" parent="Token Tray (Outline)/Token Tray (Hbox)" unique_id=2084055518]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iilvt")
+
+[node name="Token Tray (Vbox)" type="VBoxContainer" parent="Token Tray (Outline)/Token Tray (Hbox)" unique_id=1021632893]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Player Header (Panel Container)" type="PanelContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)" unique_id=207494395]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ui7d2")
+
+[node name="Margin" type="MarginContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)" unique_id=640031854]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Header content (Hbox)" type="HBoxContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin" unique_id=739182254]
+layout_mode = 2
+
+[node name="Token Image (Texture rect)" type="TextureRect" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=1746433975]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("1_4yeoc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Player Name" type="Label" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=1054507943]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Player 1"
+label_settings = SubResource("LabelSettings_y1aqv")
+vertical_alignment = 1
+
+[node name="Bottom Panel of Token Tray" type="PanelContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)" unique_id=1519372452]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8pmni")
+
+[node name="Interior panel" type="PanelContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray" unique_id=402300883]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_y1aqv")
+
+[node name="MarginContainer" type="MarginContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel" unique_id=2091625309]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="CenterContainer" type="CenterContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer" unique_id=651641336]
+layout_mode = 2
+
+[node name="Token Grid" type="GridContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer" unique_id=1957782513]
+layout_mode = 2
+columns = 5
+
+[node name="TokenTrayItemUI" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1590710358 instance=ExtResource("2_p7v6v")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI2" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1830924624 instance=ExtResource("2_p7v6v")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI3" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1181256757 instance=ExtResource("2_p7v6v")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI5" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1824955682 instance=ExtResource("2_p7v6v")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI4" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1429492305 instance=ExtResource("2_p7v6v")]
+layout_mode = 2

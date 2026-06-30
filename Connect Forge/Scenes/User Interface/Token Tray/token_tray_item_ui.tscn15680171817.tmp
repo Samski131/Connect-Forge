@@ -66,7 +66,7 @@ texture = ExtResource("2_l8c5t")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Count Badge Panel" type="PanelContainer" parent="Margin/Root (Vbox)/Icon Control" unique_id=388965093]
+[node name="PanelContainer" type="PanelContainer" parent="Margin/Root (Vbox)/Icon Control" unique_id=388965093]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -79,7 +79,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_l8c5t")
 
-[node name="Count Label" type="Label" parent="Margin/Root (Vbox)/Icon Control/Count Badge Panel" unique_id=361184299]
+[node name="Label" type="Label" parent="Margin/Root (Vbox)/Icon Control/PanelContainer" unique_id=361184299]
 layout_mode = 2
 text = "x0"
 horizontal_alignment = 1
