@@ -16,6 +16,13 @@
 [ext_resource type="Script" uid="uid://bb2u8kjrewyet" path="res://Scripts/game_over_logic.gd" id="14_gtlqa"]
 [ext_resource type="Script" uid="uid://djfb4d2f5wocp" path="res://Scripts/User Interface/animated_background.gd" id="15_1qr2h"]
 [ext_resource type="Shader" uid="uid://bnbioicp1sqn7" path="res://Shaders/background.gdshader" id="15_7vatw"]
+[ext_resource type="FontFile" uid="uid://dehtpv13sux26" path="res://fonts/Fredoka-Regular.ttf" id="18_fqi8n"]
+[ext_resource type="Texture2D" uid="uid://bdcr7yvbmtik" path="res://Assets/User Interface/Styles/Options.png" id="18_y1aqv"]
+[ext_resource type="PackedScene" uid="uid://dqgswqs7ya38d" path="res://Scenes/User Interface/Token Tray/token_tray_item_ui.tscn" id="19_fqi8n"]
+[ext_resource type="Texture2D" uid="uid://bam4msago30gp" path="res://Assets/User Interface/Styles/Pause.png" id="20_sygxm"]
+[ext_resource type="StyleBox" uid="uid://bdexh1k6igmq2" path="res://Assets/User Interface/Styles/Blue panel.stylebox" id="20_y1aqv"]
+[ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="22_y1aqv"]
+[ext_resource type="Script" uid="uid://drml0evch0llu" path="res://Scripts/debug mouse position.gd" id="23_y1aqv"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_245tq"]
 shader = ExtResource("15_7vatw")
@@ -39,28 +46,104 @@ shader_parameter/pattern_alpha = 0.086
 shader_parameter/pattern_direction_degrees = 25.0
 shader_parameter/pattern_move_speed = 0.014
 shader_parameter/wave_strength = 0.015
-shader_parameter/shape_noise_strength = 1.0
-shader_parameter/shape_noise_scale = 20.0
+shader_parameter/shape_noise_strength = 0.496
+shader_parameter/shape_noise_scale = 13.078
 shader_parameter/shape_noise_speed = 0.492
 shader_parameter/vignette_strength = 0.55
 shader_parameter/aspect_ratio = 1.7777777777777777
 
-[node name="Game Board" type="Node2D" unique_id=1895785283]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqi8n"]
+bg_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
+border_width_bottom = 2
+border_color = Color(0, 0.045000028, 0.1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_size = 2
+shadow_offset = Vector2(0, 1)
 
-[node name="Token Pool" type="Node2D" parent="." unique_id=1697406012 groups=["token pool"]]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6jnn"]
+bg_color = Color(0.0627451, 0.12156863, 0.16862746, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.13725491, 0.29411766, 0.44705883, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
-[node name="Board Builder" type="Node" parent="." unique_id=6529522]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y1aqv"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8pmni"]
+font_size = 31
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sygxm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rotw0"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_o6jnn"]
+font = ExtResource("18_fqi8n")
+font_size = 32
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iilvt"]
+bg_color = Color(0.99215686, 0.7294118, 0.11764706, 1)
+corner_radius_top_left = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.29411766)
+shadow_size = 2
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ui7d2"]
+bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
+corner_radius_top_right = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_y1aqv"]
+font_size = 29
+font_color = Color(0.16862746, 0.28235295, 0.41568628, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8pmni"]
+bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
+corner_radius_bottom_right = 8
+shadow_color = Color(0, 0, 0, 0.29411766)
+shadow_size = 2
+shadow_offset = Vector2(2, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1aqv"]
+bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_sygxm"]
+font_size = 100
+
+[node name="Game Scene" type="Node2D" unique_id=1895785283]
+
+[node name="Game Board" type="Node2D" parent="." unique_id=1535182388]
+
+[node name="Token Pool" type="Node2D" parent="Game Board" unique_id=1697406012 groups=["token pool"]]
+
+[node name="Board Builder" type="Node2D" parent="Game Board" unique_id=37717649]
 script = ExtResource("1_jobum")
+border_highlight_width = 12
+border_exterior_color = Color(0.3019608, 0.40784314, 0.5372549, 1)
+border_exterior_highlight_color = Color(0.43137255, 0.54509807, 0.654902, 1)
+border_interior_color = Color(0.11764706, 0.23137255, 0.3647059, 1)
 
-[node name="Board Manager" type="Node2D" parent="." unique_id=397328331 groups=["board pool"]]
+[node name="Board Manager" type="Node2D" parent="Game Board" unique_id=397328331 groups=["board pool"]]
+visible = false
 script = ExtResource("2_547an")
 
-[node name="Board Visual Manager" type="Node2D" parent="." unique_id=500994368]
+[node name="Board Visual Manager" type="Node2D" parent="Game Board" unique_id=500994368]
 script = ExtResource("3_02cq3")
 
 [node name="Game Manager" type="Node" parent="." unique_id=1217688198 groups=["game manager"]]
 script = ExtResource("4_byhpu")
-player_colours = Array[ColorPalette]([ExtResource("5_0iu65"), ExtResource("6_ssvmx"), ExtResource("7_lif33"), ExtResource("8_8yoh8"), ExtResource("9_15wax"), ExtResource("10_k1xih")])
+player_colours = Array[ColorPalette]([ExtResource("5_0iu65"), ExtResource("6_ssvmx"), ExtResource("8_8yoh8"), ExtResource("9_15wax"), ExtResource("10_k1xih"), ExtResource("7_lif33")])
 
 [node name="Placement State" type="Node" parent="Game Manager" unique_id=133202691]
 script = ExtResource("11_igg2s")
@@ -77,10 +160,10 @@ script = ExtResource("14_gtlqa")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1023481867]
 zoom = Vector2(0.25, 0.25)
 
-[node name="Background" type="CanvasLayer" parent="." unique_id=1529322116]
+[node name="User Interface" type="CanvasLayer" parent="." unique_id=1529322116]
 layer = -10
 
-[node name="Background Root" type="Control" parent="Background" unique_id=736886623]
+[node name="Game UI" type="Control" parent="User Interface" unique_id=967581993]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -89,7 +172,16 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Animated Background" type="ColorRect" parent="Background/Background Root" unique_id=1863502379]
+[node name="Background Root" type="Control" parent="User Interface/Game UI" unique_id=736886623]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Animated Background" type="ColorRect" parent="User Interface/Game UI/Background Root" unique_id=1863502379]
 material = SubResource("ShaderMaterial_245tq")
 layout_mode = 1
 anchors_preset = 15
@@ -103,88 +195,412 @@ pattern_scale = 15.109
 pattern_size = 0.28900000000000003
 pattern_softness = 0.072
 pattern_alpha = 0.086
+shape_noise_strength = 0.496
+shape_noise_scale = 13.078
 
-[connection signal="mouse_entered" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/Slot" to="Board Manager/Slot" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18932" to="Board Manager/@Area2D@18932" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18932" to="Board Manager/@Area2D@18932" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18933" to="Board Manager/@Area2D@18933" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18933" to="Board Manager/@Area2D@18933" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18934" to="Board Manager/@Area2D@18934" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18934" to="Board Manager/@Area2D@18934" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18935" to="Board Manager/@Area2D@18935" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18935" to="Board Manager/@Area2D@18935" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18936" to="Board Manager/@Area2D@18936" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18936" to="Board Manager/@Area2D@18936" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18937" to="Board Manager/@Area2D@18937" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18937" to="Board Manager/@Area2D@18937" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18938" to="Board Manager/@Area2D@18938" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18938" to="Board Manager/@Area2D@18938" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18939" to="Board Manager/@Area2D@18939" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18939" to="Board Manager/@Area2D@18939" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18940" to="Board Manager/@Area2D@18940" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18940" to="Board Manager/@Area2D@18940" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18941" to="Board Manager/@Area2D@18941" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18941" to="Board Manager/@Area2D@18941" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18942" to="Board Manager/@Area2D@18942" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18942" to="Board Manager/@Area2D@18942" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18943" to="Board Manager/@Area2D@18943" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18943" to="Board Manager/@Area2D@18943" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18944" to="Board Manager/@Area2D@18944" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18944" to="Board Manager/@Area2D@18944" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18945" to="Board Manager/@Area2D@18945" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18945" to="Board Manager/@Area2D@18945" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18946" to="Board Manager/@Area2D@18946" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18946" to="Board Manager/@Area2D@18946" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18947" to="Board Manager/@Area2D@18947" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18947" to="Board Manager/@Area2D@18947" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18948" to="Board Manager/@Area2D@18948" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18948" to="Board Manager/@Area2D@18948" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18949" to="Board Manager/@Area2D@18949" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18949" to="Board Manager/@Area2D@18949" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18950" to="Board Manager/@Area2D@18950" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18950" to="Board Manager/@Area2D@18950" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18951" to="Board Manager/@Area2D@18951" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18951" to="Board Manager/@Area2D@18951" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18952" to="Board Manager/@Area2D@18952" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18952" to="Board Manager/@Area2D@18952" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18953" to="Board Manager/@Area2D@18953" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18953" to="Board Manager/@Area2D@18953" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18954" to="Board Manager/@Area2D@18954" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18954" to="Board Manager/@Area2D@18954" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18955" to="Board Manager/@Area2D@18955" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18955" to="Board Manager/@Area2D@18955" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18956" to="Board Manager/@Area2D@18956" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18956" to="Board Manager/@Area2D@18956" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18957" to="Board Manager/@Area2D@18957" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18957" to="Board Manager/@Area2D@18957" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18958" to="Board Manager/@Area2D@18958" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18958" to="Board Manager/@Area2D@18958" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18959" to="Board Manager/@Area2D@18959" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18959" to="Board Manager/@Area2D@18959" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18960" to="Board Manager/@Area2D@18960" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18960" to="Board Manager/@Area2D@18960" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18961" to="Board Manager/@Area2D@18961" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18961" to="Board Manager/@Area2D@18961" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18962" to="Board Manager/@Area2D@18962" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18962" to="Board Manager/@Area2D@18962" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18963" to="Board Manager/@Area2D@18963" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18963" to="Board Manager/@Area2D@18963" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18964" to="Board Manager/@Area2D@18964" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18964" to="Board Manager/@Area2D@18964" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18965" to="Board Manager/@Area2D@18965" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18965" to="Board Manager/@Area2D@18965" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18966" to="Board Manager/@Area2D@18966" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18966" to="Board Manager/@Area2D@18966" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18967" to="Board Manager/@Area2D@18967" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18967" to="Board Manager/@Area2D@18967" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18968" to="Board Manager/@Area2D@18968" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18968" to="Board Manager/@Area2D@18968" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18969" to="Board Manager/@Area2D@18969" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18969" to="Board Manager/@Area2D@18969" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18970" to="Board Manager/@Area2D@18970" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18970" to="Board Manager/@Area2D@18970" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18971" to="Board Manager/@Area2D@18971" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18971" to="Board Manager/@Area2D@18971" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="Board Manager/@Area2D@18972" to="Board Manager/@Area2D@18972" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="Board Manager/@Area2D@18972" to="Board Manager/@Area2D@18972" method="_on_mouse_exited"]
+[node name="Panels" type="VBoxContainer" parent="User Interface/Game UI" unique_id=623789097]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Top Panel" type="MarginContainer" parent="User Interface/Game UI/Panels" unique_id=782931900]
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel" unique_id=1802805347]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer" unique_id=916899828]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fqi8n")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer" unique_id=849106066]
+layout_mode = 2
+
+[node name="Options Button" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer" unique_id=1505757810]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PanelContainer" type="PanelContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Options Button" unique_id=144269342]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_o6jnn")
+
+[node name="Options Button" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Options Button/PanelContainer" unique_id=1416923158]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Button" type="TextureButton" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Options Button/PanelContainer/Options Button" unique_id=418013803]
+layout_mode = 2
+texture_normal = ExtResource("18_y1aqv")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer" unique_id=1641123479]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer" unique_id=22012604]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = ExtResource("20_y1aqv")
+
+[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer" unique_id=1743050165]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer" unique_id=497995455]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="VSeparator4" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=140079081]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_y1aqv")
+
+[node name="Turn Counter" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=491089293]
+layout_mode = 2
+text = "Turn 1"
+label_settings = SubResource("LabelSettings_8pmni")
+horizontal_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1391797036]
+layout_mode = 2
+
+[node name="Time Counter" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1935816332]
+layout_mode = 2
+text = "00:00"
+label_settings = SubResource("LabelSettings_8pmni")
+horizontal_alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1635038459]
+layout_mode = 2
+
+[node name="Time Counter2" type="Label" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1842529506]
+layout_mode = 2
+text = "Score:   1:0"
+label_settings = SubResource("LabelSettings_8pmni")
+horizontal_alignment = 1
+
+[node name="VSeparator3" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=2084845988]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_y1aqv")
+
+[node name="Pause Button" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer" unique_id=1047425160]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PanelContainer" type="PanelContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Pause Button" unique_id=831615069]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_o6jnn")
+
+[node name="Options Button" type="MarginContainer" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Pause Button/PanelContainer" unique_id=2013181960]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Button" type="TextureButton" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Options Button" unique_id=2061748399]
+layout_mode = 2
+texture_normal = ExtResource("20_sygxm")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Centre Panels" type="HBoxContainer" parent="User Interface/Game UI/Panels" unique_id=1468148368]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="User Interface/Game UI/Panels/Centre Panels" unique_id=145484379]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Board Area Panel" type="PanelContainer" parent="User Interface/Game UI/Panels/Centre Panels/Control" unique_id=1594806224 groups=["board area fitter"]]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -620.0
+offset_top = -430.0
+offset_right = 620.0
+offset_bottom = 430.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_sygxm")
+
+[node name="Right Sidebar (PanelContainer)" type="PanelContainer" parent="User Interface/Game UI/Panels/Centre Panels" unique_id=2048093199]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+theme_override_styles/panel = SubResource("StyleBoxEmpty_rotw0")
+
+[node name="Right Sidebar Margin (Margin Container)" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)" unique_id=1405766209]
+layout_mode = 2
+
+[node name="Content (Vbox)" type="VBoxContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)" unique_id=1100701590]
+layout_mode = 2
+alignment = 1
+
+[node name="Current Turn Header" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)" unique_id=533979710]
+layout_mode = 2
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 0
+
+[node name="Current Turn Card (Panel Container)" type="PanelContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/Current Turn Header" unique_id=1354044783]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("20_y1aqv")
+
+[node name="Player Tray Header (Label)" type="Label" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/Current Turn Header/Current Turn Card (Panel Container)" unique_id=1605448443]
+texture_filter = 2
+layout_mode = 2
+text = "Player 1's Turn"
+label_settings = SubResource("LabelSettings_o6jnn")
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)" unique_id=360462506]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_top = 8
+
+[node name="Token Tray Scroll (Scroll)" type="ScrollContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer" unique_id=1223870353]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Token Trays (Vbox)" type="VBoxContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)" unique_id=961971779]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Token Tray (Hbox)" type="HBoxContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)" unique_id=229399703]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Color Indicator" type="Panel" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)" unique_id=1062214986]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iilvt")
+
+[node name="Token Tray (Vbox)" type="VBoxContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)" unique_id=1677938950]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Margin" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)" unique_id=1260068764]
+layout_mode = 2
+theme_override_constants/margin_right = 8
+
+[node name="Player Header (Panel Container)" type="PanelContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Margin" unique_id=275715823]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ui7d2")
+
+[node name="Margin" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Margin/Player Header (Panel Container)" unique_id=1020040256]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Header content (Hbox)" type="HBoxContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Margin/Player Header (Panel Container)/Margin" unique_id=471727483]
+layout_mode = 2
+
+[node name="Token Image (Texture rect)" type="TextureRect" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Margin/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=2078023178]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+texture = ExtResource("22_y1aqv")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Player Name" type="Label" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Margin/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=712507352]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Player 1"
+label_settings = SubResource("LabelSettings_y1aqv")
+vertical_alignment = 1
+
+[node name="Bottom Margin of Token Tray" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)" unique_id=95340223]
+layout_mode = 2
+theme_override_constants/margin_right = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray" unique_id=344317264]
+layout_mode = 2
+
+[node name="Bottom Panel of Token Tray" type="PanelContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer" unique_id=1681697667]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8pmni")
+
+[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray" unique_id=727168617]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Interior panel" type="PanelContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer" unique_id=1303827471]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_y1aqv")
+
+[node name="MarginContainer" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel" unique_id=1841708464]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="CenterContainer" type="CenterContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel/MarginContainer" unique_id=652016101]
+layout_mode = 2
+
+[node name="Token Grid" type="GridContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel/MarginContainer/CenterContainer" unique_id=1804371996]
+layout_mode = 2
+columns = 5
+
+[node name="TokenTrayItemUI" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1590710358 instance=ExtResource("19_fqi8n")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI2" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=647604685 instance=ExtResource("19_fqi8n")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI3" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1061246836 instance=ExtResource("19_fqi8n")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI5" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1534013078 instance=ExtResource("19_fqi8n")]
+layout_mode = 2
+
+[node name="TokenTrayItemUI4" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)/MarginContainer/Token Tray Scroll (Scroll)/Token Trays (Vbox)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Margin of Token Tray/VBoxContainer/Bottom Panel of Token Tray/MarginContainer/Interior panel/MarginContainer/CenterContainer/Token Grid" unique_id=1627550849 instance=ExtResource("19_fqi8n")]
+layout_mode = 2
+
+[node name="Mouse Position Debug" type="Node2D" parent="." unique_id=1753000040]
+visible = false
+position = Vector2(1659, 451)
+script = ExtResource("23_y1aqv")
+
+[node name="Label" type="Label" parent="Mouse Position Debug" unique_id=229987343]
+offset_right = 40.0
+offset_bottom = 20.0
+label_settings = SubResource("LabelSettings_sygxm")
+horizontal_alignment = 1
+
+[connection signal="mouse_entered" from="Game Board/Board Manager/Slot" to="Game Board/Board Manager/Slot" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/Slot" to="Game Board/Board Manager/Slot" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18934" to="Game Board/Board Manager/@Area2D@18934" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18934" to="Game Board/Board Manager/@Area2D@18934" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18935" to="Game Board/Board Manager/@Area2D@18935" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18935" to="Game Board/Board Manager/@Area2D@18935" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18936" to="Game Board/Board Manager/@Area2D@18936" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18936" to="Game Board/Board Manager/@Area2D@18936" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18937" to="Game Board/Board Manager/@Area2D@18937" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18937" to="Game Board/Board Manager/@Area2D@18937" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18938" to="Game Board/Board Manager/@Area2D@18938" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18938" to="Game Board/Board Manager/@Area2D@18938" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18939" to="Game Board/Board Manager/@Area2D@18939" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18939" to="Game Board/Board Manager/@Area2D@18939" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18940" to="Game Board/Board Manager/@Area2D@18940" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18940" to="Game Board/Board Manager/@Area2D@18940" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18941" to="Game Board/Board Manager/@Area2D@18941" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18941" to="Game Board/Board Manager/@Area2D@18941" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18942" to="Game Board/Board Manager/@Area2D@18942" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18942" to="Game Board/Board Manager/@Area2D@18942" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18943" to="Game Board/Board Manager/@Area2D@18943" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18943" to="Game Board/Board Manager/@Area2D@18943" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18944" to="Game Board/Board Manager/@Area2D@18944" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18944" to="Game Board/Board Manager/@Area2D@18944" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18945" to="Game Board/Board Manager/@Area2D@18945" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18945" to="Game Board/Board Manager/@Area2D@18945" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18946" to="Game Board/Board Manager/@Area2D@18946" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18946" to="Game Board/Board Manager/@Area2D@18946" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18947" to="Game Board/Board Manager/@Area2D@18947" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18947" to="Game Board/Board Manager/@Area2D@18947" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18948" to="Game Board/Board Manager/@Area2D@18948" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18948" to="Game Board/Board Manager/@Area2D@18948" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18949" to="Game Board/Board Manager/@Area2D@18949" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18949" to="Game Board/Board Manager/@Area2D@18949" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18950" to="Game Board/Board Manager/@Area2D@18950" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18950" to="Game Board/Board Manager/@Area2D@18950" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18951" to="Game Board/Board Manager/@Area2D@18951" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18951" to="Game Board/Board Manager/@Area2D@18951" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18952" to="Game Board/Board Manager/@Area2D@18952" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18952" to="Game Board/Board Manager/@Area2D@18952" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18953" to="Game Board/Board Manager/@Area2D@18953" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18953" to="Game Board/Board Manager/@Area2D@18953" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18954" to="Game Board/Board Manager/@Area2D@18954" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18954" to="Game Board/Board Manager/@Area2D@18954" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18955" to="Game Board/Board Manager/@Area2D@18955" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18955" to="Game Board/Board Manager/@Area2D@18955" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18956" to="Game Board/Board Manager/@Area2D@18956" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18956" to="Game Board/Board Manager/@Area2D@18956" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18957" to="Game Board/Board Manager/@Area2D@18957" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18957" to="Game Board/Board Manager/@Area2D@18957" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18958" to="Game Board/Board Manager/@Area2D@18958" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18958" to="Game Board/Board Manager/@Area2D@18958" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18959" to="Game Board/Board Manager/@Area2D@18959" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18959" to="Game Board/Board Manager/@Area2D@18959" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18960" to="Game Board/Board Manager/@Area2D@18960" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18960" to="Game Board/Board Manager/@Area2D@18960" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18961" to="Game Board/Board Manager/@Area2D@18961" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18961" to="Game Board/Board Manager/@Area2D@18961" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18962" to="Game Board/Board Manager/@Area2D@18962" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18962" to="Game Board/Board Manager/@Area2D@18962" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18963" to="Game Board/Board Manager/@Area2D@18963" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18963" to="Game Board/Board Manager/@Area2D@18963" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18964" to="Game Board/Board Manager/@Area2D@18964" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18964" to="Game Board/Board Manager/@Area2D@18964" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18965" to="Game Board/Board Manager/@Area2D@18965" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18965" to="Game Board/Board Manager/@Area2D@18965" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18966" to="Game Board/Board Manager/@Area2D@18966" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18966" to="Game Board/Board Manager/@Area2D@18966" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18967" to="Game Board/Board Manager/@Area2D@18967" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18967" to="Game Board/Board Manager/@Area2D@18967" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18968" to="Game Board/Board Manager/@Area2D@18968" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18968" to="Game Board/Board Manager/@Area2D@18968" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18969" to="Game Board/Board Manager/@Area2D@18969" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18969" to="Game Board/Board Manager/@Area2D@18969" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18970" to="Game Board/Board Manager/@Area2D@18970" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18970" to="Game Board/Board Manager/@Area2D@18970" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18971" to="Game Board/Board Manager/@Area2D@18971" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18971" to="Game Board/Board Manager/@Area2D@18971" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18972" to="Game Board/Board Manager/@Area2D@18972" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18972" to="Game Board/Board Manager/@Area2D@18972" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18973" to="Game Board/Board Manager/@Area2D@18973" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18973" to="Game Board/Board Manager/@Area2D@18973" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Game Board/Board Manager/@Area2D@18974" to="Game Board/Board Manager/@Area2D@18974" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Game Board/Board Manager/@Area2D@18974" to="Game Board/Board Manager/@Area2D@18974" method="_on_mouse_exited"]

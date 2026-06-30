@@ -4,12 +4,10 @@ extends Area2D
 # This script is the basic behaviour for every single token.
 # All common functions of tokens should go here, even if some special ones will override the functions.
 
-enum TokenType{BASIC, ANVIL, PYRE, RAMP, DAGGER, BOMB, DRILL, TETROMINO, ROTATE_GRAVITY, FAN, CHAMELEON}
-
 var player_id:int = 0
 var token_pos:Vector2i = Vector2i.ZERO
 var resolved:bool = false
-var token_type
+var token_type:TokenLibrary.TokenType
 var keywords:Array[Global.KEYWORD] = []
 var board:BoardManager
 var being_destroyed:bool = false
@@ -58,7 +56,7 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 
 
 func setup_special_token():
-	token_type = TokenType.BASIC
+	token_type = TokenLibrary.TokenType.BASIC
 	keywords = []
 
 

@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dcdpt1usuprbf"]
+
+[ext_resource type="Script" uid="uid://b1giryd51yg07" path="res://addons/shape_texture_2d/shape_texture_2d.gd" id="1_qdd02"]
+[ext_resource type="Script" uid="uid://67ncrabyyfmf" path="res://addons/shape_texture_2d/drawable_rectangle.gd" id="2_iplg1"]
+
+[sub_resource type="Resource" id="Resource_qdd02"]
+script = ExtResource("2_iplg1")
+corner_rounding = 16.0
+metadata/_custom_type_script = "uid://67ncrabyyfmf"
+
+[sub_resource type="Texture2D" id="Texture2D_iplg1"]
+resource_local_to_scene = false
+resource_name = ""
+script = ExtResource("1_qdd02")
+size = Vector2i(2808, 2407)
+shape = SubResource("Resource_qdd02")
+metadata/_custom_type_script = "uid://b1giryd51yg07"
+
+[node name="Rectangle" type="Sprite2D" unique_id=829612972]
+texture = SubResource("Texture2D_iplg1")

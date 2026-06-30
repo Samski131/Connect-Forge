@@ -2,7 +2,7 @@ extends Token
 # Pyre Token
 
 func setup_special_token():
-	token_type = TokenType.PYRE
+	token_type = TokenLibrary.TokenType.PYRE
 	charges = 1
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_IMPACT]

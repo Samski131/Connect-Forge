@@ -3,7 +3,7 @@ extends Token
 # Rotates gravity clockwise on land, or anti-clockwise if flipped.
 
 func setup_special_token():
-	token_type = TokenType.ROTATE_GRAVITY
+	token_type = TokenLibrary.TokenType.ROTATE_GRAVITY
 	charges = 1
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_LAND]

@@ -8,7 +8,7 @@ var has_transformed:bool = false
 
 
 func setup_special_token():
-	token_type = TokenType.CHAMELEON
+	token_type = TokenLibrary.TokenType.CHAMELEON
 	charges = 1
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_LAND]

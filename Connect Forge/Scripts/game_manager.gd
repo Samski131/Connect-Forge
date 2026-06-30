@@ -18,15 +18,18 @@ var current_player_id:int = 0
 @onready var action_state:Node = $"Action State"
 @onready var resolution_state:Node = $"Resolution State"
 @onready var game_over_state:Node = $"Game Over State"
-@onready var board_builder:Node = $"../Board Builder"
-@onready var board:BoardManager = $"../Board Manager"
+@onready var board_builder:Node 
+@onready var board:BoardManager
+
+
 
 var winner_ui:VBoxContainer
-
+var token_tray_model:TokenTrayModel = null
 
 func _ready():
 	gather_groups()
 	setup_default_players()
+	setup_token_tray_model()
 	setup_states()
 	start_game()
 
@@ -39,6 +42,8 @@ func setup_states():
 
 
 func gather_groups():
+	board = get_tree().get_first_node_in_group("board pool")
+	board_builder = get_tree().get_first_node_in_group("board builder")
 	winner_ui = get_tree().get_first_node_in_group("winner ui")
 
 
@@ -60,6 +65,9 @@ func add_player() -> bool:
 	number_of_players += 1
 	player_names.append(get_default_player_name(new_player_id))
 	
+	if token_tray_model != null:
+		token_tray_model.resize_for_players(number_of_players)
+		
 	return true
 
 
@@ -74,7 +82,9 @@ func remove_player() -> bool:
 	
 	if current_player_id >= number_of_players:
 		current_player_id = 0
-	
+		
+	if token_tray_model != null:
+		token_tray_model.resize_for_players(number_of_players)
 	return true
 
 
@@ -111,8 +121,8 @@ func get_default_player_name(player_id:int) -> String:
 
 
 func start_game():
-	if number_of_players <= 0:
-		setup_default_players()
+	if token_tray_model != null:
+		token_tray_model.setup_for_players(number_of_players)
 	
 	start_turn(0)
 
@@ -172,3 +182,13 @@ func debug_gravity_changes():
 	if changed:
 		placement_state.clear_placement_token()
 		action_state.enter_state()
+
+func setup_token_tray_model() -> void:
+	token_tray_model = get_node_or_null("Token Tray Model") as TokenTrayModel
+	
+	if token_tray_model == null:
+		token_tray_model = TokenTrayModel.new()
+		token_tray_model.name = "Token Tray Model"
+		add_child(token_tray_model)
+	
+	token_tray_model.setup_for_players(number_of_players)

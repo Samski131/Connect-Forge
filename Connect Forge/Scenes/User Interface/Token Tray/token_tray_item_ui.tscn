@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://dqgswqs7ya38d"]
+
+[ext_resource type="Script" uid="uid://c0cywxa4o1tl1" path="res://Scripts/User Interface/Token Trays/token_tray_item_ui.gd" id="1_nkme4"]
+[ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="2_l8c5t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_odcin"]
+bg_color = Color(0.92156863, 0.88235295, 0.8039216, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7130014, 0.646419, 0.52279514, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l8c5t"]
+bg_color = Color(0.12156863, 0.29411766, 0.49803922, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.4048, 0.6452267, 0.92, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.3882353)
+shadow_size = 1
+
+[node name="TokenTrayItemUI" type="PanelContainer" unique_id=1590710358]
+custom_minimum_size = Vector2(93.6, 114.4)
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_odcin")
+script = ExtResource("1_nkme4")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=940372737]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Root (Vbox)" type="VBoxContainer" parent="Margin" unique_id=1724678068]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="Icon Control" type="Control" parent="Margin/Root (Vbox)" unique_id=1294657233]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Icon (Texture Rect)" type="TextureRect" parent="Margin/Root (Vbox)/Icon Control" unique_id=1242793369]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_l8c5t")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="Margin/Root (Vbox)/Icon Control" unique_id=388965093]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -29.0
+offset_top = -29.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_l8c5t")
+
+[node name="Label" type="Label" parent="Margin/Root (Vbox)/Icon Control/PanelContainer" unique_id=361184299]
+layout_mode = 2
+text = "x0"
+horizontal_alignment = 1
+vertical_alignment = 1

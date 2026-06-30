@@ -6,7 +6,7 @@ var number_of_wiggles:int = 3
 
 
 func setup_special_token():
-	token_type = TokenType.RAMP
+	token_type = TokenLibrary.TokenType.RAMP
 	keywords = [Global.KEYWORD.ON_IMPACT]
 
 

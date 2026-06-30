@@ -7,7 +7,7 @@ var line_flash_duration:float = 0.4
 
 
 func setup_special_token():
-	token_type = TokenType.TETROMINO
+	token_type = TokenLibrary.TokenType.TETROMINO
 	keywords = [Global.KEYWORD.ON_LINE_FULL]
 
 

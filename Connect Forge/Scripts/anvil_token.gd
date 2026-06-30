@@ -2,7 +2,7 @@ extends Token
 # Anvil Token
 
 func setup_special_token():
-	token_type = TokenType.ANVIL
+	token_type = TokenLibrary.TokenType.ANVIL
 	charges = 1
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_LAND]

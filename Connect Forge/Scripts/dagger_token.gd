@@ -3,7 +3,7 @@ extends Token
 # Destroys a token that passes on this token's right side.
 
 func setup_special_token():
-	token_type = TokenType.DAGGER
+	token_type = TokenLibrary.TokenType.DAGGER
 	charges = 1
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_PASS_RIGHT]

@@ -6,7 +6,7 @@ extends Token
 
 
 func setup_special_token():
-	token_type = TokenType.FAN
+	token_type = TokenLibrary.TokenType.FAN
 	keywords = []
 
 

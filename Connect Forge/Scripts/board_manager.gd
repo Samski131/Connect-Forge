@@ -205,7 +205,7 @@ func set_gravity_direction(new_direction:BoardSetting.GRID_DIRECTION, animate_vi
 	settings.gravity_direction = new_direction
 	
 	refresh_gravity_order()
-	get_tree().call_group("slot", "gravity_change")
+	get_tree().call_group("slot", "refresh_visual_state")
 	get_tree().call_group("token", "reset_resolved")
 	
 	if animate_visual:
@@ -243,3 +243,6 @@ func apply_token_gravity_visual(token:Token) -> void:
 	var target_rotation_degrees:float = get_gravity_visual_rotation_degrees()
 	token.gravity_visual_rotation_degrees = target_rotation_degrees
 	token.sprites.rotation_degrees = target_rotation_degrees
+
+func refresh_slot_visuals() -> void:
+	get_tree().call_group("slot", "refresh_visual_state")

@@ -8,6 +8,7 @@ var game_manager:Node
 var current_fake_player_id:int = -1
 var dissolve_materials:Array[ShaderMaterial] = []
 
+	
 func _ready() -> void:
 	game_manager = get_tree().get_first_node_in_group("game manager")
 	

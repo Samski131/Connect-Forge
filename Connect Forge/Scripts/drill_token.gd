@@ -8,7 +8,7 @@ var drill_wiggle_duration:float = 0.28
 
 
 func setup_special_token():
-	token_type = TokenType.DRILL
+	token_type = TokenLibrary.TokenType.DRILL
 	keywords = [Global.KEYWORD.ON_LAND]
 
 

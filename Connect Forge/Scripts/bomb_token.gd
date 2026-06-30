@@ -3,7 +3,7 @@ extends Token
 # Destroys itself and adjacent tokens when it lands.
 
 func setup_special_token():
-	token_type = TokenType.BOMB
+	token_type = TokenLibrary.TokenType.BOMB
 	keywords = [Global.KEYWORD.ON_LAND]
 
 

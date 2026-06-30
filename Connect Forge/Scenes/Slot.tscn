@@ -2,8 +2,31 @@
 
 [ext_resource type="Script" uid="uid://b1giryd51yg07" path="res://addons/shape_texture_2d/shape_texture_2d.gd" id="1_ncnge"]
 [ext_resource type="Script" uid="uid://drqajqm0mfpyo" path="res://Scripts/slot.gd" id="1_tngci"]
+[ext_resource type="Shader" uid="uid://dm0rorvfwxgkf" path="res://Shaders/slot_back.gdshader" id="2_7dgrc"]
 [ext_resource type="Script" uid="uid://67ncrabyyfmf" path="res://addons/shape_texture_2d/drawable_rectangle.gd" id="2_tngci"]
 [ext_resource type="Texture2D" uid="uid://dutf6yam0bok2" path="res://Assets/Slot Front@4x.png" id="3_7dgrc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7dgrc"]
+resource_local_to_scene = true
+shader = ExtResource("2_7dgrc")
+shader_parameter/base_color = Color(0.11764706, 0.2901961, 0.47843137, 1)
+shader_parameter/highlight_color = Color(0.19600001, 0.37800002, 0.56, 1)
+shader_parameter/hover_color = Color(0.2948, 0.48240003, 0.67, 1)
+shader_parameter/rim_color = Color(0.72156864, 0.8039216, 0.8784314, 1)
+shader_parameter/visual_state = 0
+shader_parameter/highlight_mix = 0.7
+shader_parameter/hover_mix = 0.82
+shader_parameter/rim_strength = 0.14
+shader_parameter/active_rim_boost = 0.22
+shader_parameter/rim_size = 0.361
+shader_parameter/rim_softness = 0.386
+shader_parameter/pulse_strength = 0.05
+shader_parameter/pulse_speed = 1.4
+shader_parameter/centre_depth_strength = 0.92
+shader_parameter/centre_depth_size = 0.317
+shader_parameter/centre_depth_softness = 0.576
+shader_parameter/vertical_shade_strength = 0.24
+shader_parameter/octagon_corner_strength = 0.7
 
 [sub_resource type="Resource" id="Resource_a1x03"]
 script = ExtResource("2_tngci")
@@ -25,14 +48,28 @@ font_size = 75
 
 [node name="Slot" type="Area2D" unique_id=63901002 groups=["slot"]]
 script = ExtResource("1_tngci")
+background_color = Color(0.11764706, 0.2901961, 0.47843137, 1)
+highlight_color = Color(0.19600001, 0.37800002, 0.56, 1)
+hover_color = Color(0.2948, 0.48240003, 0.67, 1)
+rim_color = Color(0.72156864, 0.8039216, 0.8784314, 1)
+front_frame_color = Color(0.9098039, 0.94509804, 0.972549, 1)
+highlight_mix = 0.7
+rim_strength = 0.14
+active_rim_boost = 0.22
+pulse_strength = 0.05
+centre_depth_strength = 0.92
+centre_depth_size = 0.317
+centre_depth_softness = 0.576
+vertical_shade_strength = 0.24
 
 [node name="Back" type="Sprite2D" parent="." unique_id=1229060593]
-modulate = Color(0.11764706, 0.4117647, 0.22352941, 1)
 z_index = -1
 texture_filter = 2
+material = SubResource("ShaderMaterial_7dgrc")
 texture = SubResource("Texture2D_v3ifj")
 
 [node name="Front" type="Sprite2D" parent="." unique_id=1087407638]
+modulate = Color(0.9098039, 0.94509804, 0.972549, 1)
 z_index = 1
 texture = ExtResource("3_7dgrc")
 

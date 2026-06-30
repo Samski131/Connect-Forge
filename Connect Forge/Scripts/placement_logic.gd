@@ -29,12 +29,18 @@ func setup(new_game_manager:Node, new_board:BoardManager):
 func enter_state():
 	get_parent().current_turn_phase = Global.TURN_PHASE.PLACEMENT
 	clear_placement_token()
+	
 	current_placement_token = placement_token_sprite.instantiate()
 	current_placement_token.visible = false
-	current_placement_token.global_position = Vector2(-100000, -100000)
-	get_tree().root.call_deferred("add_child", current_placement_token)
-
-
+	current_placement_token.position = Vector2.ZERO
+	current_placement_token.scale = Vector2.ONE
+	
+	if board != null and board.token_pool != null:
+		board.token_pool.add_child(current_placement_token)
+	else:
+		add_child(current_placement_token)
+		
+		
 func exit_state():
 	clear_placement_token()
 	game_manager.action_state.enter_state()
@@ -92,8 +98,8 @@ func move_placement_token():
 		current_placement_token.visible = false
 		return
 	
-	current_placement_token.global_position = board.hovered_slot.global_position
 	current_placement_token.visible = true
+	current_placement_token.global_position = board.slot_to_global_position(board.hovered_slot.slot_position)
 
 
 func try_to_place_token()->bool:
