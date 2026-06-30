@@ -47,6 +47,7 @@ size = Vector2(400, 400)
 font_size = 75
 
 [node name="Slot" type="Area2D" unique_id=63901002 groups=["slot"]]
+z_index = 2
 script = ExtResource("1_tngci")
 background_color = Color(0.11764706, 0.2901961, 0.47843137, 1)
 highlight_color = Color(0.19600001, 0.37800002, 0.56, 1)

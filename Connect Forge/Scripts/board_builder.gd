@@ -23,6 +23,7 @@ var sprite_2d_rectangle:PackedScene = load("uid://dcdpt1usuprbf")
 var slot_width_and_height:float
 var board_area_fitter:PanelContainer
 func _ready():
+
 	board_area_fitter = get_tree().get_first_node_in_group("board area fitter")
 	clear_board()
 	setup_board_settings()
@@ -48,6 +49,9 @@ func build_board():
 	if not Engine.is_editor_hint():
 		board.settings.columns = columns
 		board.settings.rows = rows
+		board.visible = true
+	else:
+		board.visible = false
 	
 	for x in range(columns):
 		for y in range(rows):
