@@ -6,6 +6,7 @@ signal current_player_changed(player_id:int)
 signal player_names_changed
 signal turn_number_changed(turn_number:int)
 signal game_time_changed(total_seconds:int)
+signal score_changed
 
 @export var starting_number_of_players:int = 2
 @export var minimum_number_of_players:int = 2
@@ -21,6 +22,9 @@ var current_turn_number:int = 1
 var elapsed_game_time:float = 0.0
 var elapsed_game_seconds:int = 0
 var game_timer_running:bool = false
+var player_wins:Array[int] = []
+var player_losses:Array[int] = []
+var match_result_recorded:bool = false
 
 @onready var placement_state:Node = $"Placement State"
 @onready var action_state:Node = $"Action State"
@@ -29,7 +33,6 @@ var game_timer_running:bool = false
 @onready var board_builder:Node 
 @onready var board:BoardManager
 
-var winner_ui:VBoxContainer
 var token_tray_inventory:TokenTrayInventory = null
 var player_token_trays_ui:PlayerTokenTraysUI = null
 
@@ -53,11 +56,12 @@ func setup_states():
 func gather_groups():
 	board = get_tree().get_first_node_in_group("board pool")
 	board_builder = get_tree().get_first_node_in_group("board builder")
-	winner_ui = get_tree().get_first_node_in_group("winner ui")
 	player_token_trays_ui = get_tree().get_first_node_in_group("player token trays ui") as PlayerTokenTraysUI
 
 func setup_default_players() -> void:
 	player_names.clear()
+	player_wins.clear()
+	player_losses.clear()
 	number_of_players = 0
 	
 	var players_to_add:int = clamp(starting_number_of_players, minimum_number_of_players, max_number_of_players)
@@ -73,11 +77,14 @@ func add_player() -> bool:
 	var new_player_id:int = number_of_players
 	number_of_players += 1
 	player_names.append(get_default_player_name(new_player_id))
+	player_wins.append(0)
+	player_losses.append(0)
 	
 	if token_tray_inventory != null:
 		token_tray_inventory.resize_for_players(number_of_players)
 	
 	rebuild_player_trays()
+	score_changed.emit()
 	
 	return true
 
@@ -91,6 +98,12 @@ func remove_player() -> bool:
 	if player_names.size() > number_of_players:
 		player_names.pop_back()
 	
+	if player_wins.size() > number_of_players:
+		player_wins.pop_back()
+	
+	if player_losses.size() > number_of_players:
+		player_losses.pop_back()
+	
 	if token_tray_inventory != null:
 		token_tray_inventory.resize_for_players(number_of_players)
 	
@@ -98,9 +111,9 @@ func remove_player() -> bool:
 		current_player_id = 0
 	
 	rebuild_player_trays()
+	score_changed.emit()
 	
 	return true
-
 
 func set_player_name(player_id:int, new_name:String) -> bool:
 	if player_id < 0:
@@ -135,12 +148,12 @@ func get_default_player_name(player_id:int) -> String:
 
 
 func start_game():
+	match_result_recorded = false
 	current_turn_number = 1
 	turn_number_changed.emit(current_turn_number)
 	reset_game_timer()
 	start_game_timer()
 	start_turn(0)
-
 
 func start_turn(player_id:int):
 	current_player_id = player_id
@@ -189,7 +202,7 @@ func _process(delta:float) -> void:
 
 func reset_game():
 	board_builder.rebuild_board()
-	winner_ui.clear_winner()
+	reset_test_token_trays()
 	start_game()
 
 func debug_gravity_changes():
@@ -287,3 +300,103 @@ func format_seconds_as_minutes_seconds(total_seconds:int) -> String:
 	var seconds:int = used_seconds % 60
 	
 	return "%02d:%02d" % [minutes, seconds]
+
+func record_match_result(winner_id:int) -> bool:
+	if match_result_recorded:
+		return false
+	
+	if winner_id < 0:
+		return false
+	
+	if winner_id >= number_of_players:
+		return false
+	
+	ensure_score_arrays_match_players()
+	
+	for player_id in range(number_of_players):
+		if player_id == winner_id:
+			player_wins[player_id] += 1
+		else:
+			player_losses[player_id] += 1
+	
+	match_result_recorded = true
+	score_changed.emit()
+	
+	return true
+
+
+func ensure_score_arrays_match_players() -> void:
+	while player_wins.size() < number_of_players:
+		player_wins.append(0)
+	
+	while player_losses.size() < number_of_players:
+		player_losses.append(0)
+	
+	while player_wins.size() > number_of_players:
+		player_wins.pop_back()
+	
+	while player_losses.size() > number_of_players:
+		player_losses.pop_back()
+
+
+func get_player_wins(player_id:int) -> int:
+	ensure_score_arrays_match_players()
+	
+	if player_id < 0:
+		return 0
+	
+	if player_id >= player_wins.size():
+		return 0
+	
+	return player_wins[player_id]
+
+
+func get_player_losses(player_id:int) -> int:
+	ensure_score_arrays_match_players()
+	
+	if player_id < 0:
+		return 0
+	
+	if player_id >= player_losses.size():
+		return 0
+	
+	return player_losses[player_id]
+
+
+func reset_scores() -> void:
+	for player_id in range(player_wins.size()):
+		player_wins[player_id] = 0
+	
+	for player_id in range(player_losses.size()):
+		player_losses[player_id] = 0
+	
+	score_changed.emit()
+
+
+func reset_test_token_trays() -> void:
+	if token_tray_inventory == null:
+		return
+	
+	token_tray_inventory.reset_all_trays()
+	give_test_tokens()
+	
+func debug_start_next_round() -> void:
+	current_turn_phase = Global.TURN_PHASE.NONE
+	
+	var drag_controller:TokenDragController = get_tree().get_first_node_in_group("token drag controller") as TokenDragController
+	
+	if drag_controller != null:
+		drag_controller.cancel_drag()
+	
+	if placement_state != null and placement_state.has_method("clear_placement_token"):
+		placement_state.clear_placement_token()
+	
+	if board_builder != null:
+		board_builder.rebuild_board()
+	
+	if board != null:
+		board.set_gravity_direction(BoardSetting.GRID_DIRECTION.DOWN, false)
+	
+	board_builder.rebuild_board()
+	reset_test_token_trays()
+	start_game()

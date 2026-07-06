@@ -22,13 +22,16 @@ func enter_state():
 func exit_state():
 	game_manager.end_turn()
 	
-func process_state():
-	var winner_id = check_for_win()
-	if winner_id != -1 :
-		game_manager.winner_ui.update_winner(winner_id)
+func process_state() -> void:
+	var winner_id:int = check_for_win()
+	
+	if winner_id != -1:
+		if game_manager.has_method("record_match_result"):
+			game_manager.record_match_result(winner_id)
+		
 		game_manager.game_over_state.enter_state()
 		return
-		
+	
 	exit_state()
 
 func check_for_win()->int:

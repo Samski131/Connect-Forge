@@ -29,6 +29,8 @@
 [ext_resource type="Script" uid="uid://dg3fsfahrpr70" path="res://Scripts/User Interface/current_player_ui_label.gd" id="23_iilvt"]
 [ext_resource type="Script" uid="uid://cfpun1657r1aw" path="res://Scripts/User Interface/Token Trays/player_token_trays_ui.gd" id="23_o6jnn"]
 [ext_resource type="Script" uid="uid://drml0evch0llu" path="res://Scripts/debug mouse position.gd" id="23_y1aqv"]
+[ext_resource type="Script" uid="uid://pkloqfoaqfl7" path="res://Scripts/User Interface/score_counter_ui_label.gd" id="24_byhpu"]
+[ext_resource type="Script" uid="uid://cge2s1kgkwsth" path="res://Scripts/User Interface/debug_next_round.gd" id="31_0iu65"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_245tq"]
 shader = ExtResource("15_7vatw")
@@ -105,7 +107,7 @@ position = Vector2(2664, 1996)
 [node name="Token Pool" type="Node2D" parent="Game Board" unique_id=1697406012 groups=["token pool"]]
 z_index = 2
 
-[node name="Board Builder" type="Node2D" parent="Game Board" unique_id=37717649]
+[node name="Board Builder" type="Node2D" parent="Game Board" unique_id=37717649 groups=["board builder"]]
 script = ExtResource("1_jobum")
 border_highlight_width = 12
 border_exterior_color = Color(0.3019608, 0.40784314, 0.5372549, 1)
@@ -293,6 +295,7 @@ layout_mode = 2
 text = "Score:   1:0"
 label_settings = SubResource("LabelSettings_8pmni")
 horizontal_alignment = 1
+script = ExtResource("24_byhpu")
 
 [node name="VSeparator3" type="VSeparator" parent="User Interface/Game UI/Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Center Scoreboard/PanelContainer/MarginContainer/HBoxContainer" unique_id=2084845988]
 layout_mode = 2
@@ -360,6 +363,12 @@ layout_mode = 2
 [node name="Content (Vbox)" type="VBoxContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)" unique_id=1100701590]
 layout_mode = 2
 alignment = 1
+
+[node name="Next Round" type="Button" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)" unique_id=789898491]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Next Round"
+script = ExtResource("31_0iu65")
 
 [node name="Current Turn Header" type="MarginContainer" parent="User Interface/Game UI/Panels/Centre Panels/Right Sidebar (PanelContainer)/Right Sidebar Margin (Margin Container)/Content (Vbox)" unique_id=533979710]
 layout_mode = 2
