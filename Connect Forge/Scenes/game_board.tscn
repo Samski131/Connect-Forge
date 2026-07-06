@@ -115,7 +115,6 @@ border_exterior_highlight_color = Color(0.43137255, 0.54509807, 0.654902, 1)
 border_interior_color = Color(0.11764706, 0.23137255, 0.3647059, 1)
 
 [node name="Board Manager" type="Node2D" parent="Game Board" unique_id=397328331 groups=["board pool"]]
-visible = false
 script = ExtResource("2_547an")
 
 [node name="Board Visual Manager" type="Node2D" parent="Game Board" unique_id=500994368]

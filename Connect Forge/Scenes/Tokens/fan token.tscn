@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bddb6eysdayni" path="res://Assets/tokens/parts of tokens/Asset 77.png" id="6_otqib"]
 [ext_resource type="Texture2D" uid="uid://bm0yjjdpdyrss" path="res://Assets/tokens/parts of tokens/Asset 75.png" id="7_n1b77"]
 [ext_resource type="Texture2D" uid="uid://cpj36d6rqcu7a" path="res://Assets/tokens/parts of tokens/Asset 74.png" id="8_fkfjd"]
-[ext_resource type="Texture2D" uid="uid://d14wt8o1terf0" path="res://Assets/tokens/parts of tokens/token decoration/Fan.png" id="9_taw63"]
+[ext_resource type="Texture2D" uid="uid://b2n71wr0vypy4" path="res://Assets/tokens/parts of tokens/token decoration/Arrow.png" id="9_fcp5w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1njb1"]
 size = Vector2(340, 340)
@@ -65,15 +65,13 @@ texture = ExtResource("8_fkfjd")
 [node name="cyan - fan shadow" type="Sprite2D" parent="Sprites/Icon" unique_id=586332891]
 modulate = Color(0, 1, 1, 1)
 position = Vector2(0, 12.5)
-texture = ExtResource("9_taw63")
+texture = ExtResource("9_fcp5w")
 offset = Vector2(0, -4)
-flip_h = true
 
 [node name="red - fan light" type="Sprite2D" parent="Sprites/Icon" unique_id=427416080]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(0, 12.5)
-texture = ExtResource("9_taw63")
-flip_h = true
+texture = ExtResource("9_fcp5w")
 
 [node name="Token_pos Label" type="Label" parent="." unique_id=1356980226]
 visible = false

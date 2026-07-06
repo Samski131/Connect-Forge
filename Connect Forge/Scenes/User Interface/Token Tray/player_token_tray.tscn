@@ -48,13 +48,14 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [node name="Player Token Tray" type="MarginContainer" unique_id=1041809594]
+size_flags_horizontal = 3
 theme_override_constants/margin_top = 8
 script = ExtResource("1_p7v6v")
 item_scene = ExtResource("2_p7v6v")
 
 [node name="Token Tray (Outline)" type="PanelContainer" parent="." unique_id=161270509]
 layout_mode = 2
-size_flags_horizontal = 6
+size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_sygxm")
 
@@ -70,6 +71,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_iilvt")
 
 [node name="Token Tray (Vbox)" type="VBoxContainer" parent="Token Tray (Outline)/Token Tray (Hbox)" unique_id=1021632893]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
 [node name="Player Header (Panel Container)" type="PanelContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)" unique_id=207494395]
@@ -117,9 +119,6 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="CenterContainer" type="CenterContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer" unique_id=651641336]
-layout_mode = 2
-
-[node name="Token Grid" type="GridContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer" unique_id=1957782513]
+[node name="Token Grid" type="GridContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer" unique_id=1957782513]
 layout_mode = 2
 columns = 5

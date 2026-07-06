@@ -86,7 +86,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_DESCRIPTION: "Destroys a token that passes on its trigger side.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/dagger token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Dagger.png",
-			KEY_CAN_FLIP: false,
+			KEY_CAN_FLIP: true,
 			KEY_TRAY_ORDER: 4
 		},
 		TokenType.DRILL: {
@@ -126,7 +126,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_DESCRIPTION: "Rotates the board gravity direction.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/rotate gravity token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Rotate.png",
-			KEY_CAN_FLIP: false,
+			KEY_CAN_FLIP: true,
 			KEY_TRAY_ORDER: 9
 		},
 		TokenType.TETROMINO: {

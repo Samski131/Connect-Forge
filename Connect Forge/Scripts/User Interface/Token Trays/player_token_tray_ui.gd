@@ -10,7 +10,7 @@ var item_uis:Dictionary = {}
 
 @onready var color_indicator:Panel = $"Token Tray (Outline)/Token Tray (Hbox)/Color Indicator"
 @onready var player_name_label:Label = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)/Player Name"
-@onready var token_grid:GridContainer = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/CenterContainer/Token Grid"
+@onready var token_grid:GridContainer = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Bottom Panel of Token Tray/Interior panel/MarginContainer/Token Grid"
 @onready var header_token_visual_display:TokenVisualDisplay = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)/Header Token Visual Display"
 
 func _ready() -> void:

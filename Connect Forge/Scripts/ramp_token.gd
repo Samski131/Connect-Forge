@@ -35,15 +35,9 @@ func _on_impact(_context:Dictionary) -> bool:
 	if board.get_token(ramp_drop_off_pos) != null:
 		return false
 	
-	var target_flipped_state:bool = not is_flipped
-	var flip_duration:float = 0.4
-	
-	if board.visuals != null:
-		flip_duration = board.visuals.flip_duration
 	
 	var effects:Array[BoardVisualEffect] = [
 		WiggleVisualEffect.new(self, wiggle_strength, number_of_wiggles),
-		TokenFlipVisualEffect.new(self, target_flipped_state, flip_duration)
 	]
 	
 	return board.move_token_on_board(landing_token, ramp_drop_off_pos, BoardVisualManager.MOVE_VISUAL.SLIDE, effects)

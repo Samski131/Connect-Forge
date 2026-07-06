@@ -235,18 +235,8 @@ func setup_token_tray_inventory() -> void:
 	
 	token_tray_inventory.setup_for_players(number_of_players)
 	
-func give_test_tokens() -> void:
-	if token_tray_inventory == null:
-		return
-	
-	for player_id in range(number_of_players):
-		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.BASIC, 99)
-		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.ANVIL, 3)
-		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.BOMB, 3)
-		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.FAN, 3)
-		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.RAMP, 3)
-		token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.TETROMINO, 3)
 
+	
 func rebuild_player_trays() -> void:
 	if player_token_trays_ui == null:
 		player_token_trays_ui = get_tree().get_first_node_in_group("player token trays ui") as PlayerTokenTraysUI
@@ -400,3 +390,28 @@ func debug_start_next_round() -> void:
 	board_builder.rebuild_board()
 	reset_test_token_trays()
 	start_game()
+
+
+func give_test_tokens() -> void:
+	if token_tray_inventory == null:
+		return
+	
+	#for player_id in range(number_of_players):
+		#token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.BASIC, 99)
+		#token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.ANVIL, 3)
+		#token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.BOMB, 3)
+		#token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.FAN, 3)
+		#token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.RAMP, 3)
+		#token_tray_inventory.add_tokens(player_id, TokenLibrary.TokenType.TETROMINO, 3)
+	#Player 1
+	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.BASIC, 99)
+	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.ANVIL, 2)
+	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.DRILL, 2)
+	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.CHAMELEON, 2)
+	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.TETROMINO, 2)
+	#player 2
+	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.BASIC, 99)
+	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.ANVIL, 2)
+	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.DRILL, 2)
+	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.CHAMELEON, 2)
+	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.PYRE, 2)

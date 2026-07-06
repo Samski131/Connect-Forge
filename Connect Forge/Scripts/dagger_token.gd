@@ -6,7 +6,7 @@ func setup_special_token():
 	token_type = TokenLibrary.TokenType.DAGGER
 	charges = 1
 	ability_cost = 1
-	keywords = [Global.KEYWORD.ON_PASS_RIGHT]
+	keywords = [Global.KEYWORD.ON_PASS_RIGHT, Global.KEYWORD.ON_PASS_LEFT]
 
 
 func _try_to_use_ability()->bool:
@@ -14,6 +14,12 @@ func _try_to_use_ability()->bool:
 
 
 func _on_pass_right(context:Dictionary)->bool:
+	return use_ability(context)
+
+func _on_pass_left(context:Dictionary)->bool:
+	return use_ability(context)
+	
+func use_ability(context:Dictionary)->bool:
 	if check_enough_charges(ability_cost) == false:
 		return false
 	
@@ -29,11 +35,13 @@ func _on_pass_right(context:Dictionary)->bool:
 	deduct_charges(ability_cost)
 	
 	return board.destroy_token(moving_token)
-
-
 func _can_trigger_keyword(keyword:Global.KEYWORD, context:Dictionary = {})->bool:
-	if keyword != Global.KEYWORD.ON_PASS_RIGHT:
-		return false
+	if(is_flipped):
+		if keyword != Global.KEYWORD.ON_PASS_LEFT:
+			return false
+	else:
+		if keyword != Global.KEYWORD.ON_PASS_RIGHT:
+			return false
 	
 	if check_enough_charges(ability_cost) == false:
 		return false
