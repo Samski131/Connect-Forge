@@ -78,7 +78,7 @@ func create_preview_token() -> bool:
 	
 	preview_token.remove_from_group("token")
 	preview_token.setup(board, Vector2i.ZERO, dragged_player_id)
-	preview_token.modulate = Color(1.0, 1.0, 1.0, 0.75)
+	preview_token.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	preview_token.z_index = 1000
 	
 	disable_preview_collision(preview_token)
@@ -152,12 +152,24 @@ func flip_dragged_token() -> void:
 	if preview_token == null:
 		return
 	
-	dragged_is_flipped = !dragged_is_flipped
+	if is_instance_valid(preview_token) == false:
+		return
 	
-	if preview_token.has_method("set_flipped"):
-		preview_token.set_flipped(dragged_is_flipped)
-	else:
-		preview_token.is_flipped = dragged_is_flipped
+	dragged_is_flipped = not dragged_is_flipped
+	
+	var used_duration:float = 0.28
+	var used_min_scale_x:float = 0.08
+	var used_pop_scale_y:float = 1.08
+	
+	if board != null and board.visuals != null:
+		used_duration = board.visuals.flip_duration
+		used_min_scale_x = board.visuals.flip_min_scale_x
+		used_pop_scale_y = board.visuals.flip_pop_scale_y
+	
+	var effect:TokenFlipVisualEffect = TokenFlipVisualEffect.new(preview_token, dragged_is_flipped, used_duration)
+	effect.min_scale_x = used_min_scale_x
+	effect.pop_scale_y = used_pop_scale_y
+	effect.play(self, Callable())
 
 
 func try_drop_dragged_token() -> void:

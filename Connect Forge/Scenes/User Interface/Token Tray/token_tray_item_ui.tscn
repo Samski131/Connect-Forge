@@ -62,6 +62,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_l8c5t")
+visual_scale = 0.24
 
 [node name="Count Badge Panel" type="PanelContainer" parent="Margin/Root (Vbox)/Icon Control" unique_id=388965093]
 layout_mode = 1

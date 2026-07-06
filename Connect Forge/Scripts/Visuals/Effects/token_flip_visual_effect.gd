@@ -45,13 +45,10 @@ func _play_valid(runner:Node) -> void:
 
 
 func _swap_side() -> void:
-	if _token == null or is_instance_valid(_token) == false:
+	if _token == null:
 		return
 	
-	_token.is_flipped = new_is_flipped
-	
-	if _token.sprites == null:
+	if is_instance_valid(_token) == false:
 		return
 	
-	if _token.sprites.has_method("set_flipped_visual"):
-		_token.sprites.set_flipped_visual(_token.is_flipped)
+	_token.set_flipped(new_is_flipped)

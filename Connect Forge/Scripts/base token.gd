@@ -221,6 +221,10 @@ func apply_flipped_visual() -> void:
 	if sprites == null:
 		return
 	
+	if sprites.has_method("set_flipped_visual"):
+		sprites.set_flipped_visual(is_flipped)
+		return
+	
 	if is_flipped:
 		sprites.scale.x = -abs(sprites.scale.x)
 	else:

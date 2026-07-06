@@ -29,8 +29,6 @@ var game_timer_running:bool = false
 @onready var board_builder:Node 
 @onready var board:BoardManager
 
-
-
 var winner_ui:VBoxContainer
 var token_tray_inventory:TokenTrayInventory = null
 var player_token_trays_ui:PlayerTokenTraysUI = null
