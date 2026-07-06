@@ -41,7 +41,7 @@ func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int,
 	return new_token
 
 
-func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualManager.MOVE_VISUAL = BoardVisualManager.MOVE_VISUAL.SLIDE, extra_parallel_effects:Array[BoardVisualEffect] = []) -> bool:
+func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualManager.MOVE_VISUAL = BoardVisualManager.MOVE_VISUAL.SLIDE, extra_parallel_effects:Array[BoardVisualEffect] = [], check_pass_triggers:bool = true, movement_path:Array[Vector2i] = []) -> bool:
 	if token == null:
 		return false
 	
@@ -57,17 +57,39 @@ func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualM
 	if board.get_token(new_pos) != null:
 		return false
 	
+	var start_pos:Vector2i = token.token_pos
+	var destination:Vector2i = new_pos
+	var pass_step:Dictionary = {}
+	
+	if check_pass_triggers:
+		pass_step = _get_first_pass_step(token, start_pos, new_pos, movement_path)
+		
+		if pass_step.has("has_pass_trigger"):
+			if pass_step["has_pass_trigger"]:
+				destination = pass_step["to_pos"]
+	
+	if board.is_position_in_bounds(destination) == false:
+		return false
+	
+	if board.get_token(destination) != null:
+		return false
+	
 	board.remove_token_from_board(token.token_pos)
-	token.token_pos = new_pos
-	board.add_token_to_board(token, new_pos)
+	token.token_pos = destination
+	board.add_token_to_board(token, destination)
 	
 	if board.visuals != null:
-		var move_effect := _create_move_effect(token, new_pos, move_visual)
-		var effect_to_queue := _combine_with_extra_parallel_effects(move_effect, extra_parallel_effects)
+		var move_effect:TokenMoveVisualEffect = _create_move_effect(token, destination, move_visual)
+		var effect_to_queue:BoardVisualEffect = _combine_with_extra_parallel_effects(move_effect, extra_parallel_effects)
 		
 		board.visuals.queue_effect(effect_to_queue, move_visual == BoardVisualManager.MOVE_VISUAL.FALL)
 	else:
 		token.move_token_visual()
+	
+	if check_pass_triggers:
+		if pass_step.has("has_pass_trigger"):
+			if pass_step["has_pass_trigger"]:
+				board.trigger_resolver.queue_passing_trigger(token, pass_step["from_pos"], pass_step["to_pos"])
 	
 	return true
 
@@ -128,7 +150,6 @@ func try_apply_gravity_to_token(token:Token) -> bool:
 	if token.being_destroyed:
 		return false
 	
-	var old_pos:Vector2i = token.token_pos
 	var fall_path:Array[Vector2i] = board.trigger_resolver.get_fall_path(token)
 	
 	if fall_path.is_empty():
@@ -136,13 +157,9 @@ func try_apply_gravity_to_token(token:Token) -> bool:
 			token.debug_token()
 		return false
 	
-	var pass_step:Dictionary = board.trigger_resolver.find_first_pass_trigger_step(token, old_pos, fall_path)
-	var destination:Vector2i = pass_step["to_pos"]
-	
-	var moved:bool = move_token_on_board(token, destination, BoardVisualManager.MOVE_VISUAL.FALL)
-	
-	if moved and pass_step["has_pass_trigger"]:
-		board.trigger_resolver.queue_passing_trigger(token, pass_step["from_pos"], pass_step["to_pos"])
+	var destination:Vector2i = fall_path.back()
+	var extra_effects:Array[BoardVisualEffect] = []
+	var moved:bool = move_token_on_board(token, destination, BoardVisualManager.MOVE_VISUAL.FALL, extra_effects, true, fall_path)
 	
 	if board.get_token(token.token_pos) == token:
 		token.debug_token()
@@ -214,3 +231,61 @@ func get_supporting_token(token:Token) -> Token:
 		return null
 	
 	return support_token
+
+func _get_first_pass_step(token:Token, start_pos:Vector2i, new_pos:Vector2i, movement_path:Array[Vector2i]) -> Dictionary:
+	var path:Array[Vector2i] = _get_pass_check_path(start_pos, new_pos, movement_path)
+	
+	if path.is_empty():
+		return {
+			"has_pass_trigger": false,
+			"from_pos": start_pos,
+			"to_pos": start_pos
+		}
+	
+	return board.trigger_resolver.find_first_pass_trigger_step(token, start_pos, path)
+
+
+func _get_pass_check_path(start_pos:Vector2i, new_pos:Vector2i, movement_path:Array[Vector2i]) -> Array[Vector2i]:
+	var path:Array[Vector2i] = []
+	
+	if movement_path.is_empty() == false:
+		for pos in movement_path:
+			path.append(pos)
+		
+		return path
+	
+	return _create_straight_movement_path(start_pos, new_pos)
+
+
+func _create_straight_movement_path(start_pos:Vector2i, new_pos:Vector2i) -> Array[Vector2i]:
+	var path:Array[Vector2i] = []
+	
+	if start_pos == new_pos:
+		return path
+	
+	var difference:Vector2i = new_pos - start_pos
+	var step:Vector2i = Vector2i.ZERO
+	
+	if difference.x > 0:
+		step.x = 1
+	elif difference.x < 0:
+		step.x = -1
+	
+	if difference.y > 0:
+		step.y = 1
+	elif difference.y < 0:
+		step.y = -1
+	
+	if difference.x != 0 and difference.y != 0:
+		if abs(difference.x) != abs(difference.y):
+			path.append(new_pos)
+			return path
+	
+	var current_pos:Vector2i = start_pos + step
+	
+	while current_pos != new_pos:
+		path.append(current_pos)
+		current_pos += step
+	
+	path.append(new_pos)
+	return path

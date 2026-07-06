@@ -203,6 +203,7 @@ func _process(delta:float) -> void:
 func reset_game():
 	board_builder.rebuild_board()
 	reset_test_token_trays()
+	get_tree().call_group("winning_line_visual", "queue_free")
 	start_game()
 
 func debug_gravity_changes():
@@ -371,6 +372,7 @@ func reset_test_token_trays() -> void:
 	give_test_tokens()
 	
 func debug_start_next_round() -> void:
+	get_tree().call_group("winning_line_visual", "queue_free")
 	current_turn_phase = Global.TURN_PHASE.NONE
 	
 	var drag_controller:TokenDragController = get_tree().get_first_node_in_group("token drag controller") as TokenDragController
@@ -408,10 +410,10 @@ func give_test_tokens() -> void:
 	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.ANVIL, 2)
 	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.DRILL, 2)
 	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.CHAMELEON, 2)
-	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.TETROMINO, 2)
+	token_tray_inventory.add_tokens(0, TokenLibrary.TokenType.FAN, 2)
 	#player 2
 	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.BASIC, 99)
 	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.ANVIL, 2)
 	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.DRILL, 2)
 	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.CHAMELEON, 2)
-	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.PYRE, 2)
+	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.DAGGER, 2)

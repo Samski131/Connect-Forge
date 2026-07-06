@@ -23,6 +23,14 @@ enum MOVE_VISUAL {FALL, SLIDE}
 @export var flip_min_scale_x:float = 0.08
 @export var flip_pop_scale_y:float = 1.08
 
+@export_group("Winning Line")
+@export var winning_line_duration:float = 0.55
+@export var winning_line_width:float = 40.0
+@export var winning_line_padding:float = 115.0
+@export var winning_line_shadow_width_multiplier:float = 1.65
+@export var winning_line_shadow_color:Color = Color(0.0, 0.0, 0.0, 0.45)
+@export var winning_line_z_index:int = 100
+
 var visual_busy:bool = false
 var visual_queue:Array[BoardVisualEffect] = []
 var current_effect:BoardVisualEffect = null

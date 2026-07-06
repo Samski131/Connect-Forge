@@ -4,7 +4,9 @@ extends Token
 
 var fake_player_id:int = -1
 var transform_duration:float = 1.0
+var reveal_duration:float = 0.55
 var has_transformed:bool = false
+var has_revealed:bool = false
 
 
 func setup_special_token():
@@ -32,6 +34,7 @@ func _on_land(_context:Dictionary) -> bool:
 	
 	fake_player_id = chosen_player_id
 	has_transformed = true
+	has_revealed = false
 	charges -= ability_cost
 	
 	if board.visuals != null:
@@ -86,3 +89,64 @@ func finish_chameleon_transform() -> void:
 	
 	if sprites.has_method("finish_fake_visual"):
 		sprites.finish_fake_visual()
+
+
+func can_reveal_chameleon_after_win() -> bool:
+	if has_transformed == false:
+		return false
+	
+	if has_revealed:
+		return false
+	
+	if being_destroyed:
+		return false
+	
+	return true
+
+
+func create_chameleon_reveal_effect() -> BoardVisualEffect:
+	if can_reveal_chameleon_after_win() == false:
+		return null
+	
+	has_revealed = true
+	
+	return ChameleonRevealVisualEffect.new(self, reveal_duration)
+
+
+func reveal_chameleon_instantly() -> bool:
+	if can_reveal_chameleon_after_win() == false:
+		return false
+	
+	has_revealed = true
+	
+	prepare_chameleon_reveal()
+	set_chameleon_reveal_progress(1.0)
+	finish_chameleon_reveal()
+	
+	return true
+
+
+func prepare_chameleon_reveal() -> void:
+	if sprites == null:
+		return
+	
+	if sprites.has_method("prepare_reveal_visual"):
+		sprites.prepare_reveal_visual()
+
+
+func set_chameleon_reveal_progress(value:float) -> void:
+	if sprites == null:
+		return
+	
+	if sprites.has_method("set_reveal_dissolve_progress"):
+		sprites.set_reveal_dissolve_progress(value)
+
+
+func finish_chameleon_reveal() -> void:
+	fake_player_id = -1
+	
+	if sprites == null:
+		return
+	
+	if sprites.has_method("finish_reveal_visual"):
+		sprites.finish_reveal_visual()
