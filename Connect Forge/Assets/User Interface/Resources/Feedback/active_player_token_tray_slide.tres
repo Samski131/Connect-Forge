@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="UIJuicePreset" format=3 uid="uid://cnotmosk2lfv6"]
+
+[ext_resource type="Script" uid="uid://xwhddg75nyps" path="res://Scripts/User Interface/Juice/ui_juice_preset.gd" id="1_muxin"]
+[ext_resource type="Script" uid="uid://0so8li03yq6o" path="res://Scripts/User Interface/Juice/ui_juice_step.gd" id="2_wn6kd"]
+
+[sub_resource type="Resource" id="Resource_bjjqw"]
+script = ExtResource("2_wn6kd")
+step_type = 2
+use_from_value = false
+vector_to = Vector2(-30, 0)
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[sub_resource type="Resource" id="Resource_3rpmk"]
+script = ExtResource("2_wn6kd")
+step_type = 3
+duration = 0.3
+use_from_value = false
+vector_to = Vector2(-30, 0)
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[resource]
+script = ExtResource("1_muxin")
+steps = Array[ExtResource("2_wn6kd")]([SubResource("Resource_bjjqw"), SubResource("Resource_3rpmk")])
+metadata/_custom_type_script = "uid://xwhddg75nyps"

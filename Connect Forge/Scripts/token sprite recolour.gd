@@ -67,15 +67,15 @@ func setup_shimmer_materials():
 		if is_instance_valid(sprite) == false:
 			continue
 
-		var material := sprite.material as ShaderMaterial
+		var m := sprite.material as ShaderMaterial
 
-		if material == null:
-			material = ShaderMaterial.new()
-			material.shader = SHIMMER_SHADER
-			sprite.material = material
+		if m == null:
+			m = ShaderMaterial.new()
+			m.shader = SHIMMER_SHADER
+			sprite.material = m
 
-		material.set_shader_parameter("shimmer_progress", -1.0)
-		shimmer_materials.append(material)
+		m.set_shader_parameter("shimmer_progress", -1.0)
+		shimmer_materials.append(m)
 
 
 func play_shimmer(
@@ -94,14 +94,14 @@ func play_shimmer(
 	var normal_direction := direction.normalized()
 	var center := get_shimmer_center()
 
-	for material in shimmer_materials:
-		if material == null:
+	for m in shimmer_materials:
+		if m == null:
 			continue
 
-		material.set_shader_parameter("token_center_global", center)
-		material.set_shader_parameter("shimmer_direction", normal_direction)
-		material.set_shader_parameter("shimmer_strength", strength)
-		material.set_shader_parameter("shimmer_progress", 0.0)
+		m.set_shader_parameter("token_center_global", center)
+		m.set_shader_parameter("shimmer_direction", normal_direction)
+		m.set_shader_parameter("shimmer_strength", strength)
+		m.set_shader_parameter("shimmer_progress", 0.0)
 
 	shimmer_tween = create_tween()
 	shimmer_tween.tween_method(
@@ -116,19 +116,19 @@ func play_shimmer(
 func set_shimmer_progress(value:float):
 	var center := get_shimmer_center()
 
-	for material in shimmer_materials:
-		if material == null:
+	for m in shimmer_materials:
+		if m == null:
 			continue
 
-		material.set_shader_parameter("token_center_global", center)
-		material.set_shader_parameter("shimmer_progress", value)
+		m.set_shader_parameter("token_center_global", center)
+		m.set_shader_parameter("shimmer_progress", value)
 		
 func finish_shimmer():
-	for material in shimmer_materials:
-		if material == null:
+	for m in shimmer_materials:
+		if m == null:
 			continue
 
-		material.set_shader_parameter("shimmer_progress", -1.0)
+		m.set_shader_parameter("shimmer_progress", -1.0)
 
 func get_shimmer_center()->Vector2:
 	var parent_node := get_parent()

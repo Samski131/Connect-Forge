@@ -1,5 +1,5 @@
 class_name TurnCounterLabelUI
-extends EffectControl
+extends Label
 
 @export var label_prefix:String = "Turn "
 
@@ -32,5 +32,5 @@ func refresh() -> void:
 
 
 func _on_turn_number_changed(_turn_number:int) -> void:
-	queue_ui_effect(UIPulseEffect.new(get_parent(),1.0))
+	UIJuice.play(self, UIJuice.create_pulse_preset())
 	refresh()

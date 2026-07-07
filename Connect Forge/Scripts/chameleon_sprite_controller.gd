@@ -84,11 +84,11 @@ func prepare_fake_visual(fake_player_id:int) -> void:
 func set_dissolve_progress(value:float) -> void:
 	update_dissolve_screen_uniforms()
 	
-	for material in dissolve_materials:
-		if material == null:
+	for m in dissolve_materials:
+		if m == null:
 			continue
 		
-		material.set_shader_parameter("dissolve_progress", value)
+		m.set_shader_parameter("dissolve_progress", value)
 
 
 func finish_fake_visual() -> void:
@@ -120,12 +120,12 @@ func setup_dissolve_materials() -> void:
 		if is_instance_valid(sprite) == false:
 			continue
 		
-		var material:ShaderMaterial = ShaderMaterial.new()
-		material.shader = DISSOLVE_SHADER
-		material.set_shader_parameter("dissolve_progress", 0.0)
-		material.set_shader_parameter("beam_color", wave_color)
-		sprite.material = material
-		dissolve_materials.append(material)
+		var m:ShaderMaterial = ShaderMaterial.new()
+		m.shader = DISSOLVE_SHADER
+		m.set_shader_parameter("dissolve_progress", 0.0)
+		m.set_shader_parameter("beam_color", wave_color)
+		sprite.material = m
+		dissolve_materials.append(m)
 	
 	update_dissolve_screen_uniforms()
 
@@ -153,11 +153,11 @@ func set_reveal_dissolve_progress(value:float) -> void:
 	
 	update_reveal_dissolve_screen_uniforms()
 	
-	for material in reveal_materials:
-		if material == null:
+	for m in reveal_materials:
+		if m == null:
 			continue
 		
-		material.set_shader_parameter("dissolve_progress", shader_progress)
+		m.set_shader_parameter("dissolve_progress", shader_progress)
 
 
 func finish_reveal_visual() -> void:
@@ -199,12 +199,12 @@ func setup_reveal_dissolve_materials() -> void:
 		if is_instance_valid(sprite) == false:
 			continue
 		
-		var material:ShaderMaterial = ShaderMaterial.new()
-		material.shader = DISSOLVE_SHADER
-		material.set_shader_parameter("dissolve_progress", 1.0)
-		material.set_shader_parameter("beam_color", wave_color)
-		sprite.material = material
-		reveal_materials.append(material)
+		var m:ShaderMaterial = ShaderMaterial.new()
+		m.shader = DISSOLVE_SHADER
+		m.set_shader_parameter("dissolve_progress", 1.0)
+		m.set_shader_parameter("beam_color", wave_color)
+		sprite.material = m
+		reveal_materials.append(m)
 	
 	update_reveal_dissolve_screen_uniforms()
 

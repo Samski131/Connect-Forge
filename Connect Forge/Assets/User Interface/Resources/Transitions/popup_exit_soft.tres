@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="UIJuicePreset" format=3 uid="uid://clvcbhjq8f4w3"]
+
+[ext_resource type="Script" uid="uid://xwhddg75nyps" path="res://Scripts/User Interface/Juice/ui_juice_preset.gd" id="1_ghuvd"]
+[ext_resource type="Script" uid="uid://0so8li03yq6o" path="res://Scripts/User Interface/Juice/ui_juice_step.gd" id="2_664dg"]
+
+[sub_resource type="Resource" id="Resource_vpo67"]
+script = ExtResource("2_664dg")
+duration = 0.18
+ease_type = 0
+use_from_value = false
+float_to = 0.0
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[sub_resource type="Resource" id="Resource_38ka2"]
+script = ExtResource("2_664dg")
+step_type = 4
+duration = 0.18
+trans_type = 10
+ease_type = 0
+use_from_value = false
+scale_to = Vector2(0.9, 0.9)
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[sub_resource type="Resource" id="Resource_5f8xb"]
+script = ExtResource("2_664dg")
+step_type = 3
+duration = 0.18
+ease_type = 0
+use_from_value = false
+vector_to = Vector2(0, 40)
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[resource]
+script = ExtResource("1_ghuvd")
+steps = Array[ExtResource("2_664dg")]([SubResource("Resource_vpo67"), SubResource("Resource_38ka2"), SubResource("Resource_5f8xb")])
+hide_at_end = true
+disable_mouse_during_play = true
+restore_mouse_after_play = false
+reset_offset_position = true
+reset_offset_scale = true
+reset_offset_rotation = true
+metadata/_custom_type_script = "uid://xwhddg75nyps"

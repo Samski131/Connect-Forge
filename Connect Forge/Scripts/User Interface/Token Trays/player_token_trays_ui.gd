@@ -1,33 +1,20 @@
 class_name PlayerTokenTraysUI
 extends VBoxContainer
 
+@export_group("References")
+var game_manager:Node
 @export var player_tray_scene:PackedScene
 
-@export_group("Active Tray Slide")
-@export var active_slide_distance:float = 30.0
-@export var active_slide_duration:float = 0.45
-@export var active_slide_trans:Tween.TransitionType = Tween.TRANS_ELASTIC
-@export var active_slide_ease:Tween.EaseType = Tween.EASE_OUT
+@export_group("Tray State Presets")
+@export var active_tray_preset:UIJuicePreset 
+@export var inactive_tray_preset:UIJuicePreset 
 
-@export_group("Inactive Tray Slide")
-@export var home_slide_duration:float = 0.2
-@export var home_slide_trans:Tween.TransitionType = Tween.TRANS_BOUNCE
-@export var home_slide_ease:Tween.EaseType = Tween.EASE_OUT
-
-@export_group("Tray Dimming")
-@export var active_tray_modulate:Color = Color.WHITE
-@export var inactive_tray_modulate:Color = Color(0.82, 0.82, 0.82, 1.0)
-@export var tray_dim_duration:float = 0.25
-@export var tray_dim_trans:Tween.TransitionType = Tween.TRANS_SINE
-@export var tray_dim_ease:Tween.EaseType = Tween.EASE_OUT
-
-var game_manager:Node = null
 var trays:Array[PlayerTokenTrayUI] = []
 
 
 func _ready() -> void:
-	add_to_group("player token trays ui")
 	game_manager = get_tree().get_first_node_in_group("game manager")
+	add_to_group("player token trays ui")
 	connect_game_manager_signals()
 	rebuild_trays()
 
@@ -45,9 +32,6 @@ func rebuild_trays() -> void:
 	clear_trays()
 	
 	if game_manager == null:
-		game_manager = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager == null:
 		return
 	
 	connect_game_manager_signals()
@@ -58,7 +42,7 @@ func rebuild_trays() -> void:
 	for player_id in range(game_manager.number_of_players):
 		create_player_tray(player_id)
 	
-	update_current_player_tray_visuals(false)
+	call_deferred("update_current_player_tray_visuals")
 
 
 func create_player_tray(player_id:int) -> void:
@@ -80,9 +64,8 @@ func setup_tray_offset_transform(tray:Control) -> void:
 	tray.offset_transform_enabled = true
 	tray.offset_transform_visual_only = false
 	tray.offset_transform_position_ratio = Vector2.ZERO
-	
-	if tray.offset_transform_position == Vector2.ZERO:
-		tray.offset_transform_position = Vector2.ZERO
+	tray.offset_transform_pivot = Vector2.ZERO
+	tray.offset_transform_pivot_ratio = Vector2(0.5, 0.5)
 
 
 func clear_trays() -> void:
@@ -103,7 +86,7 @@ func refresh_trays() -> void:
 		tray.refresh_player_details()
 
 
-func update_current_player_tray_visuals(animated:bool = true) -> void:
+func update_current_player_tray_visuals() -> void:
 	if game_manager == null:
 		return
 	
@@ -116,25 +99,26 @@ func update_current_player_tray_visuals(animated:bool = true) -> void:
 		
 		setup_tray_offset_transform(tray)
 		
-		var target_offset:Vector2 = Vector2.ZERO
-		var target_modulate:Color = inactive_tray_modulate
-		var slide_duration:float = home_slide_duration
-		var slide_trans:Tween.TransitionType = home_slide_trans
-		var slide_ease:Tween.EaseType = home_slide_ease
+		var preset:UIJuicePreset = get_tray_state_preset(tray)
 		
-		if tray.player_id == game_manager.current_player_id:
-			target_offset = Vector2(-active_slide_distance, 0.0)
-			target_modulate = active_tray_modulate
-			slide_duration = active_slide_duration
-			slide_trans = active_slide_trans
-			slide_ease = active_slide_ease
+		if preset == null:
+			continue
 		
-		if animated:
-			tray.queue_ui_effect(UISlideToOffsetEffect.new(tray, target_offset, slide_duration, false, slide_trans, slide_ease), false)
-			tray.queue_ui_effect(UIModulateEffect.new(tray, target_modulate, tray_dim_duration, tray_dim_trans, tray_dim_ease), false)
-		else:
-			tray.offset_transform_position = target_offset
-			tray.modulate = target_modulate
+		UIJuice.play(tray, preset)
+
+
+func get_tray_state_preset(tray:PlayerTokenTrayUI) -> UIJuicePreset:
+	if tray == null:
+		return null
+	
+	if game_manager == null:
+		return null
+	
+	if tray.player_id == game_manager.current_player_id:
+		return active_tray_preset
+	
+	return inactive_tray_preset
+
 
 func _on_current_player_changed(_player_id:int) -> void:
-	update_current_player_tray_visuals(true)
+	update_current_player_tray_visuals()

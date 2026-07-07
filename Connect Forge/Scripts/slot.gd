@@ -201,10 +201,10 @@ func _apply_shader_parameters() -> void:
 
 
 func _is_valid_gravity_edge() -> bool:
-	var gravity_direction:int = _get_board_gravity_direction()
+	var grav_direction:int = _get_board_gravity_direction()
 	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
 	
-	match gravity_direction:
+	match grav_direction:
 		GRID_DIRECTION.DOWN:
 			if slot_types.has(Global.SLOT_TYPE.TOP_EDGE):
 				return true

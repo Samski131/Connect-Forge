@@ -153,6 +153,8 @@ func resize_border_rectangles():
 func fit_board():
 	var camera:Camera2D = get_viewport().get_camera_2d()
 	
+	if camera == null:
+		return 
 	if board == null:
 		return
 	
@@ -161,11 +163,6 @@ func fit_board():
 	
 	var board_size:Vector2 = Vector2(slot_width_and_height * columns+ (border_width.x*2 + border_highlight_width), slot_width_and_height * rows+ (border_width.y*2 +border_highlight_width))
 	var fit_area_rect:Rect2 = board_area_fitter.get_global_rect()
-	print("Fit Area Rect Pos ", fit_area_rect.position)
-	print("Fit Area Rect center ", fit_area_rect.get_center())
-	print("Fit Area Rect width ", fit_area_rect.size.x)
-	print("Fit Area Rect height ", fit_area_rect.size.y)
-	print("Fit area pos ", board_area_fitter.global_position)
 	
 	game_board.global_position = Vector2(get_canvas_transform().affine_inverse() * fit_area_rect.position) + (fit_area_rect.size*2)
 	var fit_area_size_world = Vector2(fit_area_rect.size.x / camera.zoom.x, fit_area_rect.size.y / camera.zoom.y)

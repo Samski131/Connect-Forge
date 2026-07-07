@@ -1,5 +1,5 @@
 class_name PlayerTokenTrayUI
-extends EffectControl
+extends MarginContainer
 
 @export var player_id:int = 0
 @export var item_scene:PackedScene

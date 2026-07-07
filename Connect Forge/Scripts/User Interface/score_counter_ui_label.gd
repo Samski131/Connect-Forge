@@ -1,5 +1,5 @@
 class_name ScoreLabelUI
-extends EffectControl
+extends Label
 
 @export var label_prefix:String = ""
 @export var player_separator:String = "  |  "
@@ -78,7 +78,7 @@ func get_player_wins(player_id:int) -> int:
 
 
 func _on_score_changed() -> void:
-	queue_ui_effect(UIPulseEffect.new(get_parent(), 1.0))
+	UIJuice.play(self, UIJuice.create_pulse_preset())
 	refresh()
 
 

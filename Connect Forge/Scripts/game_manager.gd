@@ -287,7 +287,7 @@ func get_elapsed_time_text() -> String:
 
 func format_seconds_as_minutes_seconds(total_seconds:int) -> String:
 	var used_seconds:int = max(total_seconds, 0)
-	var minutes:int = int(used_seconds / 60)
+	var minutes:int = int(used_seconds / 60.0)
 	var seconds:int = used_seconds % 60
 	
 	return "%02d:%02d" % [minutes, seconds]
@@ -383,16 +383,15 @@ func debug_start_next_round() -> void:
 	if placement_state != null and placement_state.has_method("clear_placement_token"):
 		placement_state.clear_placement_token()
 	
+	if board != null:
+		await board.empty_board_with_fall_effect()
+		board.set_gravity_direction(BoardSetting.GRID_DIRECTION.DOWN, false)
+	
 	if board_builder != null:
 		board_builder.rebuild_board()
 	
-	if board != null:
-		board.set_gravity_direction(BoardSetting.GRID_DIRECTION.DOWN, false)
-	
-	board_builder.rebuild_board()
 	reset_test_token_trays()
 	start_game()
-
 
 func give_test_tokens() -> void:
 	if token_tray_inventory == null:

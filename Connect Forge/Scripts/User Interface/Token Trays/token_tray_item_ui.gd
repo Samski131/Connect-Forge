@@ -1,11 +1,8 @@
 class_name TokenTrayItemUI
-extends EffectControl
+extends PanelContainer
 
 @export_group("Invalid Drag Feedback")
-@export var invalid_turn_shake_intensity:float = 5.0
-@export var invalid_turn_shake_duration:float = 0.18
-@export var invalid_turn_shakes:int = 3
-@export var invalid_turn_shake_visual_only:bool = true
+@export var invalid_feedback_preset:UIJuicePreset = preload("res://Assets/User Interface/Resources/Feedback/invalid_shake.tres")
 
 var player_id:int = -1
 var token_type:int = -1
@@ -42,6 +39,9 @@ func setup_visual() -> void:
 
 func refresh() -> void:
 	if token_tray_inventory == null:
+		return
+	
+	if count_label == null:
 		return
 	
 	var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
@@ -99,20 +99,6 @@ func is_wrong_player_turn() -> bool:
 	return false
 
 
-func play_invalid_turn_feedback() -> void:
-	queue_ui_effect(UIShakeEffect.new(self, invalid_turn_shake_intensity, invalid_turn_shake_duration, invalid_turn_shakes, invalid_turn_shake_visual_only), false)
-
-
-func _on_token_count_changed(changed_player_id:int, changed_token_type:int, _new_count:int) -> void:
-	if changed_player_id != player_id:
-		return
-	
-	if changed_token_type != token_type:
-		return
-	
-	pulse()
-	refresh()
-
 func player_has_no_tokens() -> bool:
 	if token_tray_inventory == null:
 		return false
@@ -123,3 +109,34 @@ func player_has_no_tokens() -> bool:
 		return true
 	
 	return false
+
+
+func play_invalid_turn_feedback() -> void:
+	if invalid_feedback_preset == null:
+		return
+	
+	var player:UIJuicePlayer = UIJuice.get_or_create_player(self)
+	
+	if player == null:
+		return
+	
+	player.play_preset(invalid_feedback_preset, Callable(self, "_on_invalid_feedback_finished"))
+
+
+func _on_invalid_feedback_finished() -> void:
+	refresh()
+
+func play_count_changed_feedback() -> void:
+	var preset:UIJuicePreset = UIJuice.create_pulse_preset()
+	UIJuice.play(self, preset)
+
+
+func _on_token_count_changed(changed_player_id:int, changed_token_type:int, _new_count:int) -> void:
+	if changed_player_id != player_id:
+		return
+	
+	if changed_token_type != token_type:
+		return
+	
+	play_count_changed_feedback()
+	refresh()

@@ -1,5 +1,5 @@
 class_name TimeCounterLabelUI
-extends EffectControl
+extends Label
 
 var game_manager:Node = null
 
@@ -40,7 +40,7 @@ func _on_game_time_changed(total_seconds:int) -> void:
 
 func format_seconds_as_minutes_seconds(total_seconds:int) -> String:
 	var used_seconds:int = max(total_seconds, 0)
-	var minutes:int = int(used_seconds / 60)
+	var minutes:int = int(used_seconds / 60.0)
 	var seconds:int = used_seconds % 60
 	
 	return "%02d:%02d" % [minutes, seconds]

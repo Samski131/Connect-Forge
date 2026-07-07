@@ -1,5 +1,5 @@
 class_name CurrentPlayerLabelUI
-extends EffectControl
+extends Label
 
 var game_manager:Node = null
 
@@ -73,7 +73,7 @@ func get_player_color(player_id:int) -> Color:
 
 
 func _on_current_player_changed(_player_id:int) -> void:
-	queue_ui_effect(UIPulseEffect.new(get_parent()))
+	UIJuice.play(self, UIJuice.create_pulse_preset())
 	refresh()
 
 

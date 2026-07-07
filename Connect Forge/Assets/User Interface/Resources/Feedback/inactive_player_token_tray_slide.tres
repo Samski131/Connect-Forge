@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="UIJuicePreset" format=3 uid="uid://b28wrtqwrtg06"]
+
+[ext_resource type="Script" uid="uid://xwhddg75nyps" path="res://Scripts/User Interface/Juice/ui_juice_preset.gd" id="1_5arrb"]
+[ext_resource type="Script" uid="uid://0so8li03yq6o" path="res://Scripts/User Interface/Juice/ui_juice_step.gd" id="2_s1c2b"]
+
+[sub_resource type="Resource" id="Resource_ag88x"]
+script = ExtResource("2_s1c2b")
+step_type = 2
+duration = 0.25
+use_from_value = false
+color_to = Color(0.81960785, 0.81960785, 0.81960785, 1)
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[sub_resource type="Resource" id="Resource_jqt58"]
+script = ExtResource("2_s1c2b")
+step_type = 3
+duration = 0.4
+trans_type = 2
+use_from_value = false
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[resource]
+script = ExtResource("1_5arrb")
+steps = Array[ExtResource("2_s1c2b")]([SubResource("Resource_ag88x"), SubResource("Resource_jqt58")])
+metadata/_custom_type_script = "uid://xwhddg75nyps"

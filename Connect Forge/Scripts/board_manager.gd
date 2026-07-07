@@ -122,14 +122,14 @@ func get_positions_in_gravity_order() -> Array[Vector2i]:
 
 func rotate_gravity(clockwise:bool = true) -> void:
 	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
-	var gravity_order:Array[BoardSetting.GRID_DIRECTION] = [
+	var grav_order:Array[BoardSetting.GRID_DIRECTION] = [
 		GRID_DIRECTION.UP,
 		GRID_DIRECTION.RIGHT,
 		GRID_DIRECTION.DOWN,
 		GRID_DIRECTION.LEFT
 	]
 	
-	var current_index:int = gravity_order.find(settings.gravity_direction)
+	var current_index:int = grav_order.find(settings.gravity_direction)
 	
 	if current_index == -1:
 		set_gravity_direction(GRID_DIRECTION.DOWN)
@@ -148,7 +148,7 @@ func rotate_gravity(clockwise:bool = true) -> void:
 	if new_index < 0:
 		new_index = gravity_order.size() - 1
 	
-	var new_direction:BoardSetting.GRID_DIRECTION = gravity_order[new_index]
+	var new_direction:BoardSetting.GRID_DIRECTION = grav_order[new_index]
 	set_gravity_direction(new_direction)
 	
 
@@ -246,3 +246,83 @@ func apply_token_gravity_visual(token:Token) -> void:
 
 func refresh_slot_visuals() -> void:
 	get_tree().call_group("slot", "refresh_visual_state")
+
+func get_all_tokens_on_board() -> Array[Token]:
+	var found_tokens:Array[Token] = []
+	
+	if state == null:
+		return found_tokens
+	
+	for y in range(settings.rows):
+		for x in range(settings.columns):
+			var pos:Vector2i = Vector2i(x, y)
+			var token:Token = get_token(pos)
+			
+			if token == null:
+				continue
+			
+			if is_instance_valid(token) == false:
+				continue
+			
+			if found_tokens.has(token):
+				continue
+			
+			found_tokens.append(token)
+	
+	return found_tokens
+
+
+func remove_all_tokens_from_board_state() -> void:
+	if state == null:
+		return
+	
+	for y in range(settings.rows):
+		for x in range(settings.columns):
+			var pos:Vector2i = Vector2i(x, y)
+			state.set_token(pos, null)
+	
+	if trigger_resolver != null:
+		trigger_resolver.clear_pending_pass_triggers()
+	
+	hovered_slot = null
+
+
+func empty_board_with_fall_effect() -> void:
+	var tokens:Array[Token] = get_all_tokens_on_board()
+	
+	if tokens.is_empty():
+		remove_all_tokens_from_board_state()
+		return
+	
+	for token in tokens:
+		if token == null:
+			continue
+		
+		if is_instance_valid(token) == false:
+			continue
+		
+		token.being_destroyed = true
+	
+	remove_all_tokens_from_board_state()
+	
+	if visuals == null:
+		for token in tokens:
+			if token == null:
+				continue
+			
+			if is_instance_valid(token):
+				token.queue_free()
+		
+		return
+	
+	var effect:TokenFallOutBoardVisualEffect = TokenFallOutBoardVisualEffect.new(tokens, self, visuals.clear_fall_duration)
+	effect.fall_distance = visuals.clear_fall_distance
+	effect.row_stagger = visuals.clear_fall_row_stagger
+	effect.token_stagger = visuals.clear_fall_token_stagger
+	effect.side_scatter = visuals.clear_fall_side_scatter
+	effect.spin_degrees = visuals.clear_fall_spin_degrees
+	
+	visuals.queue_effect(effect)
+	
+	if visuals.is_busy():
+		await visuals.visual_queue_empty

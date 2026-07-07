@@ -2,6 +2,7 @@ class_name BoardVisualManager
 extends Node
 
 enum MOVE_VISUAL {FALL, SLIDE}
+signal visual_queue_empty
 
 @export_group("Movement")
 @export var slide_duration:float = 0.12
@@ -30,6 +31,14 @@ enum MOVE_VISUAL {FALL, SLIDE}
 @export var winning_line_shadow_width_multiplier:float = 1.65
 @export var winning_line_shadow_color:Color = Color(0.0, 0.0, 0.0, 0.45)
 @export var winning_line_z_index:int = 100
+
+@export_group("Board Clear Fall Out")
+@export var clear_fall_duration:float = 0.62
+@export var clear_fall_distance:float = 2600.0
+@export var clear_fall_row_stagger:float = 0.035
+@export var clear_fall_token_stagger:float = 0.006
+@export var clear_fall_side_scatter:float = 0.0
+@export var clear_fall_spin_degrees:float = 0.0
 
 var visual_busy:bool = false
 var visual_queue:Array[BoardVisualEffect] = []
@@ -90,6 +99,9 @@ func _finish_visual_event() -> void:
 	current_effect = null
 	visual_busy = false
 	_start_next_visual_event()
+	
+	if is_busy() == false:
+		visual_queue_empty.emit()
 
 
 func begin_move_batch() -> void:
