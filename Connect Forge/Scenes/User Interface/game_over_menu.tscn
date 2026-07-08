@@ -1,0 +1,287 @@
+[gd_scene format=3 uid="uid://duksh1i7qsv63"]
+
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="1_5mlej"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
+bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.9019608, 0.3137255, 0.3254902, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rolqa"]
+bg_color = Color(0.9019608, 0.8627451, 0.79607844, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7176471, 0.62352943, 0.5176471, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 14
+shadow_color = Color(0, 0, 0, 0.3882353)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font_size = 64
+font_color = Color(0.7882353, 0.18039216, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_5mlej"]
+font_size = 64
+font_color = Color(0.105882354, 0.16862746, 0.33333334, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
+font_size = 28
+font_color = Color(0.14117648, 0.20784314, 0.37254903, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmvkj"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fsy6u"]
+bg_color = Color(0.84705883, 0.80784315, 0.7607843, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_detail = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guliv"]
+bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
+corner_radius_top_left = 16
+
+[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
+font_size = 28
+font_color = Color(0.105882354, 0.16862746, 0.33333334, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mmvkj"]
+font_size = 40
+font_color = Color(0.7882353, 0.18039216, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ootgn"]
+font_size = 32
+font_color = Color(0.105882354, 0.16862746, 0.33333334, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lueid"]
+color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+
+[node name="WinPopupUI" type="Control" unique_id=356466557]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1039780782]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(0.1897483, 0.22091639, 0.3133042, 0.72)
+
+[node name="PopupCenter" type="CenterContainer" parent="." unique_id=25291938]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PopupRoot" type="Control" parent="PopupCenter" unique_id=588263096]
+custom_minimum_size = Vector2(920, 640)
+layout_mode = 2
+
+[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot" unique_id=1865169177]
+custom_minimum_size = Vector2(150, 150)
+anchors_preset = 0
+offset_left = 385.0
+offset_top = 221.0
+offset_right = 535.0
+offset_bottom = 371.0
+script = ExtResource("1_5mlej")
+visual_scale = 0.24
+metadata/_edit_use_anchors_ = true
+
+[node name="TopTokenHolder" type="CenterContainer" parent="PopupCenter/PopupRoot" unique_id=1502719663]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_bottom = 170.0
+
+[node name="OuterFrame" type="PanelContainer" parent="PopupCenter/PopupRoot" unique_id=55612880]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8v3xt")
+
+[node name="OuterMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=107440784]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Inner Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin" unique_id=438187732]
+custom_minimum_size = Vector2(860, 560)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rolqa")
+
+[node name="ContentMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel" unique_id=473582246]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentVbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin" unique_id=2120904535]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TopSpacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1695223297]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+
+[node name="WinnerLabelHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1377486983]
+layout_mode = 2
+alignment = 1
+
+[node name="WinnerNameLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=89453216]
+layout_mode = 2
+text = "Sam"
+label_settings = SubResource("LabelSettings_lueid")
+horizontal_alignment = 1
+
+[node name="WinsLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=1861086673]
+layout_mode = 2
+text = " Wins!"
+label_settings = SubResource("LabelSettings_5mlej")
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=35450927]
+layout_mode = 2
+text = "Current Score"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="ScorePanel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1015123418]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
+
+[node name="ScoreMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel" unique_id=683188887]
+layout_mode = 2
+
+[node name="ScoreRows" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin" unique_id=823607828]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PlayerRow_1" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows" unique_id=1453858529]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
+
+[node name="PlayerRowHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1" unique_id=311054093]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="WinnerStrip" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=2037980834]
+custom_minimum_size = Vector2(14, 76)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_guliv")
+
+[node name="Token Holder" type="CenterContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=596082981]
+custom_minimum_size = Vector2(74, 76)
+layout_mode = 2
+
+[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox/Token Holder" unique_id=458011792]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+script = ExtResource("1_5mlej")
+visual_scale = 0.24
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerNameLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=54332132]
+layout_mode = 2
+text = "Sam"
+label_settings = SubResource("LabelSettings_guliv")
+horizontal_alignment = 1
+
+[node name="WinnerStarLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=1991114573]
+layout_mode = 2
+text = "★"
+label_settings = SubResource("LabelSettings_mmvkj")
+vertical_alignment = 3
+
+[node name="ScoreLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=1654165835]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+label_settings = SubResource("LabelSettings_ootgn")
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows" unique_id=1815152532]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_lueid")
+
+[node name="PlayerRow_2" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows" unique_id=1396219024]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
+
+[node name="PlayerRowHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2" unique_id=42705136]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="WinnerStrip" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=942766489]
+custom_minimum_size = Vector2(14, 76)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_guliv")
+
+[node name="Token Holder" type="CenterContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=1936432898]
+custom_minimum_size = Vector2(74, 76)
+layout_mode = 2
+
+[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox/Token Holder" unique_id=1421836395]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+script = ExtResource("1_5mlej")
+visual_scale = 0.24
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerNameLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=799846580]
+layout_mode = 2
+text = "Sam"
+label_settings = SubResource("LabelSettings_guliv")
+horizontal_alignment = 1
+
+[node name="WinnerStarLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=1495526442]
+layout_mode = 2
+text = "★"
+label_settings = SubResource("LabelSettings_mmvkj")
+vertical_alignment = 3
+
+[node name="ScoreLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=640930880]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+label_settings = SubResource("LabelSettings_ootgn")
+horizontal_alignment = 2

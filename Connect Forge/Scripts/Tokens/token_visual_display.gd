@@ -14,6 +14,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	clip_contents = true
 	call_deferred("refresh_layout")
+	setup(0,0,false)
 
 
 func setup(new_token_type:int, new_player_id:int, new_is_flipped:bool = false) -> void:
