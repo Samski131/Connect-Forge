@@ -20,7 +20,7 @@ var popup_delay_seconds:float = 1.5
 
 @onready var popup_root:Control = $PopupCenter/PopupRoot
 
-@onready var winner_token_display:TokenVisualDisplay =$"PopupCenter/PopupRoot/Token Visual Display"
+@onready var winner_token_display: TokenVisualDisplay = $"PopupCenter/PopupRoot/OuterFrame/Token Overlay/Token Visual Display"
 
 @onready var outer_frame:PanelContainer =$PopupCenter/PopupRoot/OuterFrame
 

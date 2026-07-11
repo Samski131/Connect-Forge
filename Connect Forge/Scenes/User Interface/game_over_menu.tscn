@@ -193,27 +193,6 @@ enter_preset = ExtResource("5_5dkol")
 exit_preset = ExtResource("6_iekjd")
 metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
 
-[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot" unique_id=1865169177]
-z_index = 1
-custom_minimum_size = Vector2(220, 220)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -110.0
-offset_top = -44.655
-offset_right = 110.0
-offset_bottom = 175.345
-grow_horizontal = 2
-script = ExtResource("1_5mlej")
-visual_scale = 0.54
-
-[node name="TopTokenHolder" type="CenterContainer" parent="PopupCenter/PopupRoot" unique_id=1502719663]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-offset_bottom = 170.0
-
 [node name="OuterFrame" type="PanelContainer" parent="PopupCenter/PopupRoot" unique_id=55612880]
 layout_mode = 1
 anchors_preset = -1
@@ -458,3 +437,22 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_rq1fh")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_cus25")
 theme_override_styles/hover = SubResource("StyleBoxFlat_5dkol")
 text = "Return to Lobby"
+
+[node name="Token Overlay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=213115429]
+z_index = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/Token Overlay" unique_id=1865169177]
+z_index = 1
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.09
+offset_left = -110.0
+offset_top = -110.0
+offset_right = 110.0
+grow_horizontal = 2
+script = ExtResource("1_5mlej")
+visual_scale = 0.54

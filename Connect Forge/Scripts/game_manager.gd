@@ -8,10 +8,10 @@ signal turn_number_changed(turn_number:int)
 signal game_time_changed(total_seconds:int)
 signal score_changed
 
-@export var starting_number_of_players:int = 2
+@export var starting_number_of_players:int = 5
 @export var minimum_number_of_players:int = 2
 @export var max_number_of_players:int = 6
-@export var default_player_names:Array[String] = ["Sam", "Jordan", "Harry"]
+@export var default_player_names:Array[String] = ["Sam", "Jordan", "Harry", "Jack", "Ross"]
 @export var player_colours:Array[ColorPalette]
 
 var number_of_players:int = 0
@@ -416,3 +416,11 @@ func give_test_tokens() -> void:
 	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.DRILL, 2)
 	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.CHAMELEON, 2)
 	token_tray_inventory.add_tokens(1, TokenLibrary.TokenType.DAGGER, 2)
+
+	if(number_of_players>=3):
+		for i in range(2,number_of_players):
+			token_tray_inventory.add_tokens(i, TokenLibrary.TokenType.BASIC, 99)
+			token_tray_inventory.add_tokens(i, TokenLibrary.TokenType.ANVIL, 2)
+			token_tray_inventory.add_tokens(i, TokenLibrary.TokenType.DRILL, 2)
+			token_tray_inventory.add_tokens(i, TokenLibrary.TokenType.CHAMELEON, 2)
+			token_tray_inventory.add_tokens(i, TokenLibrary.TokenType.DAGGER, 2)
