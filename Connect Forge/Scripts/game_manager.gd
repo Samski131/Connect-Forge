@@ -371,7 +371,7 @@ func reset_test_token_trays() -> void:
 	token_tray_inventory.reset_all_trays()
 	give_test_tokens()
 	
-func debug_start_next_round() -> void:
+func start_next_round() -> void:
 	get_tree().call_group("winning_line_visual", "queue_free")
 	current_turn_phase = Global.TURN_PHASE.NONE
 	

@@ -1,6 +1,13 @@
 [gd_scene format=3 uid="uid://duksh1i7qsv63"]
 
 [ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="1_5mlej"]
+[ext_resource type="Script" uid="uid://cqve5yylad77o" path="res://Scripts/game_over_menu.gd" id="1_rolqa"]
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="2_5dkol"]
+[ext_resource type="Resource" uid="uid://dcj5mm65cf8k6" path="res://Assets/User Interface/Resources/Transitions/popup_enter_soft.tres" id="3_iekjd"]
+[ext_resource type="Resource" uid="uid://clvcbhjq8f4w3" path="res://Assets/User Interface/Resources/Transitions/popup_exit_soft.tres" id="4_c4c2f"]
+[ext_resource type="StyleBox" uid="uid://bpga6rji02ymx" path="res://Assets/User Interface/Resources/Theme Presets/Game Over Menu/red button.stylebox" id="4_ujij1"]
+[ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="5_5dkol"]
+[ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="6_iekjd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
 bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
@@ -29,6 +36,15 @@ corner_radius_bottom_left = 12
 corner_detail = 14
 shadow_color = Color(0, 0, 0, 0.3882353)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+bg_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_lueid"]
 font_size = 64
 font_color = Color(0.7882353, 0.18039216, 0.2, 1)
@@ -54,45 +70,100 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 corner_detail = 16
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fsy6u"]
-bg_color = Color(0.84705883, 0.80784315, 0.7607843, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dhjdk"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.79, 0.023699978, 0.049243297, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(1, 0.53, 0.53, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
-corner_detail = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guliv"]
-bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujij1"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.94594723, 0.3268647, 0.32010517, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(1, 0.53, 0.53, 1)
 corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
 
-[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
-font_size = 28
-font_color = Color(0.105882354, 0.16862746, 0.33333334, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rq1fh"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.16078432, 0.23921569, 0.3882353, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.49803922, 0.61960787, 0.7764706, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
 
-[sub_resource type="LabelSettings" id="LabelSettings_mmvkj"]
-font_size = 40
-font_color = Color(0.7882353, 0.18039216, 0.2, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cus25"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.0234, 0.15170997, 0.39, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.49803922, 0.61960787, 0.7764706, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
 
-[sub_resource type="LabelSettings" id="LabelSettings_ootgn"]
-font_size = 32
-font_color = Color(0.105882354, 0.16862746, 0.33333334, 1)
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_lueid"]
-color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5dkol"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.21639585, 0.3125864, 0.4950549, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.49803922, 0.61960787, 0.7764706, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
 
 [node name="WinPopupUI" type="Control" unique_id=356466557]
+z_index = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_rolqa")
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=1039780782]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-color = Color(0.1897483, 0.22091639, 0.3133042, 0.72)
+color = Color(0.02745098, 0.06666667, 0.12156863, 0.8)
 
 [node name="PopupCenter" type="CenterContainer" parent="." unique_id=25291938]
 layout_mode = 1
@@ -107,16 +178,35 @@ mouse_filter = 2
 custom_minimum_size = Vector2(920, 640)
 layout_mode = 2
 
+[node name="UIJuicePlayer" type="Node" parent="PopupCenter/PopupRoot" unique_id=837932620]
+script = ExtResource("2_5dkol")
+start_mode = 1
+enter_preset = ExtResource("3_iekjd")
+exit_preset = ExtResource("4_c4c2f")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
+[node name="UIJuicePlayerBackdrop" type="Node" parent="PopupCenter/PopupRoot" unique_id=323035621]
+script = ExtResource("2_5dkol")
+target_path = NodePath("../../../Backdrop")
+start_mode = 1
+enter_preset = ExtResource("5_5dkol")
+exit_preset = ExtResource("6_iekjd")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
 [node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot" unique_id=1865169177]
-custom_minimum_size = Vector2(150, 150)
-anchors_preset = 0
-offset_left = 385.0
-offset_top = 221.0
-offset_right = 535.0
-offset_bottom = 371.0
+z_index = 1
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -110.0
+offset_top = -44.655
+offset_right = 110.0
+offset_bottom = 175.345
+grow_horizontal = 2
 script = ExtResource("1_5mlej")
-visual_scale = 0.24
-metadata/_edit_use_anchors_ = true
+visual_scale = 0.54
 
 [node name="TopTokenHolder" type="CenterContainer" parent="PopupCenter/PopupRoot" unique_id=1502719663]
 layout_mode = 1
@@ -163,125 +253,208 @@ layout_mode = 2
 
 [node name="WinnerLabelHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1377486983]
 layout_mode = 2
+theme_override_constants/separation = 15
 alignment = 1
 
-[node name="WinnerNameLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=89453216]
+[node name="Left Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=1538383554]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Left Divider" unique_id=411443778]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Left Divider" unique_id=1845412082]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Left Divider/Diamond Holder" unique_id=212539744]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Winner Labels" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=1897170379]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="WinnerNameLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Winner Labels" unique_id=89453216]
 layout_mode = 2
 text = "Sam"
 label_settings = SubResource("LabelSettings_lueid")
 horizontal_alignment = 1
 
-[node name="WinsLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=1861086673]
+[node name="WinsLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Winner Labels" unique_id=1861086673]
 layout_mode = 2
 text = " Wins!"
 label_settings = SubResource("LabelSettings_5mlej")
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=35450927]
+[node name="Right Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=413603736]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Right Divider" unique_id=996201669]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Right Divider/Diamond Holder" unique_id=440861944]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Right Divider" unique_id=2123981903]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="CurrentScoreHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1475648395]
+layout_mode = 2
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox" unique_id=355332214]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Left Divider" unique_id=2117997837]
+custom_minimum_size = Vector2(200, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Left Divider" unique_id=1439728292]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Left Divider/Diamond Holder" unique_id=155922690]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox" unique_id=35450927]
 layout_mode = 2
 text = "Current Score"
 label_settings = SubResource("LabelSettings_fsy6u")
 horizontal_alignment = 1
 
-[node name="ScorePanel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1015123418]
+[node name="Right Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox" unique_id=721616577]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Right Divider" unique_id=900631934]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Right Divider/Diamond Holder" unique_id=462809562]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Right Divider" unique_id=2129727502]
+custom_minimum_size = Vector2(200, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="ScoreMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=683188887]
+layout_mode = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_right = 64
+
+[node name="ScorePanel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScoreMargin" unique_id=1015123418]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
 
-[node name="ScoreMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel" unique_id=683188887]
-layout_mode = 2
-
-[node name="ScoreRows" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin" unique_id=823607828]
+[node name="ScoreRows" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScoreMargin/ScorePanel" unique_id=823607828]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="PlayerRow_1" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows" unique_id=1453858529]
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1815692670]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
+size_flags_vertical = 3
+alignment = 2
 
-[node name="PlayerRowHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1" unique_id=311054093]
-custom_minimum_size = Vector2(0, 76)
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/VBoxContainer" unique_id=208718113]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
 
-[node name="WinnerStrip" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=2037980834]
-custom_minimum_size = Vector2(14, 76)
+[node name="Button Hbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/VBoxContainer/MarginContainer" unique_id=699408768]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_guliv")
+theme_override_constants/separation = 32
 
-[node name="Token Holder" type="CenterContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=596082981]
-custom_minimum_size = Vector2(74, 76)
-layout_mode = 2
-
-[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox/Token Holder" unique_id=458011792]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-script = ExtResource("1_5mlej")
-visual_scale = 0.24
-metadata/_edit_use_anchors_ = true
-
-[node name="PlayerNameLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=54332132]
-layout_mode = 2
-text = "Sam"
-label_settings = SubResource("LabelSettings_guliv")
-horizontal_alignment = 1
-
-[node name="WinnerStarLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=1991114573]
-layout_mode = 2
-text = "★"
-label_settings = SubResource("LabelSettings_mmvkj")
-vertical_alignment = 3
-
-[node name="ScoreLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_1/PlayerRowHbox" unique_id=1654165835]
+[node name="Next Round" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/VBoxContainer/MarginContainer/Button Hbox" unique_id=1211796610]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "1"
-label_settings = SubResource("LabelSettings_ootgn")
-horizontal_alignment = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("4_ujij1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_dhjdk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ujij1")
+text = "Next Round"
 
-[node name="HSeparator" type="HSeparator" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows" unique_id=1815152532]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_lueid")
-
-[node name="PlayerRow_2" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows" unique_id=1396219024]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
-
-[node name="PlayerRowHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2" unique_id=42705136]
-custom_minimum_size = Vector2(0, 76)
-layout_mode = 2
-theme_override_constants/separation = 18
-
-[node name="WinnerStrip" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=942766489]
-custom_minimum_size = Vector2(14, 76)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_guliv")
-
-[node name="Token Holder" type="CenterContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=1936432898]
-custom_minimum_size = Vector2(74, 76)
-layout_mode = 2
-
-[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox/Token Holder" unique_id=1421836395]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-script = ExtResource("1_5mlej")
-visual_scale = 0.24
-metadata/_edit_use_anchors_ = true
-
-[node name="PlayerNameLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=799846580]
-layout_mode = 2
-text = "Sam"
-label_settings = SubResource("LabelSettings_guliv")
-horizontal_alignment = 1
-
-[node name="WinnerStarLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=1495526442]
-layout_mode = 2
-text = "★"
-label_settings = SubResource("LabelSettings_mmvkj")
-vertical_alignment = 3
-
-[node name="ScoreLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ScorePanel/ScoreMargin/ScoreRows/PlayerRow_2/PlayerRowHbox" unique_id=640930880]
+[node name="Return to Lobby" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/VBoxContainer/MarginContainer/Button Hbox" unique_id=1394777057]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "1"
-label_settings = SubResource("LabelSettings_ootgn")
-horizontal_alignment = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_rq1fh")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cus25")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5dkol")
+text = "Return to Lobby"

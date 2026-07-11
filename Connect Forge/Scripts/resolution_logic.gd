@@ -35,16 +35,13 @@ func process_state():
 		last_winning_slots.clear()
 		
 		var result_slots:Array = win_result.get("winning_slots", [])
+		
 		for slot in result_slots:
 			last_winning_slots.append(slot)
 		
 		play_winning_sequence(winner_id, last_winning_slots)
-		
-		if game_manager.has_method("record_win"):
-			game_manager.record_win(winner_id)
-		
-		
-		game_manager.game_over_state.enter_state()
+		game_manager.record_match_result(winner_id)
+		game_manager.game_over_state.enter_state(winner_id)
 		return
 	
 	exit_state()

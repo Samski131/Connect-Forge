@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://batt3rltxdv8a"]
+
+[ext_resource type="StyleBox" uid="uid://dsatxatu1pemj" path="res://Assets/User Interface/Resources/Theme Presets/Game Over Menu/Light_Player_Row_Panel.stylebox" id="1_ah2f0"]
+[ext_resource type="StyleBox" uid="uid://ccirdkyqx0qxd" path="res://Assets/User Interface/Resources/Theme Presets/Game Over Menu/colour chip on score panel.stylebox" id="2_hmxi1"]
+[ext_resource type="Script" uid="uid://g2jqivnmlpp4" path="res://Scripts/User Interface/player_score_row.gd" id="2_vnh8j"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="3_vnh8j"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
+font_size = 28
+font_color = Color(0.105882354, 0.16862746, 0.33333334, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mmvkj"]
+font_size = 40
+font_color = Color(0.7882353, 0.18039216, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ootgn"]
+font_size = 40
+font_color = Color(0.105882354, 0.16862746, 0.33333334, 1)
+
+[node name="PlayerRow" type="PanelContainer" unique_id=740351324]
+theme_override_styles/panel = ExtResource("1_ah2f0")
+script = ExtResource("2_vnh8j")
+
+[node name="PlayerRowHbox" type="HBoxContainer" parent="." unique_id=1236118209]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="ColourStrip" type="PanelContainer" parent="PlayerRowHbox" unique_id=1937299518]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(14, 76)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_hmxi1")
+
+[node name="Token Holder" type="CenterContainer" parent="PlayerRowHbox" unique_id=1718295688]
+custom_minimum_size = Vector2(74, 76)
+layout_mode = 2
+
+[node name="Token Visual Display" type="Control" parent="PlayerRowHbox/Token Holder" unique_id=365082269]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+script = ExtResource("3_vnh8j")
+metadata/_edit_use_anchors_ = true
+
+[node name="PlayerNameLabel" type="Label" parent="PlayerRowHbox" unique_id=1548890738]
+layout_mode = 2
+text = "Sam"
+label_settings = SubResource("LabelSettings_guliv")
+horizontal_alignment = 1
+
+[node name="WinnerStarLabel" type="Label" parent="PlayerRowHbox" unique_id=1623339866]
+layout_mode = 2
+text = "★"
+label_settings = SubResource("LabelSettings_mmvkj")
+vertical_alignment = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerRowHbox" unique_id=562458383]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 32
+
+[node name="ScoreLabel" type="Label" parent="PlayerRowHbox/MarginContainer" unique_id=1930004122]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1"
+label_settings = SubResource("LabelSettings_ootgn")
+horizontal_alignment = 2

@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://67fr7bom4y3s"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lueid"]
+color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+thickness = 2
+
+[node name="Player Row Seperator" type="HSeparator" unique_id=1718143204]
+theme_override_constants/separation = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_lueid")
