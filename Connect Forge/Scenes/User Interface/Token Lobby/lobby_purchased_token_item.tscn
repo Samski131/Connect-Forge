@@ -1,0 +1,102 @@
+[gd_scene format=3 uid="uid://dd5tck0j34syc"]
+
+[ext_resource type="Script" uid="uid://bgg6j8impxfx1" path="res://Scripts/User Interface/TokenLobby/lobby_purchased_token_item.gd" id="1_6u2n2"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="1_bstdq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.91, 0.86814004, 0.8008, 0.15686275)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.78, 0.71682, 0.6396, 0.5294118)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jn2rt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jn2rt"]
+bg_color = Color(0.63529414, 0, 0, 0.6)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6u2n2"]
+bg_color = Color(1, 0, 0, 0.4627451)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iua0u"]
+bg_color = Color(0.12156863, 0.29411766, 0.49803922, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.4048, 0.6452267, 0.92, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.3882353)
+shadow_size = 1
+
+[node name="lobby_purchased_token_item" type="PanelContainer" unique_id=18511471]
+custom_minimum_size = Vector2(72, 72)
+offset_right = 56.0
+offset_bottom = 56.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+script = ExtResource("1_6u2n2")
+
+[node name="TokenVisualDisplay" type="Control" parent="." unique_id=370261361]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("1_bstdq")
+
+[node name="RemoveButton" type="Button" parent="." unique_id=415474701]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jn2rt")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jn2rt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6u2n2")
+
+[node name="Control" type="Control" parent="." unique_id=35741089]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Count Badge Panel" type="PanelContainer" parent="Control" unique_id=1289806874]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -21.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iua0u")
+
+[node name="CountLabel" type="Label" parent="Control/Count Badge Panel" unique_id=427427638]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "x0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="mouse_entered" from="RemoveButton" to="RemoveButton" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="RemoveButton" to="RemoveButton" method="_on_mouse_exited"]

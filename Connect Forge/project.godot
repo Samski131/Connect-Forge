@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 Global="*res://Scripts/global.gd"
+MatchData="*uid://dgxgv8ki3q1d2"
 
 [display]
 

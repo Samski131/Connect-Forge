@@ -21,7 +21,8 @@ const KEY_SCENE_PATH:String = "scene_path"
 const KEY_ICON_PATH:String = "icon_path"
 const KEY_CAN_FLIP:String = "can_flip"
 const KEY_TRAY_ORDER:String = "tray_order"
-
+const KEY_COST:String = "cost"
+const KEY_AVAILABLE_IN_LOBBY:String = "available_in_lobby"
 
 
 static func get_token_data(token_type:int) -> Dictionary:
@@ -55,7 +56,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/base token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/Asset 73.png",
 			KEY_CAN_FLIP: false,
-			KEY_TRAY_ORDER: 0
+			KEY_TRAY_ORDER: 0,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: false
 		},
 		TokenType.ANVIL: {
 			KEY_DISPLAY_NAME: "Anvil",
@@ -63,7 +66,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/anvil token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Anvil.png",
 			KEY_CAN_FLIP: false,
-			KEY_TRAY_ORDER: 1
+			KEY_TRAY_ORDER: 1,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.BOMB: {
 			KEY_DISPLAY_NAME: "Bomb",
@@ -71,7 +76,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/bomb token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Bomb.png",
 			KEY_CAN_FLIP: false,
-			KEY_TRAY_ORDER: 2
+			KEY_TRAY_ORDER: 2,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.CHAMELEON: {
 			KEY_DISPLAY_NAME: "Chameleon",
@@ -79,7 +86,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/chameleon token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Chameleon.png",
 			KEY_CAN_FLIP: false,
-			KEY_TRAY_ORDER: 3
+			KEY_TRAY_ORDER: 3,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.DAGGER: {
 			KEY_DISPLAY_NAME: "Dagger",
@@ -87,7 +96,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/dagger token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Dagger.png",
 			KEY_CAN_FLIP: true,
-			KEY_TRAY_ORDER: 4
+			KEY_TRAY_ORDER: 4,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.DRILL: {
 			KEY_DISPLAY_NAME: "Drill",
@@ -95,7 +106,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/drill token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Drill.png",
 			KEY_CAN_FLIP: false,
-			KEY_TRAY_ORDER: 5
+			KEY_TRAY_ORDER: 5,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.FAN: {
 			KEY_DISPLAY_NAME: "Fan",
@@ -103,7 +116,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/fan token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Fan.png",
 			KEY_CAN_FLIP: true,
-			KEY_TRAY_ORDER: 6
+			KEY_TRAY_ORDER: 6,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.PYRE: {
 			KEY_DISPLAY_NAME: "Pyre",
@@ -111,7 +126,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/pyre token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/pyre - main.png",
 			KEY_CAN_FLIP: false,
-			KEY_TRAY_ORDER: 7
+			KEY_TRAY_ORDER: 7,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.RAMP: {
 			KEY_DISPLAY_NAME: "Ramp",
@@ -119,7 +136,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/ramp token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Ramp front.png",
 			KEY_CAN_FLIP: true,
-			KEY_TRAY_ORDER: 8
+			KEY_TRAY_ORDER: 8,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.ROTATE_GRAVITY: {
 			KEY_DISPLAY_NAME: "Rotate Gravity",
@@ -127,7 +146,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/rotate gravity token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Rotate.png",
 			KEY_CAN_FLIP: true,
-			KEY_TRAY_ORDER: 9
+			KEY_TRAY_ORDER: 9,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.TETROMINO: {
 			KEY_DISPLAY_NAME: "Tetromino",
@@ -135,7 +156,9 @@ static func get_all_token_data() -> Dictionary:
 			KEY_SCENE_PATH: "res://Scenes/Tokens/tetromino token.tscn",
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/tetris body.png",
 			KEY_CAN_FLIP: false,
-			KEY_TRAY_ORDER: 10
+			KEY_TRAY_ORDER: 10,
+			KEY_COST: 2,
+			KEY_AVAILABLE_IN_LOBBY: true
 		}
 	}
 
@@ -211,3 +234,20 @@ static func get_token_types_in_tray_order() -> Array[int]:
 			sorted_types.append(token_type)
 	
 	return sorted_types
+
+static func get_cost(token_type:int) -> int:
+	return int(get_token_data_value(token_type, KEY_COST, 1))
+
+
+static func is_available_in_lobby(token_type:int) -> bool:
+	return bool(get_token_data_value(token_type, KEY_AVAILABLE_IN_LOBBY, true))
+
+
+static func get_lobby_token_types() -> Array[int]:
+	var lobby_types:Array[int] = []
+	
+	for token_type in get_token_types_in_tray_order():
+		if is_available_in_lobby(token_type):
+			lobby_types.append(token_type)
+	
+	return lobby_types

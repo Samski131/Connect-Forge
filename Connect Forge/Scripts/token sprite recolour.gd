@@ -1,17 +1,25 @@
 extends Node2D
 
 const SHIMMER_SHADER:Shader = preload("res://Shaders/token_shimmer.gdshader")
+const FALLBACK_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/blue.tres")
 
-var sprites:Array = []
-var shimmer_materials:Array = []
+enum PART {
+	red,
+	green,
+	blue,
+	cyan,
+	yellow
+}
 
-enum PART { red, green, blue, cyan, yellow }
+var sprites:Array[Sprite2D] = []
+var shimmer_materials:Array[ShaderMaterial] = []
 
-var game_manager:Node
+var game_manager:Node = null
 var shimmer_tween:Tween = null
 var darken_tween:Tween = null
 
-func _ready():
+
+func _ready() -> void:
 	game_manager = get_tree().get_first_node_in_group("game manager")
 	gather_sprites()
 	setup_shimmer_materials()
@@ -20,153 +28,212 @@ func _ready():
 		recolor(game_manager.current_player_id)
 
 
-func recolor(player_id:int):
+func recolor(player_id:int) -> void:
 	gather_sprites()
-
+	
+	var palette:ColorPalette = get_player_palette(player_id)
+	
 	for sprite in sprites:
+		if sprite == null:
+			continue
+		
+		if is_instance_valid(sprite) == false:
+			continue
+		
 		if sprite.name.contains("red"):
-			sprite.modulate = get_part_color(PART.red, player_id)
+			sprite.modulate = get_part_color(PART.red, palette)
 		elif sprite.name.contains("green"):
-			sprite.modulate = get_part_color(PART.green, player_id)
+			sprite.modulate = get_part_color(PART.green, palette)
 		elif sprite.name.contains("blue"):
-			sprite.modulate = get_part_color(PART.blue, player_id)
+			sprite.modulate = get_part_color(PART.blue, palette)
 		elif sprite.name.contains("cyan"):
-			sprite.modulate = get_part_color(PART.cyan, player_id)
+			sprite.modulate = get_part_color(PART.cyan, palette)
 		elif sprite.name.contains("yellow"):
-			sprite.modulate = get_part_color(PART.yellow, player_id)
+			sprite.modulate = get_part_color(PART.yellow, palette)
 
 
-func darken(amount:float):
+func get_player_palette(player_id:int) -> ColorPalette:
+	if game_manager == null:
+		game_manager = get_tree().get_first_node_in_group("game manager")
+	
+	if game_manager != null:
+		if player_id >= 0 and player_id < game_manager.player_colours.size():
+			var game_palette:ColorPalette = game_manager.player_colours[player_id]
+			
+			if is_valid_palette(game_palette):
+				return game_palette
+	
+	if MatchData.config != null:
+		var player_data:MatchPlayerData = MatchData.config.get_player(player_id)
+		
+		if player_data != null:
+			if is_valid_palette(player_data.colour_palette):
+				return player_data.colour_palette
+	
+	return FALLBACK_PALETTE
+
+
+func is_valid_palette(palette:ColorPalette) -> bool:
+	if palette == null:
+		return false
+	
+	if palette.colors.size() < 5:
+		return false
+	
+	return true
+
+func get_part_color(part_id:int, palette:ColorPalette) -> Color:
+	if palette == null:
+		palette = FALLBACK_PALETTE
+	
+	if palette == null:
+		return Color.WHITE
+	
+	if part_id < 0:
+		return Color.WHITE
+	
+	if part_id >= palette.colors.size():
+		return Color.WHITE
+	
+	return palette.colors[part_id]
+
+
+func darken(amount:float) -> void:
 	gather_sprites()
-
+	
 	for sprite in sprites:
+		if sprite == null:
+			continue
+		
+		if is_instance_valid(sprite) == false:
+			continue
+		
 		sprite.modulate = sprite.modulate.darkened(amount)
 
 
-func gather_sprites():
+func gather_sprites() -> void:
 	sprites.clear()
 	_collect_sprites(self)
 
 
-func _collect_sprites(node:Node):
+func _collect_sprites(node:Node) -> void:
+	if node == null:
+		return
+	
 	for child in node.get_children():
-		if child is Sprite2D:
-			sprites.append(child)
+		var sprite:Sprite2D = child as Sprite2D
+		
+		if sprite != null:
+			sprites.append(sprite)
 		
 		_collect_sprites(child)
 
 
-func setup_shimmer_materials():
+func setup_shimmer_materials() -> void:
 	shimmer_materials.clear()
 	gather_sprites()
-
+	
 	for sprite in sprites:
 		if sprite == null:
 			continue
-
+		
 		if is_instance_valid(sprite) == false:
 			continue
+		
+		var shimmer_material:ShaderMaterial = sprite.material as ShaderMaterial
+		
+		if shimmer_material == null or shimmer_material.shader != SHIMMER_SHADER:
+			shimmer_material = ShaderMaterial.new()
+			shimmer_material.shader = SHIMMER_SHADER
+			sprite.material = shimmer_material
+		else:
+			shimmer_material = shimmer_material.duplicate() as ShaderMaterial
+			sprite.material = shimmer_material
+		
+		shimmer_material.set_shader_parameter("shimmer_progress", -1.0)
+		shimmer_materials.append(shimmer_material)
 
-		var m := sprite.material as ShaderMaterial
 
-		if m == null:
-			m = ShaderMaterial.new()
-			m.shader = SHIMMER_SHADER
-			sprite.material = m
-
-		m.set_shader_parameter("shimmer_progress", -1.0)
-		shimmer_materials.append(m)
-
-
-func play_shimmer(
-	duration:float = 0.45,
-	direction:Vector2 = Vector2(1.0, -1.0),
-	strength:float = 0.75
-):
+func play_shimmer(duration:float = 0.45, direction:Vector2 = Vector2(1.0, -1.0), strength:float = 0.75) -> void:
 	setup_shimmer_materials()
-
+	
 	if shimmer_materials.is_empty():
 		return
-
+	
 	if shimmer_tween != null and shimmer_tween.is_running():
 		shimmer_tween.kill()
-
-	var normal_direction := direction.normalized()
-	var center := get_shimmer_center()
-
-	for m in shimmer_materials:
-		if m == null:
-			continue
-
-		m.set_shader_parameter("token_center_global", center)
-		m.set_shader_parameter("shimmer_direction", normal_direction)
-		m.set_shader_parameter("shimmer_strength", strength)
-		m.set_shader_parameter("shimmer_progress", 0.0)
-
-	shimmer_tween = create_tween()
-	shimmer_tween.tween_method(
-		set_shimmer_progress,
-		0.0,
-		1.0,
-		duration
-	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-
-	shimmer_tween.finished.connect(finish_shimmer)
 	
-func set_shimmer_progress(value:float):
-	var center := get_shimmer_center()
-
-	for m in shimmer_materials:
-		if m == null:
+	var normal_direction:Vector2 = direction.normalized()
+	
+	if normal_direction == Vector2.ZERO:
+		normal_direction = Vector2(1.0, -1.0).normalized()
+	
+	var center:Vector2 = get_shimmer_center()
+	
+	for shimmer_material in shimmer_materials:
+		if shimmer_material == null:
 			continue
-
-		m.set_shader_parameter("token_center_global", center)
-		m.set_shader_parameter("shimmer_progress", value)
 		
-func finish_shimmer():
-	for m in shimmer_materials:
-		if m == null:
+		shimmer_material.set_shader_parameter("token_center_global", center)
+		shimmer_material.set_shader_parameter("shimmer_direction", normal_direction)
+		shimmer_material.set_shader_parameter("shimmer_strength", strength)
+		shimmer_material.set_shader_parameter("shimmer_progress", 0.0)
+	
+	shimmer_tween = create_tween()
+	shimmer_tween.tween_method(set_shimmer_progress, 0.0, 1.0, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	shimmer_tween.finished.connect(finish_shimmer)
+
+
+func set_shimmer_progress(value:float) -> void:
+	var center:Vector2 = get_shimmer_center()
+	
+	for shimmer_material in shimmer_materials:
+		if shimmer_material == null:
 			continue
+		
+		shimmer_material.set_shader_parameter("token_center_global", center)
+		shimmer_material.set_shader_parameter("shimmer_progress", value)
 
-		m.set_shader_parameter("shimmer_progress", -1.0)
 
-func get_shimmer_center()->Vector2:
-	var parent_node := get_parent()
+func finish_shimmer() -> void:
+	for shimmer_material in shimmer_materials:
+		if shimmer_material == null:
+			continue
+		
+		shimmer_material.set_shader_parameter("shimmer_progress", -1.0)
 
-	if parent_node is Node2D:
-		return parent_node.global_position
 
+func get_shimmer_center() -> Vector2:
+	var parent_node:Node = get_parent()
+	var parent_node_2d:Node2D = parent_node as Node2D
+	
+	if parent_node_2d != null:
+		return parent_node_2d.global_position
+	
 	return global_position
 
-func tween_darken(amount:float = 0.3, duration:float = 0.18)->Tween:
-	gather_sprites()
 
+func tween_darken(amount:float = 0.3, duration:float = 0.18) -> Tween:
+	gather_sprites()
+	
 	if darken_tween != null and darken_tween.is_running():
 		darken_tween.kill()
-
+	
 	darken_tween = create_tween()
 	darken_tween.set_parallel(true)
-
+	
 	for sprite in sprites:
 		if sprite == null:
 			continue
-
+		
 		if is_instance_valid(sprite) == false:
 			continue
-
+		
 		var target_color:Color = sprite.modulate.darkened(amount)
-
-		darken_tween.tween_property(
-			sprite,
-			"modulate",
-			target_color,
-			duration
-		).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-
-	return darken_tween
+		darken_tween.tween_property(sprite, "modulate", target_color, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	
-func get_part_color(part_id:int, player_id:int)->Color:
-	return game_manager.player_colours[player_id].colors[part_id]
+	return darken_tween
+
 
 func set_flipped_visual(is_flipped:bool) -> void:
 	var icon:Node2D = get_icon_node()
@@ -175,15 +242,40 @@ func set_flipped_visual(is_flipped:bool) -> void:
 		return
 	
 	if is_flipped:
-		icon.scale.x = -1.0
+		icon.scale.x = -abs(icon.scale.x)
 	else:
-		icon.scale.x = 1.0
+		icon.scale.x = abs(icon.scale.x)
 
 
 func get_icon_node() -> Node2D:
-	var icon = find_child("Icon", true, false)
+	var icon:Node = find_child("Icon", true, false)
+	return icon as Node2D
+
+func recolor_with_palette(palette:ColorPalette) -> void:
+	gather_sprites()
 	
-	if icon is Node2D:
-		return icon
+	var used_palette:ColorPalette = palette
 	
-	return null
+	if used_palette == null:
+		used_palette = FALLBACK_PALETTE
+	
+	if used_palette.colors.size() < 5:
+		used_palette = FALLBACK_PALETTE
+	
+	for sprite in sprites:
+		if sprite == null:
+			continue
+		
+		if is_instance_valid(sprite) == false:
+			continue
+		
+		if sprite.name.contains("red"):
+			sprite.modulate = get_part_color(PART.red, used_palette)
+		elif sprite.name.contains("green"):
+			sprite.modulate = get_part_color(PART.green, used_palette)
+		elif sprite.name.contains("blue"):
+			sprite.modulate = get_part_color(PART.blue, used_palette)
+		elif sprite.name.contains("cyan"):
+			sprite.modulate = get_part_color(PART.cyan, used_palette)
+		elif sprite.name.contains("yellow"):
+			sprite.modulate = get_part_color(PART.yellow, used_palette)

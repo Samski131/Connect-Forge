@@ -1,0 +1,141 @@
+[gd_scene format=3 uid="uid://dluo7duburx27"]
+
+[ext_resource type="Script" uid="uid://b0n2ub5f2ikss" path="res://Scripts/User Interface/TokenLobby/lobby_player_tray.gd" id="1_ghuxs"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="1_wgdcp"]
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="2_ghuxs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmvkj"]
+bg_color = Color(0.9764706, 0.7490196, 0.2627451, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.95, 0.8803333, 0.74099994, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+bg_color = Color(0.9254902, 0.6509804, 0.18039216, 1)
+corner_radius_top_left = 14
+corner_radius_bottom_left = 14
+corner_detail = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
+font_size = 24
+font_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
+font_size = 18
+font_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font_size = 24
+font_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fsy6u"]
+bg_color = Color(0.9098039, 0.8666667, 0.79607844, 1)
+corner_radius_bottom_right = 14
+
+[node name="LobbyPlayerTray" type="PanelContainer" unique_id=426039924]
+custom_minimum_size = Vector2(350, 165)
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
+script = ExtResource("1_ghuxs")
+
+[node name="TrayHbox" type="HBoxContainer" parent="." unique_id=919360206]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="ColourStrip" type="PanelContainer" parent="TrayHbox" unique_id=187295634]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Content" type="MarginContainer" parent="TrayHbox" unique_id=370144872]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Content" type="VBoxContainer" parent="TrayHbox/Content" unique_id=1317265705]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Margin" type="MarginContainer" parent="TrayHbox/Content/Content" unique_id=140781529]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="Header Content" type="HBoxContainer" parent="TrayHbox/Content/Content/Margin" unique_id=739459553]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=88806355]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("1_wgdcp")
+visual_scale = 0.12
+
+[node name="PlayerNameLabel" type="Label" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=93510]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Name"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="HeaderSpacer" type="Control" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=2044448835]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="PointsLeftLabel" type="Label" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=924779835]
+layout_mode = 2
+text = "Points Left: "
+label_settings = SubResource("LabelSettings_fsy6u")
+
+[node name="PointsLabel" type="Label" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=1024327861]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1"
+label_settings = SubResource("LabelSettings_lueid")
+
+[node name="TokenGridBackground" type="PanelContainer" parent="TrayHbox/Content/Content" unique_id=2055869412]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
+
+[node name="Margin" type="MarginContainer" parent="TrayHbox/Content/Content/TokenGridBackground" unique_id=1111027103]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="PurchasedTokensScroll" type="ScrollContainer" parent="TrayHbox/Content/Content/TokenGridBackground/Margin" unique_id=1329739940]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="PurchaseTokens" type="GridContainer" parent="TrayHbox/Content/Content/TokenGridBackground/Margin/PurchasedTokensScroll" unique_id=461277573]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+mouse_filter = 2
+columns = 5
+
+[node name="UIJuicePlayer" type="Node" parent="." unique_id=643367759]
+unique_name_in_owner = true
+script = ExtResource("2_ghuxs")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"

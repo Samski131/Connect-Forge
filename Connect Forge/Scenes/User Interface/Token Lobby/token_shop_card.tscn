@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://bu0bynbou7moq"]
+
+[ext_resource type="Script" uid="uid://ddj68q638gv0p" path="res://Scripts/User Interface/TokenLobby/token_shop_card.gd" id="1_k8d1k"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="1_wmxyl"]
+[ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="2_8mxab"]
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="2_k8d1k"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+bg_color = Color(0.9411765, 0.9019608, 0.84705883, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.09600834, 0.15173289, 0.25771305, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fsy6u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_guliv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mmvkj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8mxab"]
+font_size = 22
+font_color = Color(0.0234, 0.15170997, 0.39, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fsy6u"]
+bg_color = Color(0.8862745, 0.8352941, 0.7647059, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font_size = 22
+font_color = Color(0.0234, 0.15170997, 0.39, 1)
+
+[node name="TokenShopCard" type="PanelContainer" unique_id=81048055]
+custom_minimum_size = Vector2(205, 175)
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_force_pass_scroll_events = false
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+script = ExtResource("1_k8d1k")
+
+[node name="CardButton" type="Button" parent="." unique_id=213095647]
+layout_mode = 2
+focus_mode = 0
+mouse_filter = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_fsy6u")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_guliv")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_mmvkj")
+flat = true
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=2037788156]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Content" type="VBoxContainer" parent="Margin" unique_id=251045767]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TokenArea" type="Control" parent="Margin/Content" unique_id=1612205878]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="Margin/Content/TokenArea" unique_id=897252269]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_wmxyl")
+visual_scale = 0.26
+
+[node name="TokenNameLabel" type="Label" parent="Margin/Content" unique_id=381204735]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Basic Token"
+label_settings = SubResource("LabelSettings_8mxab")
+horizontal_alignment = 1
+
+[node name="CostPanel" type="PanelContainer" parent="Margin/Content" unique_id=1241922872]
+custom_minimum_size = Vector2(120, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
+
+[node name="CostMargin" type="MarginContainer" parent="Margin/Content/CostPanel" unique_id=1753138086]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="CostRow" type="HBoxContainer" parent="Margin/Content/CostPanel/CostMargin" unique_id=1589463188]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Margin/Content/CostPanel/CostMargin/CostRow" unique_id=47381757]
+layout_mode = 2
+texture = ExtResource("2_8mxab")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="CostLabel" type="Label" parent="Margin/Content/CostPanel/CostMargin/CostRow" unique_id=390308007]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1"
+label_settings = SubResource("LabelSettings_lueid")
+
+[node name="UIJuicePlayer" type="Node" parent="." unique_id=139784620]
+unique_name_in_owner = true
+script = ExtResource("2_k8d1k")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"

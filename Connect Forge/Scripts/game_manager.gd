@@ -8,10 +8,10 @@ signal turn_number_changed(turn_number:int)
 signal game_time_changed(total_seconds:int)
 signal score_changed
 
-@export var starting_number_of_players:int = 5
+@export var starting_number_of_players:int = 3
 @export var minimum_number_of_players:int = 2
 @export var max_number_of_players:int = 6
-@export var default_player_names:Array[String] = ["Sam", "Jordan", "Harry", "Jack", "Ross"]
+@export var default_player_names:Array[String] = ["Sam", "Ross", "Jack", "Jack", "Ross"]
 @export var player_colours:Array[ColorPalette]
 
 var number_of_players:int = 0
@@ -393,6 +393,32 @@ func start_next_round() -> void:
 	reset_test_token_trays()
 	start_game()
 
+func apply_match_config() -> void:
+	if MatchData.config == null:
+		return
+	
+	number_of_players = MatchData.config.get_player_count()
+	player_names.clear()
+	player_colours.clear()
+	
+	for player_id in range(number_of_players):
+		var player:MatchPlayerData = MatchData.config.get_player(player_id)
+		
+		if player == null:
+			continue
+		
+		player_names.append(player.player_name)
+		player_colours.append(player.colour_palette)
+
+func apply_board_config() -> void:
+	if MatchData.config == null:
+		return
+	
+	board.settings.columns = MatchData.config.board_columns
+	board.settings.rows = MatchData.config.board_rows
+	board.settings.tokens_to_win = MatchData.config.tokens_to_win
+	
+	
 func give_test_tokens() -> void:
 	if token_tray_inventory == null:
 		return

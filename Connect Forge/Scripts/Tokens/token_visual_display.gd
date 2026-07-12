@@ -8,16 +8,25 @@ var token_type:int = -1
 var player_id:int = -1
 var is_flipped:bool = false
 var visual_root:Node2D = null
-
+var explicit_palette:ColorPalette = null
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	clip_contents = true
 	call_deferred("refresh_layout")
-	setup(0,0,false)
 
 
 func setup(new_token_type:int, new_player_id:int, new_is_flipped:bool = false) -> void:
+	explicit_palette = null
+	setup_internal(new_token_type, new_player_id, new_is_flipped)
+
+
+func setup_with_palette(new_token_type:int, new_player_id:int, new_palette:ColorPalette, new_is_flipped:bool = false) -> void:
+	explicit_palette = new_palette
+	setup_internal(new_token_type, new_player_id, new_is_flipped)
+
+
+func setup_internal(new_token_type:int, new_player_id:int, new_is_flipped:bool) -> void:
 	if token_type == new_token_type and player_id == new_player_id and is_flipped == new_is_flipped and visual_root != null:
 		call_deferred("apply_visual_setup")
 		return
@@ -73,8 +82,11 @@ func apply_visual_setup() -> void:
 	if is_instance_valid(visual_root) == false:
 		return
 	
-	_call_method_recursive(visual_root, "recolor", [player_id])
-	
+	if explicit_palette != null:
+		_call_method_recursive(visual_root, "recolor_with_palette", [explicit_palette])
+	else:
+		_call_method_recursive(visual_root, "recolor", [player_id])
+		
 	if is_flipped:
 		_call_method_recursive(visual_root, "set_flipped_visual", [true])
 	else:
