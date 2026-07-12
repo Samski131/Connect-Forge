@@ -2,13 +2,13 @@ class_name PlayerTokenTraysUI
 extends VBoxContainer
 
 @export_group("References")
-var game_manager:Node
 @export var player_tray_scene:PackedScene
 
 @export_group("Tray State Presets")
-@export var active_tray_preset:UIJuicePreset 
-@export var inactive_tray_preset:UIJuicePreset 
+@export var active_tray_preset:UIJuicePreset
+@export var inactive_tray_preset:UIJuicePreset
 
+var game_manager:Node = null
 var trays:Array[PlayerTokenTrayUI] = []
 
 
@@ -26,6 +26,14 @@ func connect_game_manager_signals() -> void:
 	if game_manager.has_signal("current_player_changed"):
 		if game_manager.current_player_changed.is_connected(_on_current_player_changed) == false:
 			game_manager.current_player_changed.connect(_on_current_player_changed)
+	
+	if game_manager.has_signal("players_changed"):
+		if game_manager.players_changed.is_connected(_on_players_changed) == false:
+			game_manager.players_changed.connect(_on_players_changed)
+	
+	if game_manager.has_signal("player_names_changed"):
+		if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
+			game_manager.player_names_changed.connect(_on_player_names_changed)
 
 
 func rebuild_trays() -> void:
@@ -39,13 +47,21 @@ func rebuild_trays() -> void:
 	if player_tray_scene == null:
 		return
 	
-	for player_id in range(game_manager.number_of_players):
+	if game_manager.has_method("get_player_count") == false:
+		return
+	
+	var player_count:int = game_manager.get_player_count()
+	
+	for player_id in range(player_count):
 		create_player_tray(player_id)
 	
 	call_deferred("update_current_player_tray_visuals")
 
 
 func create_player_tray(player_id:int) -> void:
+	if player_tray_scene == null:
+		return
+	
 	var tray:PlayerTokenTrayUI = player_tray_scene.instantiate() as PlayerTokenTrayUI
 	
 	if tray == null:
@@ -122,3 +138,11 @@ func get_tray_state_preset(tray:PlayerTokenTrayUI) -> UIJuicePreset:
 
 func _on_current_player_changed(_player_id:int) -> void:
 	update_current_player_tray_visuals()
+
+
+func _on_players_changed() -> void:
+	rebuild_trays()
+
+
+func _on_player_names_changed() -> void:
+	refresh_trays()

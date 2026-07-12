@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://dlnd1t87y8gfr"]
+
+[ext_resource type="Script" uid="uid://bnoucfs43fmlc" path="res://Scripts/token_palette_preview.gd" id="1_s26xy"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
+font_size = 36
+
+[node name="TokenPalettePreview" type="Control" unique_id=767724482]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s26xy")
+
+[node name="Background" type="ColorRect" parent="." unique_id=763217108]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.09411765, 0.14901961, 0.21960784, 1)
+
+[node name="ScreenMargin" type="MarginContainer" parent="Background" unique_id=1637801508]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 40
+
+[node name="Layout" type="VBoxContainer" parent="Background/ScreenMargin" unique_id=271374475]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Title" type="Label" parent="Background/ScreenMargin/Layout" unique_id=1863026338]
+layout_mode = 2
+text = "Palette Preview"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="PaletteScroll" type="ScrollContainer" parent="Background/ScreenMargin/Layout" unique_id=1990618204]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PaletteGrid" type="GridContainer" parent="Background/ScreenMargin/Layout/PaletteScroll" unique_id=748351894]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 7

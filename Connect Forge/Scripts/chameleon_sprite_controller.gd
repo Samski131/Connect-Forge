@@ -1,6 +1,7 @@
 extends Node2D
 
 const DISSOLVE_SHADER:Shader = preload("res://Shaders/chamelon_effect.gdshader")
+const WAVE_COLOUR_INDEX:int = 4
 
 @onready var fake_sprites:Node2D = $FakeSprites
 @onready var chameleon_sprites:Node2D = $ChameleonSprites
@@ -84,11 +85,11 @@ func prepare_fake_visual(fake_player_id:int) -> void:
 func set_dissolve_progress(value:float) -> void:
 	update_dissolve_screen_uniforms()
 	
-	for m in dissolve_materials:
-		if m == null:
+	for dissolve_material in dissolve_materials:
+		if dissolve_material == null:
 			continue
 		
-		m.set_shader_parameter("dissolve_progress", value)
+		dissolve_material.set_shader_parameter("dissolve_progress", value)
 
 
 func finish_fake_visual() -> void:
@@ -120,12 +121,12 @@ func setup_dissolve_materials() -> void:
 		if is_instance_valid(sprite) == false:
 			continue
 		
-		var m:ShaderMaterial = ShaderMaterial.new()
-		m.shader = DISSOLVE_SHADER
-		m.set_shader_parameter("dissolve_progress", 0.0)
-		m.set_shader_parameter("beam_color", wave_color)
-		sprite.material = m
-		dissolve_materials.append(m)
+		var dissolve_material:ShaderMaterial = ShaderMaterial.new()
+		dissolve_material.shader = DISSOLVE_SHADER
+		dissolve_material.set_shader_parameter("dissolve_progress", 0.0)
+		dissolve_material.set_shader_parameter("beam_color", wave_color)
+		sprite.material = dissolve_material
+		dissolve_materials.append(dissolve_material)
 	
 	update_dissolve_screen_uniforms()
 
@@ -153,11 +154,11 @@ func set_reveal_dissolve_progress(value:float) -> void:
 	
 	update_reveal_dissolve_screen_uniforms()
 	
-	for m in reveal_materials:
-		if m == null:
+	for reveal_material in reveal_materials:
+		if reveal_material == null:
 			continue
 		
-		m.set_shader_parameter("dissolve_progress", shader_progress)
+		reveal_material.set_shader_parameter("dissolve_progress", shader_progress)
 
 
 func finish_reveal_visual() -> void:
@@ -199,62 +200,50 @@ func setup_reveal_dissolve_materials() -> void:
 		if is_instance_valid(sprite) == false:
 			continue
 		
-		var m:ShaderMaterial = ShaderMaterial.new()
-		m.shader = DISSOLVE_SHADER
-		m.set_shader_parameter("dissolve_progress", 1.0)
-		m.set_shader_parameter("beam_color", wave_color)
-		sprite.material = m
-		reveal_materials.append(m)
+		var reveal_material:ShaderMaterial = ShaderMaterial.new()
+		reveal_material.shader = DISSOLVE_SHADER
+		reveal_material.set_shader_parameter("dissolve_progress", 1.0)
+		reveal_material.set_shader_parameter("beam_color", wave_color)
+		sprite.material = reveal_material
+		reveal_materials.append(reveal_material)
 	
 	update_reveal_dissolve_screen_uniforms()
 
 
 func get_change_wave_color() -> Color:
-	if game_manager == null:
-		game_manager = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager == null:
-		return Color.WHITE
-	
-	if current_fake_player_id < 0:
-		return Color.WHITE
-	
-	if current_fake_player_id >= game_manager.player_colours.size():
-		return Color.WHITE
-	
-	var palette:ColorPalette = game_manager.player_colours[current_fake_player_id]
-	
-	if palette == null:
-		return Color.WHITE
-	
-	if palette.colors.is_empty():
-		return Color.WHITE
-	
-	return palette.colors[4]
+	return get_player_wave_color(current_fake_player_id)
 
 
 func get_reveal_wave_color() -> Color:
-	if game_manager == null:
-		game_manager = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager == null:
-		return Color.WHITE
-	
-	if current_real_player_id < 0:
-		return Color.WHITE
-	
-	if current_real_player_id >= game_manager.player_colours.size():
-		return Color.WHITE
-	
-	var palette:ColorPalette = game_manager.player_colours[current_real_player_id]
+	return get_player_wave_color(current_real_player_id)
+
+
+func get_player_wave_color(player_id:int) -> Color:
+	var palette:ColorPalette = get_player_palette(player_id)
 	
 	if palette == null:
 		return Color.WHITE
 	
-	if palette.colors.is_empty():
+	if palette.colors.size() <= WAVE_COLOUR_INDEX:
 		return Color.WHITE
 	
-	return palette.colors[4]
+	return palette.colors[WAVE_COLOUR_INDEX]
+
+
+func get_player_palette(player_id:int) -> ColorPalette:
+	if player_id < 0:
+		return null
+	
+	if game_manager == null:
+		game_manager = get_tree().get_first_node_in_group("game manager")
+	
+	if game_manager != null and game_manager.has_method("get_player_palette"):
+		return game_manager.get_player_palette(player_id)
+	
+	if MatchData.config == null:
+		return null
+	
+	return MatchData.config.get_player_palette(player_id)
 
 
 func _collect_sprites(node:Node, results:Array[Sprite2D]) -> void:
@@ -262,8 +251,10 @@ func _collect_sprites(node:Node, results:Array[Sprite2D]) -> void:
 		return
 	
 	for child in node.get_children():
-		if child is Sprite2D:
-			results.append(child)
+		var sprite:Sprite2D = child as Sprite2D
+		
+		if sprite != null:
+			results.append(sprite)
 		
 		_collect_sprites(child, results)
 
@@ -294,36 +285,39 @@ func clear_dissolve_materials_from_layer(layer:Node2D) -> void:
 
 
 func update_dissolve_screen_uniforms() -> void:
-	var parent_node:Node = get_parent()
-	var token_center_screen:Vector2 = global_position
-	var dissolve_height_pixels:float = 120.0
+	var screen_data:Dictionary = get_dissolve_screen_data()
+	var token_center_screen:Vector2 = screen_data["token_center_screen"]
+	var dissolve_height_pixels:float = screen_data["dissolve_height_pixels"]
 	
-	if parent_node is Node2D:
-		var parent_2d:Node2D = parent_node as Node2D
-		var canvas_transform:Transform2D = parent_2d.get_global_transform_with_canvas()
-		token_center_screen = canvas_transform.origin
-		
-		var visual_scale:float = canvas_transform.y.length()
-		dissolve_height_pixels = 400.0 * visual_scale
-		
-		if dissolve_height_pixels < 1.0:
-			dissolve_height_pixels = 120.0
-	
-	for material in dissolve_materials:
-		if material == null:
+	for dissolve_material in dissolve_materials:
+		if dissolve_material == null:
 			continue
 		
-		material.set_shader_parameter("token_center_screen", token_center_screen)
-		material.set_shader_parameter("dissolve_height_pixels", dissolve_height_pixels)
+		dissolve_material.set_shader_parameter("token_center_screen", token_center_screen)
+		dissolve_material.set_shader_parameter("dissolve_height_pixels", dissolve_height_pixels)
 
 
 func update_reveal_dissolve_screen_uniforms() -> void:
+	var screen_data:Dictionary = get_dissolve_screen_data()
+	var token_center_screen:Vector2 = screen_data["token_center_screen"]
+	var dissolve_height_pixels:float = screen_data["dissolve_height_pixels"]
+	
+	for reveal_material in reveal_materials:
+		if reveal_material == null:
+			continue
+		
+		reveal_material.set_shader_parameter("token_center_screen", token_center_screen)
+		reveal_material.set_shader_parameter("dissolve_height_pixels", dissolve_height_pixels)
+
+
+func get_dissolve_screen_data() -> Dictionary:
 	var parent_node:Node = get_parent()
 	var token_center_screen:Vector2 = global_position
 	var dissolve_height_pixels:float = 120.0
 	
-	if parent_node is Node2D:
-		var parent_2d:Node2D = parent_node as Node2D
+	var parent_2d:Node2D = parent_node as Node2D
+	
+	if parent_2d != null:
 		var canvas_transform:Transform2D = parent_2d.get_global_transform_with_canvas()
 		token_center_screen = canvas_transform.origin
 		
@@ -333,9 +327,7 @@ func update_reveal_dissolve_screen_uniforms() -> void:
 		if dissolve_height_pixels < 1.0:
 			dissolve_height_pixels = 120.0
 	
-	for material in reveal_materials:
-		if material == null:
-			continue
-		
-		material.set_shader_parameter("token_center_screen", token_center_screen)
-		material.set_shader_parameter("dissolve_height_pixels", dissolve_height_pixels)
+	return {
+		"token_center_screen": token_center_screen,
+		"dissolve_height_pixels": dissolve_height_pixels
+	}

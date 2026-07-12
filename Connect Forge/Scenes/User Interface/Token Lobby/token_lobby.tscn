@@ -119,10 +119,9 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="LabelSettings" id="LabelSettings_8o36d"]
-font_size = 24
+font_size = 20
 
 [sub_resource type="LabelSettings" id="LabelSettings_6cky2"]
-font_size = 22
 font_color = Color(0.7, 0.7, 0.7, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8o36d"]
@@ -387,6 +386,8 @@ columns = 7
 
 [node name="PlayerTraySection" type="MarginContainer" parent="Control/ScreenMargin/ScreenLayout" unique_id=425803448]
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_right = 12
 
@@ -397,17 +398,20 @@ theme_override_constants/separation = 12
 
 [node name="Footer" type="MarginContainer" parent="Control/ScreenMargin/ScreenLayout" unique_id=1163402808]
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="Footer" type="HBoxContainer" parent="Control/ScreenMargin/ScreenLayout/Footer" unique_id=919666652]
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_constants/separation = 20
 alignment = 1
 
 [node name="HelpPanel" type="PanelContainer" parent="Control/ScreenMargin/ScreenLayout/Footer/Footer" unique_id=700089640]
-custom_minimum_size = Vector2(512, 96)
+custom_minimum_size = Vector2(512, 48)
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/ScreenMargin/ScreenLayout/Footer/Footer/HelpPanel" unique_id=1783635595]
@@ -421,7 +425,7 @@ theme_override_constants/margin_bottom = 12
 layout_mode = 2
 
 [node name="Information Symbol" type="TextureRect" parent="Control/ScreenMargin/ScreenLayout/Footer/Footer/HelpPanel/MarginContainer/HelpHbox" unique_id=1625132015]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(1, 16)
 layout_mode = 2
 texture = ExtResource("5_fr2p3")
 expand_mode = 2
@@ -444,10 +448,12 @@ autowrap_mode = 2
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 8
 
 [node name="PointsInformationPanel" type="PanelContainer" parent="Control/ScreenMargin/ScreenLayout/Footer/Footer" unique_id=1628246205]
-custom_minimum_size = Vector2(512, 96)
+custom_minimum_size = Vector2(512, 48)
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/ScreenMargin/ScreenLayout/Footer/Footer/PointsInformationPanel" unique_id=2082899156]
@@ -483,10 +489,12 @@ autowrap_mode = 2
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 8
 
 [node name="Start Button" type="Button" parent="Control/ScreenMargin/ScreenLayout/Footer/Footer" unique_id=1236255771]
 custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_font_sizes/font_size = 48
 theme_override_icons/icon = ExtResource("7_rfmhd")
 theme_override_styles/normal = SubResource("StyleBoxFlat_8o36d")

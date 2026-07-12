@@ -2,12 +2,12 @@ extends Node
 
 signal config_changed
 
-const YELLOW_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/yellow.tres")
-const RED_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red.tres")
-const GREEN_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/green.tres")
-const PINK_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/pink.tres")
-const VIOLET_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/violet.tres")
-const BLUE_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/blue.tres")
+const YELLOW_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/yellow_v3.tres")
+const RED_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
+const GREEN_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/green_v3.tres")
+const PINK_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/pink_v3.tres")
+const VIOLET_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/violet_v3.tres")
+const BLUE_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/blue_v3.tres")
 
 var config:MatchConfig = null
 
@@ -24,8 +24,7 @@ func create_default_config() -> void:
 	config.tokens_to_win = 4
 	config.add_player("Sam", YELLOW_PALETTE)
 	config.add_player("Jordan", RED_PALETTE)
-	config.add_player("Ross", GREEN_PALETTE)
-	config.add_player("Jack", PINK_PALETTE)
+
 	config_changed.emit()
 
 

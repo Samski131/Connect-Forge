@@ -9,7 +9,7 @@ var has_transformed:bool = false
 var has_revealed:bool = false
 
 
-func setup_special_token():
+func setup_special_token() -> void:
 	token_type = TokenLibrary.TokenType.CHAMELEON
 	charges = 1
 	ability_cost = 1
@@ -53,17 +53,20 @@ func pick_fake_player_id() -> int:
 	if game_manager == null:
 		return -1
 	
+	if game_manager.has_method("get_player_count") == false:
+		return -1
+	
+	var player_count:int = game_manager.get_player_count()
 	var valid_player_ids:Array[int] = []
 	
-	for i in range(game_manager.number_of_players):
-		if i != player_id:
-			valid_player_ids.append(i)
+	for possible_player_id in range(player_count):
+		if possible_player_id != player_id:
+			valid_player_ids.append(possible_player_id)
 	
 	if valid_player_ids.is_empty():
 		return -1
 	
 	var random_index:int = randi_range(0, valid_player_ids.size() - 1)
-	
 	return valid_player_ids[random_index]
 
 
@@ -109,7 +112,6 @@ func create_chameleon_reveal_effect() -> BoardVisualEffect:
 		return null
 	
 	has_revealed = true
-	
 	return ChameleonRevealVisualEffect.new(self, reveal_duration)
 
 

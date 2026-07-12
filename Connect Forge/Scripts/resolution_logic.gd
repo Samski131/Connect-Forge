@@ -1,222 +1,295 @@
 extends Node
-# This script handles the resolution state.
-# It checks for wins, plays the winning sequence, then moves into game over.
 
 const WIN_DIRECTIONS:Array[Vector2i] = [
-	Vector2i(0, 1),   # row same, column right
-	Vector2i(1, 0),   # row down, column same
-	Vector2i(1, 1),   # row down, column right
-	Vector2i(1, -1),  # row down, column left
+	Vector2i(0, 1),
+	Vector2i(1, 0),
+	Vector2i(1, 1),
+	Vector2i(1, -1)
 ]
 
-var game_manager:Node
-var board:BoardManager
-var last_winning_slots:Array[Vector2i] = []
+@export_group("Winning Line")
+@export var winning_line_colour_index:int = 0
+
+var game_manager:Node = null
+var board:BoardManager = null
+
+var win_sequence_started:bool = false
+var stored_winner_id:int = -1
+var stored_winning_slots:Array[Vector2i] = []
 
 
-func setup(new_game_manager:Node, new_board:BoardManager):
+func setup(new_game_manager:Node, new_board:BoardManager) -> void:
 	game_manager = new_game_manager
 	board = new_board
 
 
-func enter_state():
-	get_parent().current_turn_phase = Global.TURN_PHASE.RESOLUTION
+func enter_state() -> void:
+	if game_manager == null:
+		return
+	
+	clear_stored_win()
+	game_manager.current_turn_phase = Global.TURN_PHASE.RESOLUTION
 
 
-func exit_state():
+func exit_state() -> void:
+	if game_manager == null:
+		return
+	
+	clear_stored_win()
 	game_manager.end_turn()
 
 
-func process_state():
-	var win_result:Dictionary = check_for_win()
-	var winner_id:int = int(win_result.get("winner_id", -1))
-	
-	if winner_id != -1:
-		last_winning_slots.clear()
-		
-		var result_slots:Array = win_result.get("winning_slots", [])
-		
-		for slot in result_slots:
-			last_winning_slots.append(slot)
-		
-		play_winning_sequence(winner_id, last_winning_slots)
-		game_manager.record_match_result(winner_id)
-		game_manager.game_over_state.enter_state(winner_id)
+func process_state() -> void:
+	if game_manager == null:
 		return
 	
-	exit_state()
-
-
-func check_for_win() -> Dictionary:
-	var no_win_result:Dictionary = {
-		"winner_id": -1,
-		"winning_slots": []
-	}
-	
 	if board == null:
-		return no_win_result
+		return
+	
+	if board.visuals != null and board.visuals.is_busy():
+		return
+	
+	if win_sequence_started:
+		finish_game_with_winner(stored_winner_id)
+		return
+	
+	var winning_result:Dictionary = find_winning_result()
+	
+	if winning_result.is_empty():
+		exit_state()
+		return
+	
+	stored_winner_id = int(winning_result["player_id"])
+	stored_winning_slots.clear()
+	
+	var found_slots:Array = winning_result["slots"]
+	
+	for slot in found_slots:
+		stored_winning_slots.append(slot)
+	
+	win_sequence_started = true
+	
+	reveal_chameleon_tokens_after_win()
+	queue_winning_line(stored_winner_id, stored_winning_slots)
+	
+	if board.visuals != null and board.visuals.is_busy():
+		return
+	
+	finish_game_with_winner(stored_winner_id)
+
+
+func find_winning_result() -> Dictionary:
+	if board == null:
+		return {}
+	
+	if board.settings == null:
+		return {}
 	
 	var rows:int = board.settings.rows
 	var columns:int = board.settings.columns
+	var tokens_to_win:int = board.settings.tokens_to_win
+	
+	if rows <= 0:
+		return {}
+	
+	if columns <= 0:
+		return {}
+	
+	if tokens_to_win <= 0:
+		return {}
 	
 	for row in range(rows):
 		for column in range(columns):
-			var start_pos:Vector2i = Vector2i(column, row)
-			var current_token:Token = board.get_token(start_pos)
+			var start_position:Vector2i = Vector2i(column, row)
+			var starting_token:Token = board.get_token(start_position)
 			
-			if current_token == null:
+			if starting_token == null:
 				continue
 			
-			if is_instance_valid(current_token) == false:
+			if is_instance_valid(starting_token) == false:
 				continue
 			
-			if current_token.being_destroyed:
+			if starting_token.being_destroyed:
 				continue
 			
-			var current_player_id:int = current_token.player_id
+			var player_id:int = starting_token.player_id
+			
+			if is_valid_winning_player(player_id) == false:
+				continue
 			
 			for direction in WIN_DIRECTIONS:
-				var winning_slots:Array[Vector2i] = get_winning_slots_from(start_pos, direction, current_player_id)
+				var winning_slots:Array[Vector2i] = get_winning_slots(start_position, direction, player_id, tokens_to_win)
 				
 				if winning_slots.is_empty() == false:
 					return {
-						"winner_id": current_player_id,
-						"winning_slots": winning_slots
+						"player_id": player_id,
+						"slots": winning_slots
 					}
 	
-	return no_win_result
+	return {}
 
 
-func get_winning_slots_from(start_pos:Vector2i, row_column_direction:Vector2i, player_id:int) -> Array[Vector2i]:
-	var slots:Array[Vector2i] = []
-	var tokens_to_win:int = board.settings.tokens_to_win
-	var rows:int = board.settings.rows
-	var columns:int = board.settings.columns
+func check_for_win() -> int:
+	var winning_result:Dictionary = find_winning_result()
 	
-	var row_step:int = row_column_direction.x
-	var column_step:int = row_column_direction.y
+	if winning_result.is_empty():
+		return -1
 	
-	var start_row:int = start_pos.y
-	var start_column:int = start_pos.x
+	return int(winning_result["player_id"])
+
+
+func get_winning_slots(start_position:Vector2i, direction:Vector2i, player_id:int, tokens_to_win:int) -> Array[Vector2i]:
+	var winning_slots:Array[Vector2i] = []
+	var final_position:Vector2i = start_position + direction * (tokens_to_win - 1)
 	
-	var farthest_row:int = start_row + row_step * (tokens_to_win - 1)
-	var farthest_column:int = start_column + column_step * (tokens_to_win - 1)
+	if board.is_position_in_bounds(final_position) == false:
+		return winning_slots
 	
-	if farthest_row < 0 or farthest_row >= rows:
-		return slots
-	
-	if farthest_column < 0 or farthest_column >= columns:
-		return slots
-	
-	for i in range(tokens_to_win):
-		var check_row:int = start_row + row_step * i
-		var check_column:int = start_column + column_step * i
-		var check_pos:Vector2i = Vector2i(check_column, check_row)
-		var checked_token:Token = board.get_token(check_pos)
+	for step in range(tokens_to_win):
+		var checked_position:Vector2i = start_position + direction * step
+		var checked_token:Token = board.get_token(checked_position)
 		
 		if checked_token == null:
-			slots.clear()
-			return slots
+			winning_slots.clear()
+			return winning_slots
 		
 		if is_instance_valid(checked_token) == false:
-			slots.clear()
-			return slots
+			winning_slots.clear()
+			return winning_slots
 		
 		if checked_token.being_destroyed:
-			slots.clear()
-			return slots
+			winning_slots.clear()
+			return winning_slots
 		
 		if checked_token.player_id != player_id:
-			slots.clear()
-			return slots
+			winning_slots.clear()
+			return winning_slots
 		
-		slots.append(check_pos)
+		winning_slots.append(checked_position)
 	
-	return slots
+	return winning_slots
 
 
-func play_winning_sequence(winner_id:int, winning_slots:Array[Vector2i]) -> void:
+func is_winning_line(start_position:Vector2i, direction:Vector2i, player_id:int, tokens_to_win:int) -> bool:
+	var winning_slots:Array[Vector2i] = get_winning_slots(start_position, direction, player_id, tokens_to_win)
+	return winning_slots.is_empty() == false
+
+
+func is_valid_winning_player(player_id:int) -> bool:
+	if player_id < 0:
+		return false
+	
+	if game_manager == null:
+		return true
+	
+	if game_manager.has_method("is_valid_player_id") == false:
+		return true
+	
+	return game_manager.is_valid_player_id(player_id)
+
+
+func queue_winning_line(winner_id:int, winning_slots:Array[Vector2i]) -> void:
 	if board == null:
 		return
 	
 	if board.visuals == null:
 		return
 	
-	var reveal_effects:Array[BoardVisualEffect] = create_chameleon_reveal_effects()
-	
-	if reveal_effects.is_empty() == false:
-		board.visuals.queue_effect(ParallelVisualEffect.new(reveal_effects))
-	
 	if winning_slots.size() < 2:
 		return
 	
-	var winning_color:Color = get_player_win_color(winner_id)
-	var effect:WinningLineVisualEffect = WinningLineVisualEffect.new(board, winning_slots, winning_color, board.visuals.winning_line_duration)
+	var line_colour:Color = get_winning_line_colour(winner_id)
+	var line_effect:WinningLineVisualEffect = WinningLineVisualEffect.new(board, winning_slots, line_colour, board.visuals.winning_line_duration)
 	
-	effect.line_width = board.visuals.winning_line_width
-	effect.line_padding = board.visuals.winning_line_padding
-	effect.shadow_width_multiplier = board.visuals.winning_line_shadow_width_multiplier
-	effect.shadow_color = board.visuals.winning_line_shadow_color
-	effect.line_z_index = board.visuals.winning_line_z_index
+	line_effect.line_width = board.visuals.winning_line_width
+	line_effect.line_padding = board.visuals.winning_line_padding
+	line_effect.shadow_width_multiplier = board.visuals.winning_line_shadow_width_multiplier
+	line_effect.shadow_color = board.visuals.winning_line_shadow_color
+	line_effect.line_z_index = board.visuals.winning_line_z_index
 	
-	board.visuals.queue_effect(effect)
+	board.visuals.queue_effect(line_effect)
 
 
-func create_chameleon_reveal_effects() -> Array[BoardVisualEffect]:
-	var effects:Array[BoardVisualEffect] = []
-	
-	if board == null:
-		return effects
-	
-	var rows:int = board.settings.rows
-	var columns:int = board.settings.columns
-	
-	for row in range(rows):
-		for column in range(columns):
-			var pos:Vector2i = Vector2i(column, row)
-			var token:Token = board.get_token(pos)
-			
-			if token == null:
-				continue
-			
-			if is_instance_valid(token) == false:
-				continue
-			
-			if token.being_destroyed:
-				continue
-			
-			if token.has_method("create_chameleon_reveal_effect") == false:
-				continue
-			
-			var reveal_effect:BoardVisualEffect = token.create_chameleon_reveal_effect()
-			
-			if reveal_effect == null:
-				continue
-			
-			effects.append(reveal_effect)
-	
-	return effects
-
-
-func get_player_win_color(player_id:int) -> Color:
+func get_winning_line_colour(winner_id:int) -> Color:
 	if game_manager == null:
 		return Color.WHITE
 	
-	if player_id < 0:
+	if game_manager.has_method("get_player_palette") == false:
 		return Color.WHITE
 	
-	if player_id >= game_manager.player_colours.size():
-		return Color.WHITE
-	
-	var palette:ColorPalette = game_manager.player_colours[player_id]
+	var palette:ColorPalette = game_manager.get_player_palette(winner_id)
 	
 	if palette == null:
 		return Color.WHITE
 	
-	if palette.colors.size() >= 3:
-		return palette.colors[2]
+	if palette.colors.is_empty():
+		return Color.WHITE
 	
-	if palette.colors.size() > 0:
-		return palette.colors[0]
+	var used_colour_index:int = clamp(winning_line_colour_index, 0, palette.colors.size() - 1)
+	return palette.colors[used_colour_index]
+
+
+func reveal_chameleon_tokens_after_win() -> void:
+	if board == null:
+		return
 	
-	return Color.WHITE
+	var reveal_effects:Array[BoardVisualEffect] = []
+	
+	for position in board.get_positions_in_gravity_order():
+		var token:Token = board.get_token(position)
+		
+		if token == null:
+			continue
+		
+		if is_instance_valid(token) == false:
+			continue
+		
+		if token.being_destroyed:
+			continue
+		
+		if token.has_method("can_reveal_chameleon_after_win") == false:
+			continue
+		
+		var can_reveal:bool = bool(token.call("can_reveal_chameleon_after_win"))
+		
+		if can_reveal == false:
+			continue
+		
+		if board.visuals != null and token.has_method("create_chameleon_reveal_effect"):
+			var reveal_effect:BoardVisualEffect = token.call("create_chameleon_reveal_effect") as BoardVisualEffect
+			
+			if reveal_effect != null:
+				reveal_effects.append(reveal_effect)
+			elif token.has_method("reveal_chameleon_instantly"):
+				token.call("reveal_chameleon_instantly")
+		elif token.has_method("reveal_chameleon_instantly"):
+			token.call("reveal_chameleon_instantly")
+	
+	if reveal_effects.is_empty():
+		return
+	
+	if board.visuals == null:
+		return
+	
+	board.visuals.queue_effect(ParallelVisualEffect.new(reveal_effects))
+
+
+func finish_game_with_winner(winner_id:int) -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.has_method("is_valid_player_id"):
+		if game_manager.is_valid_player_id(winner_id) == false:
+			return
+	
+	if game_manager.has_method("record_match_result"):
+		game_manager.record_match_result(winner_id)
+	
+	if game_manager.game_over_state != null:
+		game_manager.game_over_state.enter_state(winner_id)
+
+
+func clear_stored_win() -> void:
+	win_sequence_started = false
+	stored_winner_id = -1
+	stored_winning_slots.clear()

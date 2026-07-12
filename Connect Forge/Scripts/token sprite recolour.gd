@@ -14,24 +14,29 @@ enum PART {
 var sprites:Array[Sprite2D] = []
 var shimmer_materials:Array[ShaderMaterial] = []
 
-var game_manager:Node = null
 var shimmer_tween:Tween = null
 var darken_tween:Tween = null
 
 
 func _ready() -> void:
-	game_manager = get_tree().get_first_node_in_group("game manager")
 	gather_sprites()
 	setup_shimmer_materials()
+	
+	var game_manager:Node = get_tree().get_first_node_in_group("game manager")
 	
 	if game_manager != null:
 		recolor(game_manager.current_player_id)
 
 
 func recolor(player_id:int) -> void:
+	var palette:ColorPalette = get_player_palette(player_id)
+	recolor_with_palette(palette)
+
+
+func recolor_with_palette(palette:ColorPalette) -> void:
 	gather_sprites()
 	
-	var palette:ColorPalette = get_player_palette(player_id)
+	var used_palette:ColorPalette = get_valid_palette_or_fallback(palette)
 	
 	for sprite in sprites:
 		if sprite == null:
@@ -41,34 +46,32 @@ func recolor(player_id:int) -> void:
 			continue
 		
 		if sprite.name.contains("red"):
-			sprite.modulate = get_part_color(PART.red, palette)
+			sprite.modulate = get_part_color(PART.red, used_palette)
 		elif sprite.name.contains("green"):
-			sprite.modulate = get_part_color(PART.green, palette)
+			sprite.modulate = get_part_color(PART.green, used_palette)
 		elif sprite.name.contains("blue"):
-			sprite.modulate = get_part_color(PART.blue, palette)
+			sprite.modulate = get_part_color(PART.blue, used_palette)
 		elif sprite.name.contains("cyan"):
-			sprite.modulate = get_part_color(PART.cyan, palette)
+			sprite.modulate = get_part_color(PART.cyan, used_palette)
 		elif sprite.name.contains("yellow"):
-			sprite.modulate = get_part_color(PART.yellow, palette)
+			sprite.modulate = get_part_color(PART.yellow, used_palette)
 
 
 func get_player_palette(player_id:int) -> ColorPalette:
-	if game_manager == null:
-		game_manager = get_tree().get_first_node_in_group("game manager")
+	if MatchData.config == null:
+		return FALLBACK_PALETTE
 	
-	if game_manager != null:
-		if player_id >= 0 and player_id < game_manager.player_colours.size():
-			var game_palette:ColorPalette = game_manager.player_colours[player_id]
-			
-			if is_valid_palette(game_palette):
-				return game_palette
+	var palette:ColorPalette = MatchData.config.get_player_palette(player_id)
 	
-	if MatchData.config != null:
-		var player_data:MatchPlayerData = MatchData.config.get_player(player_id)
-		
-		if player_data != null:
-			if is_valid_palette(player_data.colour_palette):
-				return player_data.colour_palette
+	if is_valid_palette(palette):
+		return palette
+	
+	return FALLBACK_PALETTE
+
+
+func get_valid_palette_or_fallback(palette:ColorPalette) -> ColorPalette:
+	if is_valid_palette(palette):
+		return palette
 	
 	return FALLBACK_PALETTE
 
@@ -82,20 +85,20 @@ func is_valid_palette(palette:ColorPalette) -> bool:
 	
 	return true
 
+
 func get_part_color(part_id:int, palette:ColorPalette) -> Color:
-	if palette == null:
-		palette = FALLBACK_PALETTE
+	var used_palette:ColorPalette = get_valid_palette_or_fallback(palette)
 	
-	if palette == null:
+	if used_palette == null:
 		return Color.WHITE
 	
 	if part_id < 0:
 		return Color.WHITE
 	
-	if part_id >= palette.colors.size():
+	if part_id >= used_palette.colors.size():
 		return Color.WHITE
 	
-	return palette.colors[part_id]
+	return used_palette.colors[part_id]
 
 
 func darken(amount:float) -> void:
@@ -250,32 +253,3 @@ func set_flipped_visual(is_flipped:bool) -> void:
 func get_icon_node() -> Node2D:
 	var icon:Node = find_child("Icon", true, false)
 	return icon as Node2D
-
-func recolor_with_palette(palette:ColorPalette) -> void:
-	gather_sprites()
-	
-	var used_palette:ColorPalette = palette
-	
-	if used_palette == null:
-		used_palette = FALLBACK_PALETTE
-	
-	if used_palette.colors.size() < 5:
-		used_palette = FALLBACK_PALETTE
-	
-	for sprite in sprites:
-		if sprite == null:
-			continue
-		
-		if is_instance_valid(sprite) == false:
-			continue
-		
-		if sprite.name.contains("red"):
-			sprite.modulate = get_part_color(PART.red, used_palette)
-		elif sprite.name.contains("green"):
-			sprite.modulate = get_part_color(PART.green, used_palette)
-		elif sprite.name.contains("blue"):
-			sprite.modulate = get_part_color(PART.blue, used_palette)
-		elif sprite.name.contains("cyan"):
-			sprite.modulate = get_part_color(PART.cyan, used_palette)
-		elif sprite.name.contains("yellow"):
-			sprite.modulate = get_part_color(PART.yellow, used_palette)

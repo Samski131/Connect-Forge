@@ -2,7 +2,7 @@ class_name TokenShopCard
 extends PanelContainer
 
 @export var token_type:int = TokenLibrary.TokenType.ANVIL
-@export var display_palette:ColorPalette = load("res://Scenes/Tokens/token colour resources/steel.tres")
+@export var display_palette:ColorPalette = load("res://Scenes/Tokens/token colour resources/blue_v3.tres")
 
 @onready var token_visual_display:TokenVisualDisplay = %TokenVisualDisplay
 @onready var token_name_label:Label = %TokenNameLabel

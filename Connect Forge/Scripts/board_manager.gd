@@ -142,11 +142,11 @@ func rotate_gravity(clockwise:bool = true) -> void:
 	
 	var new_index:int = current_index + step
 	
-	if new_index >= gravity_order.size():
+	if new_index >= grav_order.size():
 		new_index = 0
 	
 	if new_index < 0:
-		new_index = gravity_order.size() - 1
+		new_index = grav_order.size() - 1
 	
 	var new_direction:BoardSetting.GRID_DIRECTION = grav_order[new_index]
 	set_gravity_direction(new_direction)
