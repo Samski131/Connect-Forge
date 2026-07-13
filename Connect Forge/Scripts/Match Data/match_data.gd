@@ -24,8 +24,8 @@ func create_default_config() -> void:
 	config.tokens_to_win = 4
 	config.turn_timer_seconds = 0
 	config.starting_player_id = 0
-	config.add_player("Sam", YELLOW_PALETTE)
-	config.add_player("Jordan", RED_PALETTE)
+	config.add_player("Player 1", YELLOW_PALETTE)
+	config.add_player("Player 2", RED_PALETTE)
 	config_changed.emit()
 
 

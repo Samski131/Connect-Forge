@@ -94,11 +94,11 @@ resource_local_to_scene = false
 resource_local_to_scene = false
 allow_unpress = true
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_1tunj"]
-
 [sub_resource type="ButtonGroup" id="ButtonGroup_bqt2o"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_wx241"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_i32ml"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dhjdk"]
 content_margin_top = 8.0
@@ -722,7 +722,7 @@ unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
-button_group = SubResource("ButtonGroup_1tunj")
+button_group = SubResource("ButtonGroup_bqt2o")
 text = "Off"
 
 [node name="SeperatorV" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel/TimerButtons" unique_id=1727406546 instance=ExtResource("12_i32ml")]
@@ -732,7 +732,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
-button_group = SubResource("ButtonGroup_bqt2o")
+button_group = SubResource("ButtonGroup_wx241")
 text = "30s"
 
 [node name="SeperatorV2" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel/TimerButtons" unique_id=311695494 instance=ExtResource("12_i32ml")]
@@ -742,7 +742,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
-button_group = SubResource("ButtonGroup_wx241")
+button_group = SubResource("ButtonGroup_i32ml")
 text = "60s"
 
 [node name="Seperator5" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=749649251 instance=ExtResource("9_1tunj")]
