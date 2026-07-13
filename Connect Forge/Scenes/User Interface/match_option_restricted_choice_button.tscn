@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cksmkbm7v2iab"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ya15j"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kejf6"]
+bg_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_euvdp"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3axpr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_unbhu"]
+
+[node name="Button" type="Button" unique_id=415151106]
+custom_minimum_size = Vector2(90, 44)
+theme_override_colors/font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ya15j")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kejf6")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_euvdp")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_3axpr")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_unbhu")
+text = "7 x 6"

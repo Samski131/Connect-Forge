@@ -11,12 +11,15 @@ extends CanvasLayer
 @onready var token_grid:GridContainer = %TokenGrid
 @onready var player_tray_row:HBoxContainer = %PlayerTrayRow
 @onready var start_button:Button = $"Control/ScreenMargin/ScreenLayout/Footer/Footer/Start Button"
+@onready var hamburger_button:TextureButton = $"Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Options Button/PanelContainer/OptionsButton/Button"
+@onready var match_options_popup:MatchOptionsPopupUI = $Control/ScreenMargin/MatchOptionsPopupUI
 
 var is_starting_match:bool = false
 
 
 func _ready() -> void:
 	connect_buttons()
+	setup_match_options_popup()
 	setup_inventory()
 	create_shop_cards()
 	create_player_trays()
@@ -28,6 +31,16 @@ func connect_buttons() -> void:
 	
 	if start_button.pressed.is_connected(_on_start_button_pressed) == false:
 		start_button.pressed.connect(_on_start_button_pressed)
+
+
+func setup_match_options_popup() -> void:
+	if match_options_popup == null:
+		return
+	
+	match_options_popup.setup(hamburger_button)
+	
+	if match_options_popup.options_applied.is_connected(_on_match_options_applied) == false:
+		match_options_popup.options_applied.connect(_on_match_options_applied)
 
 
 func setup_inventory() -> void:
@@ -206,6 +219,11 @@ func start_match() -> void:
 
 func _on_start_button_pressed() -> void:
 	start_match()
+
+
+func _on_match_options_applied() -> void:
+	setup_inventory()
+	create_player_trays()
 
 
 func _on_player_count_changed(_player_count:int) -> void:

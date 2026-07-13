@@ -12,6 +12,10 @@
 [ext_resource type="Texture2D" uid="uid://88j63f6o5cmn" path="res://Assets/User Interface/tick.png" id="7_rfmhd"]
 [ext_resource type="Script" uid="uid://2mu2n8qbrdwp" path="res://Scripts/User Interface/Token Trays/token_tray_inventory.gd" id="9_ewep4"]
 [ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="10_hk3g5"]
+[ext_resource type="StyleBox" uid="uid://buwpa3b31eccc" path="res://Assets/User Interface/Resources/Buttons/green_normal.stylebox" id="12_7wkn7"]
+[ext_resource type="StyleBox" uid="uid://cp3c1isr71xkd" path="res://Assets/User Interface/Resources/Buttons/green_pressed.stylebox" id="13_qdbar"]
+[ext_resource type="StyleBox" uid="uid://bb3tlxb03hh8n" path="res://Assets/User Interface/Resources/Buttons/green_hover.stylebox" id="14_eq5re"]
+[ext_resource type="PackedScene" uid="uid://co8r8a8l1dhym" path="res://Scenes/User Interface/match_options_menu.tscn" id="15_qdbar"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8o36d"]
 shader = ExtResource("1_x1gbq")
@@ -132,54 +136,6 @@ font_size = 20
 
 [sub_resource type="LabelSettings" id="LabelSettings_6cky2"]
 font_color = Color(0.7, 0.7, 0.7, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8o36d"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.34901962, 0.68235296, 0.2901961, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.53, 1, 0.5456667, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-expand_margin_left = 16.0
-shadow_color = Color(0, 0, 0, 0.61960787)
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hk3g5"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.17135999, 0.68, 0.0816, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.53, 1, 0.5456667, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-expand_margin_left = 16.0
-shadow_color = Color(0, 0, 0, 0.61960787)
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3wwbg"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.46096498, 0.79, 0.4029, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.53, 1, 0.5456667, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-expand_margin_left = 16.0
-shadow_color = Color(0, 0, 0, 0.61960787)
-shadow_size = 4
 
 [node name="TokenLobby" type="CanvasLayer" unique_id=1236318408]
 script = ExtResource("1_6cky2")
@@ -576,10 +532,14 @@ layout_mode = 2
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 48
 theme_override_icons/icon = ExtResource("7_rfmhd")
-theme_override_styles/normal = SubResource("StyleBoxFlat_8o36d")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_hk3g5")
-theme_override_styles/hover = SubResource("StyleBoxFlat_3wwbg")
+theme_override_styles/normal = ExtResource("12_7wkn7")
+theme_override_styles/pressed = ExtResource("13_qdbar")
+theme_override_styles/hover = ExtResource("14_eq5re")
 text = "Start Match"
+
+[node name="MatchOptionsPopupUI" parent="Control/ScreenMargin" unique_id=356466557 instance=ExtResource("15_qdbar")]
+visible = false
+layout_mode = 2
 
 [node name="TokenTrayInventory" type="Node" parent="." unique_id=706902379 groups=["token tray inventory"]]
 script = ExtResource("9_ewep4")

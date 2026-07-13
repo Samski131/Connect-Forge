@@ -1,0 +1,899 @@
+[gd_scene format=3 uid="uid://co8r8a8l1dhym"]
+
+[ext_resource type="Script" uid="uid://crk40l2aif35e" path="res://Scripts/User Interface/TokenLobby/match_options_popup_ui.gd" id="1_1tunj"]
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="2_khgnh"]
+[ext_resource type="Resource" uid="uid://dcj5mm65cf8k6" path="res://Assets/User Interface/Resources/Transitions/popup_enter_soft.tres" id="3_h12w7"]
+[ext_resource type="Resource" uid="uid://clvcbhjq8f4w3" path="res://Assets/User Interface/Resources/Transitions/popup_exit_soft.tres" id="4_x4ujm"]
+[ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="5_kbtki"]
+[ext_resource type="PackedScene" uid="uid://b6nqi0covjlbl" path="res://Scenes/User Interface/Match Options/minus_button.tscn" id="6_du72n"]
+[ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="6_euvdp"]
+[ext_resource type="Texture2D" uid="uid://c7hk3ebcivx15" path="res://Assets/User Interface/minus.png" id="7_3axpr"]
+[ext_resource type="StyleBox" uid="uid://bpga6rji02ymx" path="res://Assets/User Interface/Resources/Theme Presets/Game Over Menu/red button.stylebox" id="7_unbhu"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="8_3axpr"]
+[ext_resource type="Texture2D" uid="uid://cqpv538qj472q" path="res://Assets/User Interface/plus.png" id="8_rhcwx"]
+[ext_resource type="PackedScene" uid="uid://67fr7bom4y3s" path="res://Scenes/User Interface/player_score_row_seperator.tscn" id="9_1tunj"]
+[ext_resource type="PackedScene" uid="uid://cksmkbm7v2iab" path="res://Scenes/User Interface/match_option_restricted_choice_button.tscn" id="10_bqt2o"]
+[ext_resource type="PackedScene" uid="uid://onbpxalakc7h" path="res://Scenes/User Interface/seperator V.tscn" id="12_i32ml"]
+[ext_resource type="StyleBox" uid="uid://buwpa3b31eccc" path="res://Assets/User Interface/Resources/Buttons/green_normal.stylebox" id="13_rhcwx"]
+[ext_resource type="StyleBox" uid="uid://cp3c1isr71xkd" path="res://Assets/User Interface/Resources/Buttons/green_pressed.stylebox" id="14_1tunj"]
+[ext_resource type="StyleBox" uid="uid://bb3tlxb03hh8n" path="res://Assets/User Interface/Resources/Buttons/green_hover.stylebox" id="15_bqt2o"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
+bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.9019608, 0.3137255, 0.3254902, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rolqa"]
+bg_color = Color(0.9019608, 0.8627451, 0.79607844, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7176471, 0.62352943, 0.5176471, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 14
+shadow_color = Color(0, 0, 0, 0.3882353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+bg_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font_size = 64
+font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
+font_size = 28
+font_color = Color(0.14117648, 0.20784314, 0.37254903, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmvkj"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 16
+
+[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
+font_size = 24
+font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mmvkj"]
+font_size = 21
+font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_euvdp"]
+resource_local_to_scene = false
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_unbhu"]
+resource_local_to_scene = false
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_3axpr"]
+resource_local_to_scene = false
+allow_unpress = true
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_1tunj"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_bqt2o"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_wx241"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dhjdk"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.79, 0.023699978, 0.049243297, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(1, 0.53, 0.53, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujij1"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.94594723, 0.3268647, 0.32010517, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(1, 0.53, 0.53, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
+
+[node name="MatchOptionsPopupUI" type="Control" unique_id=356466557]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_1tunj")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1039780782]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02745098, 0.06666667, 0.12156863, 0.8)
+
+[node name="PopupCenter" type="CenterContainer" parent="." unique_id=25291938]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PopupRoot" type="Control" parent="PopupCenter" unique_id=588263096]
+custom_minimum_size = Vector2(920, 768)
+layout_mode = 2
+
+[node name="UIJuicePlayer" type="Node" parent="PopupCenter/PopupRoot" unique_id=837932620]
+unique_name_in_owner = true
+script = ExtResource("2_khgnh")
+start_mode = 1
+enter_preset = ExtResource("3_h12w7")
+exit_preset = ExtResource("4_x4ujm")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
+[node name="UIJuicePlayerBackdrop" type="Node" parent="PopupCenter/PopupRoot" unique_id=323035621]
+unique_name_in_owner = true
+script = ExtResource("2_khgnh")
+target_path = NodePath("../../../Backdrop")
+start_mode = 1
+enter_preset = ExtResource("5_kbtki")
+exit_preset = ExtResource("6_euvdp")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
+[node name="OuterFrame" type="PanelContainer" parent="PopupCenter/PopupRoot" unique_id=55612880]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8v3xt")
+
+[node name="OuterMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=107440784]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Inner Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin" unique_id=438187732]
+custom_minimum_size = Vector2(860, 560)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rolqa")
+
+[node name="ContentMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel" unique_id=473582246]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentVbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin" unique_id=2120904535]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TopSpacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1695223297]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+
+[node name="WinnerLabelHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1377486983]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=1538383554]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Left Divider" unique_id=411443778]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Left Divider" unique_id=1845412082]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Left Divider/Diamond Holder" unique_id=212539744]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="TitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=89453216]
+layout_mode = 2
+text = "Match Options"
+label_settings = SubResource("LabelSettings_lueid")
+horizontal_alignment = 1
+
+[node name="Right Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox" unique_id=413603736]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Right Divider" unique_id=996201669]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Right Divider/Diamond Holder" unique_id=440861944]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/WinnerLabelHbox/Right Divider" unique_id=2123981903]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="CurrentScoreHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1475648395]
+layout_mode = 2
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox" unique_id=355332214]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Left Divider" unique_id=2117997837]
+custom_minimum_size = Vector2(50, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Left Divider" unique_id=1439728292]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Left Divider/Diamond Holder" unique_id=155922690]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox" unique_id=35450927]
+layout_mode = 2
+text = "Set up the match before starting."
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Right Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox" unique_id=721616577]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Right Divider" unique_id=900631934]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Right Divider/Diamond Holder" unique_id=462809562]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/CurrentScoreHbox/Right Divider" unique_id=2129727502]
+custom_minimum_size = Vector2(50, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="OptionsMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=683188887]
+layout_mode = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_right = 64
+
+[node name="OptionsPanel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin" unique_id=1015123418]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
+
+[node name="OptionsRows" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel" unique_id=823607828]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PlayerCount" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=885863699]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="PlayerCountRow" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount" unique_id=273716758]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+alignment = 1
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount/PlayerCountRow" unique_id=1426830689]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount/PlayerCountRow/Diamond Holder" unique_id=682946923]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 10.000002
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SettingLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount/PlayerCountRow" unique_id=1676210075]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Player Count"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Spacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount/PlayerCountRow" unique_id=1339669035]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerCountMinus" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount/PlayerCountRow" unique_id=1298047042 instance=ExtResource("6_du72n")]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+icon = ExtResource("7_3axpr")
+
+[node name="PlayerCountValue" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount/PlayerCountRow" unique_id=1599621661]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(58, 0)
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_mmvkj")
+horizontal_alignment = 1
+
+[node name="PlayerCountPlus" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/PlayerCount/PlayerCountRow" unique_id=2051378948 instance=ExtResource("6_du72n")]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+icon = ExtResource("8_rhcwx")
+
+[node name="Seperator1" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=1718143204 instance=ExtResource("9_1tunj")]
+layout_mode = 2
+
+[node name="StartingPoints" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=1062931968]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="StartingPointsRow" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints" unique_id=1837597647]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+alignment = 1
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints/StartingPointsRow" unique_id=1870510399]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints/StartingPointsRow/Diamond Holder" unique_id=751132163]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 10.000002
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SettingLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints/StartingPointsRow" unique_id=2005597948]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Starting Points"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Spacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints/StartingPointsRow" unique_id=660797174]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StartingPointsMinus" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints/StartingPointsRow" unique_id=1874701749 instance=ExtResource("6_du72n")]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+icon = ExtResource("7_3axpr")
+
+[node name="StartingPointsValue" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints/StartingPointsRow" unique_id=906425385]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(58, 0)
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_mmvkj")
+horizontal_alignment = 1
+
+[node name="StartingPointsPlus" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPoints/StartingPointsRow" unique_id=1777556310 instance=ExtResource("6_du72n")]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+icon = ExtResource("8_rhcwx")
+
+[node name="Seperator2" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=794416725 instance=ExtResource("9_1tunj")]
+layout_mode = 2
+
+[node name="TokensInRow" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=443530352]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="Tokens in aRow Row" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow" unique_id=1981603442]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+alignment = 1
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow/Tokens in aRow Row" unique_id=1463203795]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow/Tokens in aRow Row/Diamond Holder" unique_id=982530756]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 10.000002
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SettingLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow/Tokens in aRow Row" unique_id=414781699]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Tokens in a row to Win"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Spacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow/Tokens in aRow Row" unique_id=457572770]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TokensToWinMinus" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow/Tokens in aRow Row" unique_id=1254404972 instance=ExtResource("6_du72n")]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+icon = ExtResource("7_3axpr")
+
+[node name="TokensToWinValue" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow/Tokens in aRow Row" unique_id=203794830]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(58, 0)
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_mmvkj")
+horizontal_alignment = 1
+
+[node name="TokensToWinPlus" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TokensInRow/Tokens in aRow Row" unique_id=944996578 instance=ExtResource("6_du72n")]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+icon = ExtResource("8_rhcwx")
+
+[node name="Seperator3" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=1381364425 instance=ExtResource("9_1tunj")]
+layout_mode = 2
+
+[node name="BoardSizeRow" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=1884344446]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="BoardSizeRow" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow" unique_id=1217535966]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+alignment = 1
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow" unique_id=1672789220]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Diamond Holder" unique_id=1995888893]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 10.000002
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SettingLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow" unique_id=426576750]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Board Size"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Spacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow" unique_id=1810769211]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Margin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow" unique_id=755641630]
+layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="OptionsPanel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin" unique_id=218910348]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
+
+[node name="BoardSizeButtons" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel" unique_id=2081229668]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Board7x6Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel/BoardSizeButtons" unique_id=415151106 instance=ExtResource("10_bqt2o")]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_euvdp")
+
+[node name="SeperatorV" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel/BoardSizeButtons" unique_id=1669078402 instance=ExtResource("12_i32ml")]
+layout_mode = 2
+
+[node name="Board10x9Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel/BoardSizeButtons" unique_id=431014705 instance=ExtResource("10_bqt2o")]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_unbhu")
+text = "10 x 9"
+
+[node name="SeperatorV2" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel/BoardSizeButtons" unique_id=1573643467 instance=ExtResource("12_i32ml")]
+layout_mode = 2
+
+[node name="Board14x12Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel/BoardSizeButtons" unique_id=222850879 instance=ExtResource("10_bqt2o")]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_3axpr")
+text = "14 x 12"
+
+[node name="Seperator4" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=674362423 instance=ExtResource("9_1tunj")]
+layout_mode = 2
+
+[node name="TurnTimerRow" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=200694474]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="TurnTimerRow" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow" unique_id=1216176368]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+alignment = 1
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow" unique_id=1295788141]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Diamond Holder" unique_id=1053254323]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 10.000002
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SettingLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow" unique_id=1400733249]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Turn Timer"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Spacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow" unique_id=994617838]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Margin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow" unique_id=104361561]
+layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="OptionsPanel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin" unique_id=1099511305]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
+
+[node name="TimerButtons" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel" unique_id=384379960]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="TimerOffButton" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel/TimerButtons" unique_id=1688833253 instance=ExtResource("10_bqt2o")]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_1tunj")
+text = "Off"
+
+[node name="SeperatorV" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel/TimerButtons" unique_id=1727406546 instance=ExtResource("12_i32ml")]
+layout_mode = 2
+
+[node name="Timer30Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel/TimerButtons" unique_id=1374420468 instance=ExtResource("10_bqt2o")]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_bqt2o")
+text = "30s"
+
+[node name="SeperatorV2" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel/TimerButtons" unique_id=311695494 instance=ExtResource("12_i32ml")]
+layout_mode = 2
+
+[node name="Timer60Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel/TimerButtons" unique_id=281697359 instance=ExtResource("10_bqt2o")]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_wx241")
+text = "60s"
+
+[node name="Seperator5" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=749649251 instance=ExtResource("9_1tunj")]
+layout_mode = 2
+
+[node name="StartingPlayerRow" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=1038077243]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="StartingPlayerRow" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPlayerRow" unique_id=1197665109]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+alignment = 1
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPlayerRow/StartingPlayerRow" unique_id=2091403599]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPlayerRow/StartingPlayerRow/Diamond Holder" unique_id=995901310]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -7.0
+offset_right = 10.000002
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SettingLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPlayerRow/StartingPlayerRow" unique_id=764508722]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Starting Player"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Spacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPlayerRow/StartingPlayerRow" unique_id=303936207]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Margin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPlayerRow/StartingPlayerRow" unique_id=52945305]
+layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="StartingPlayerOption" type="OptionButton" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/StartingPlayerRow/StartingPlayerRow/Margin" unique_id=2080206153]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(275, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+theme_override_colors/font_pressed_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+theme_override_colors/font_hover_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_mmvkj")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_mmvkj")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mmvkj")
+alignment = 1
+selected = 1
+item_count = 3
+popup/item_0/text = "Random"
+popup/item_0/id = 0
+popup/item_1/text = "Player 1"
+popup/item_1/id = 1
+popup/item_2/text = "Player 2"
+popup/item_2/id = 2
+
+[node name="ButtonsHbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1815692670]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox" unique_id=208718113]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+
+[node name="Button Hbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer" unique_id=699408768]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="RestoreDefaultsButton" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer/Button Hbox" unique_id=1211796610]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("7_unbhu")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_dhjdk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ujij1")
+text = "Restore Defaults"
+
+[node name="ApplyOptionsButton" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer/Button Hbox" unique_id=1315461960]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("13_rhcwx")
+theme_override_styles/pressed = ExtResource("14_1tunj")
+theme_override_styles/hover = ExtResource("15_bqt2o")
+text = "Apply Options"
+
+[node name="Token Overlay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=213115429]
+z_index = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/Token Overlay" unique_id=1865169177]
+z_index = 1
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.09
+offset_left = -109.5
+offset_top = -109.5
+offset_right = 110.5
+offset_bottom = 57.219997
+grow_horizontal = 2
+script = ExtResource("8_3axpr")
+visual_scale = 0.54
+
+[node name="Token Overlay2" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=900471357]
+z_index = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/Token Overlay2" unique_id=395098328]
+z_index = 1
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.09
+offset_left = -109.5
+offset_top = -109.5
+offset_right = 110.5
+offset_bottom = 57.219997
+grow_horizontal = 2
+script = ExtResource("8_3axpr")
+visual_scale = 0.54

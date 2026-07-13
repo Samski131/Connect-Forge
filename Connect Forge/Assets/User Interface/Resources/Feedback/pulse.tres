@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UIJuicePreset" format=3 uid="uid://dva8qc0tdhfjq"]
+
+[ext_resource type="Script" uid="uid://xwhddg75nyps" path="res://Scripts/User Interface/Juice/ui_juice_preset.gd" id="1_0gkwr"]
+[ext_resource type="Script" uid="uid://0so8li03yq6o" path="res://Scripts/User Interface/Juice/ui_juice_step.gd" id="2_4jevw"]
+
+[sub_resource type="Resource" id="Resource_vhtn0"]
+script = ExtResource("2_4jevw")
+step_type = 4
+duration = 0.05
+scale_to = Vector2(1.1, 1.1)
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[sub_resource type="Resource" id="Resource_0ei15"]
+script = ExtResource("2_4jevw")
+step_type = 4
+delay = 0.05
+metadata/_custom_type_script = "uid://0so8li03yq6o"
+
+[resource]
+script = ExtResource("1_0gkwr")
+steps = Array[ExtResource("2_4jevw")]([SubResource("Resource_vhtn0"), SubResource("Resource_0ei15")])
+metadata/_custom_type_script = "uid://xwhddg75nyps"
