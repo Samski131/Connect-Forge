@@ -11,14 +11,19 @@ extends CanvasLayer
 @onready var token_grid:GridContainer = %TokenGrid
 @onready var player_tray_row:HBoxContainer = %PlayerTrayRow
 @onready var start_button:Button = $"Control/ScreenMargin/ScreenLayout/Footer/Footer/Start Button"
-@onready var hamburger_button:TextureButton = $"Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Options Button/PanelContainer/OptionsButton/Button"
+
+@onready var options_button:TextureButton = $"Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Options Button/PanelContainer/OptionsButton/Button"
+@onready var pause_button:TextureButton = $"Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Pause Button/Button"
+
 @onready var match_options_popup:MatchOptionsPopupUI = $Control/ScreenMargin/MatchOptionsPopupUI
+@onready var pause_menu:PauseMenu = $Control/ScreenMargin/PauseMenuPopupUI
 
 var is_starting_match:bool = false
 
 
 func _ready() -> void:
 	connect_buttons()
+	setup_pause_menu()
 	setup_match_options_popup()
 	setup_inventory()
 	create_shop_cards()
@@ -26,18 +31,22 @@ func _ready() -> void:
 
 
 func connect_buttons() -> void:
-	if start_button == null:
-		return
-	
-	if start_button.pressed.is_connected(_on_start_button_pressed) == false:
-		start_button.pressed.connect(_on_start_button_pressed)
+	if start_button != null:
+		if start_button.pressed.is_connected(_on_start_button_pressed) == false:
+			start_button.pressed.connect(_on_start_button_pressed)
+
 
 
 func setup_match_options_popup() -> void:
 	if match_options_popup == null:
+		push_error("TokenLobby: MatchOptionsPopupUI could not be found.")
 		return
 	
-	match_options_popup.setup(hamburger_button)
+	if options_button == null:
+		push_error("TokenLobby: Options button could not be found.")
+		return
+	
+	match_options_popup.setup(options_button)
 	
 	if match_options_popup.options_applied.is_connected(_on_match_options_applied) == false:
 		match_options_popup.options_applied.connect(_on_match_options_applied)
@@ -229,3 +238,15 @@ func _on_match_options_applied() -> void:
 func _on_player_count_changed(_player_count:int) -> void:
 	setup_inventory()
 	create_player_trays()
+
+func setup_pause_menu() -> void:
+	if pause_menu == null:
+		push_error("TokenLobby: PauseMenuPopupUI could not be found.")
+		return
+	
+	if pause_button == null:
+		push_error("TokenLobby: Pause button could not be found.")
+		return
+	
+	pause_menu.set_menu_context(PauseMenu.MenuContext.TOKEN_LOBBY)
+	pause_menu.setup(pause_button)

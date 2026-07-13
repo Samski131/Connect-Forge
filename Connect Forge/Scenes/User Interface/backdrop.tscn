@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dsdwgt8o11k35"]
+
+[ext_resource type="Script" uid="uid://c5oa31c1i8mns" path="res://Scripts/User Interface/menu_backdrop.gd" id="1_8vsyk"]
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="1_hrv5k"]
+[ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="2_8vsyk"]
+[ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="3_vid5l"]
+
+[node name="Backdrop" type="ColorRect" unique_id=1823797956]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.02745098, 0.06666667, 0.12156863, 0.8)
+script = ExtResource("1_8vsyk")
+
+[node name="UIJuicePlayer" type="Node" parent="." unique_id=1061572767]
+script = ExtResource("1_hrv5k")
+start_mode = 1
+enter_preset = ExtResource("2_8vsyk")
+exit_preset = ExtResource("3_vid5l")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"

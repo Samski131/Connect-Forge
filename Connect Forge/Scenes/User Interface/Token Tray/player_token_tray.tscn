@@ -29,10 +29,6 @@ shadow_offset = Vector2(0, 4)
 bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
 corner_radius_top_right = 6
 
-[sub_resource type="LabelSettings" id="LabelSettings_y1aqv"]
-font_size = 29
-font_color = Color(0.16862746, 0.28235295, 0.41568628, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8pmni"]
 bg_color = Color(0.8156863, 0.8, 0.77254903, 1)
 corner_radius_bottom_right = 6
@@ -96,12 +92,12 @@ size_flags_horizontal = 0
 script = ExtResource("3_c72vp")
 visual_scale = 0.11
 
-[node name="Player Name" type="Label" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=1054507943]
+[node name="Player Name" type="Label" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)" unique_id=1812662625]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.16862746, 0.28235295, 0.41568628, 1)
 theme_override_font_sizes/font_size = 28
 text = "Player 1"
-label_settings = SubResource("LabelSettings_y1aqv")
-vertical_alignment = 1
 
 [node name="Bottom Panel of Token Tray" type="PanelContainer" parent="Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)" unique_id=1519372452]
 custom_minimum_size = Vector2(0, 40)

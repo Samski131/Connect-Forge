@@ -16,6 +16,7 @@
 [ext_resource type="StyleBox" uid="uid://cp3c1isr71xkd" path="res://Assets/User Interface/Resources/Buttons/green_pressed.stylebox" id="13_qdbar"]
 [ext_resource type="StyleBox" uid="uid://bb3tlxb03hh8n" path="res://Assets/User Interface/Resources/Buttons/green_hover.stylebox" id="14_eq5re"]
 [ext_resource type="PackedScene" uid="uid://co8r8a8l1dhym" path="res://Scenes/User Interface/match_options_menu.tscn" id="15_qdbar"]
+[ext_resource type="PackedScene" uid="uid://pj4tijvlt85x" path="res://Scenes/User Interface/Pause Menu/pause_menu.tscn" id="16_eq5re"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8o36d"]
 shader = ExtResource("1_x1gbq")
@@ -330,7 +331,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_ewep4")
 
-[node name="Options Button" type="MarginContainer" parent="Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer" unique_id=1768457399]
+[node name="Pause Button" type="MarginContainer" parent="Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer" unique_id=1768457399]
 custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -340,7 +341,7 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Button" type="TextureButton" parent="Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Options Button" unique_id=1137940361]
+[node name="Button" type="TextureButton" parent="Control/ScreenMargin/ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Pause Button" unique_id=1137940361]
 layout_mode = 2
 texture_normal = ExtResource("4_rfmhd")
 ignore_texture_size = true
@@ -540,6 +541,11 @@ text = "Start Match"
 [node name="MatchOptionsPopupUI" parent="Control/ScreenMargin" unique_id=356466557 instance=ExtResource("15_qdbar")]
 visible = false
 layout_mode = 2
+
+[node name="PauseMenuPopupUI" parent="Control/ScreenMargin" unique_id=592206339 node_paths=PackedStringArray("toggle_button") instance=ExtResource("16_eq5re")]
+visible = false
+layout_mode = 2
+toggle_button = NodePath("../ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Pause Button/Button")
 
 [node name="TokenTrayInventory" type="Node" parent="." unique_id=706902379 groups=["token tray inventory"]]
 script = ExtResource("9_ewep4")

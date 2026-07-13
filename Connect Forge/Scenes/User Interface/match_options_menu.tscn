@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://co8r8a8l1dhym"]
 
 [ext_resource type="Script" uid="uid://crk40l2aif35e" path="res://Scripts/User Interface/TokenLobby/match_options_popup_ui.gd" id="1_1tunj"]
+[ext_resource type="PackedScene" uid="uid://dsdwgt8o11k35" path="res://Scenes/User Interface/backdrop.tscn" id="2_bqt2o"]
 [ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="2_khgnh"]
 [ext_resource type="Resource" uid="uid://dcj5mm65cf8k6" path="res://Assets/User Interface/Resources/Transitions/popup_enter_soft.tres" id="3_h12w7"]
 [ext_resource type="Resource" uid="uid://clvcbhjq8f4w3" path="res://Assets/User Interface/Resources/Transitions/popup_exit_soft.tres" id="4_x4ujm"]
@@ -140,14 +141,8 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_1tunj")
 
-[node name="Backdrop" type="ColorRect" parent="." unique_id=1039780782]
+[node name="Backdrop" parent="." unique_id=1823797956 instance=ExtResource("2_bqt2o")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.02745098, 0.06666667, 0.12156863, 0.8)
 
 [node name="PopupCenter" type="CenterContainer" parent="." unique_id=25291938]
 layout_mode = 1
@@ -173,7 +168,6 @@ metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
 [node name="UIJuicePlayerBackdrop" type="Node" parent="PopupCenter/PopupRoot" unique_id=323035621]
 unique_name_in_owner = true
 script = ExtResource("2_khgnh")
-target_path = NodePath("../../../Backdrop")
 start_mode = 1
 enter_preset = ExtResource("5_kbtki")
 exit_preset = ExtResource("6_euvdp")
@@ -864,26 +858,6 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/Token Overlay" unique_id=1865169177]
-z_index = 1
-custom_minimum_size = Vector2(220, 220)
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.09
-offset_left = -109.5
-offset_top = -109.5
-offset_right = 110.5
-offset_bottom = 57.219997
-grow_horizontal = 2
-script = ExtResource("8_3axpr")
-visual_scale = 0.54
-
-[node name="Token Overlay2" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=900471357]
-z_index = 1
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Token Visual Display" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/Token Overlay2" unique_id=395098328]
 z_index = 1
 custom_minimum_size = Vector2(220, 220)
 layout_mode = 1

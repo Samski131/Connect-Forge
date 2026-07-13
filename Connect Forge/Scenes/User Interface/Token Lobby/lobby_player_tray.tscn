@@ -20,10 +20,6 @@ corner_radius_top_left = 14
 corner_radius_bottom_left = 14
 corner_detail = 12
 
-[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
-font_size = 24
-font_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
-
 [sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
 font_size = 18
 font_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
@@ -86,11 +82,19 @@ mouse_filter = 2
 script = ExtResource("1_wgdcp")
 visual_scale = 0.12
 
-[node name="PlayerNameLabel" type="Label" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=93510]
+[node name="PlayerNameEdit" type="LineEdit" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=1983471913]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
+theme_override_colors/caret_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
+theme_override_colors/selection_color = Color(0.32156864, 0.49019608, 0.6666667, 1)
+theme_override_font_sizes/font_size = 24
 text = "Name"
-label_settings = SubResource("LabelSettings_guliv")
+placeholder_text = "Player Name"
+max_length = 20
+flat = true
+select_all_on_focus = true
 
 [node name="HeaderSpacer" type="Control" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=2044448835]
 layout_mode = 2

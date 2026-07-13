@@ -33,6 +33,17 @@ corner_radius_bottom_left = 12
 shadow_color = Color(0.26900592, 0.26900592, 0.26900592, 0.6)
 shadow_size = 1
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jwgcj"]
+bg_color = Color(0.29119998, 0.30416, 0.32, 1)
+border_width_left = 1
+border_width_top = 1
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.26900592, 0.26900592, 0.26900592, 0.6)
+shadow_size = 1
+
 [node name="Button" type="Button" unique_id=1298047042]
 custom_minimum_size = Vector2(48, 42)
 size_flags_horizontal = 4
@@ -41,4 +52,5 @@ theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_fsy6u")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_i1fpt")
 theme_override_styles/hover = SubResource("StyleBoxFlat_rh2v2")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_jwgcj")
 text = "-"

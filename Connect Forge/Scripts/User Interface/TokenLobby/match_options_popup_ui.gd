@@ -13,9 +13,11 @@ const DEFAULT_STARTING_PLAYER_ID:int = 0
 
 @export_group("Starting Points")
 @export var starting_points_step:int = 1
+@export_group("Header Token")
+@export var header_token_palette:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
 
 @onready var popup_juice_player:UIJuicePlayer = %UIJuicePlayer
-@onready var backdrop_juice_player:UIJuicePlayer = %UIJuicePlayerBackdrop
+@onready var backdrop:MenuBackdrop = $Backdrop
 
 @onready var player_count_minus:Button = %PlayerCountMinus
 @onready var player_count_value:Label = %PlayerCountValue
@@ -41,7 +43,7 @@ const DEFAULT_STARTING_PLAYER_ID:int = 0
 
 @onready var restore_defaults_button:Button = %RestoreDefaultsButton
 @onready var apply_options_button:Button = %ApplyOptionsButton
-
+@onready var header_token_display:TokenVisualDisplay = $"PopupCenter/PopupRoot/OuterFrame/Token Overlay/Token Visual Display"
 var hamburger_button:BaseButton = null
 
 var draft_player_count:int = DEFAULT_PLAYER_COUNT
@@ -56,12 +58,15 @@ var is_refreshing_ui:bool = false
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_to_group(MenuBackdrop.CLOSABLE_MENU_GROUP)
+	
 	visible = true
 	setup_button_groups()
 	connect_option_controls()
 	load_draft_from_config()
-
+	setup_header_token()
 
 func setup(new_hamburger_button:BaseButton) -> void:
 	if hamburger_button != null:
@@ -142,10 +147,11 @@ func open_popup() -> void:
 		return
 	
 	load_draft_from_config()
+	setup_header_token()
 	visible = true
 	
-	if backdrop_juice_player != null:
-		backdrop_juice_player.enter()
+	if backdrop != null:
+		backdrop.enter()
 	
 	popup_juice_player.enter()
 
@@ -154,15 +160,35 @@ func close_popup() -> void:
 	if popup_juice_player == null:
 		return
 	
+	if popup_juice_player.is_open == false:
+		return
+	
 	if popup_juice_player.is_transitioning:
 		return
 	
-	if backdrop_juice_player != null:
-		backdrop_juice_player.exit()
+	if backdrop != null:
+		backdrop.exit()
 	
 	popup_juice_player.exit()
 
 
+func close_menu() -> void:
+	close_popup()
+
+
+func force_close_popup() -> void:
+	if popup_juice_player != null:
+		popup_juice_player.hide_instant()
+	
+	if backdrop != null:
+		backdrop.hide_instant()
+	
+	visible = false
+
+
+func force_close_menu() -> void:
+	force_close_popup()
+	
 func load_draft_from_config() -> void:
 	if MatchData.config == null:
 		restore_defaults()
@@ -391,3 +417,13 @@ func _on_starting_player_selected(option_index:int) -> void:
 		return
 	
 	draft_starting_player_id = int(metadata)
+
+func setup_header_token() -> void:
+	if header_token_display == null:
+		return
+	
+	if header_token_palette != null:
+		header_token_display.setup_with_palette(TokenLibrary.TokenType.BASIC, 0, header_token_palette)
+		return
+	
+	header_token_display.setup(TokenLibrary.TokenType.BASIC, 0)

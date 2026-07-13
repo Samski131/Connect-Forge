@@ -177,10 +177,17 @@ func set_header_token_visual() -> void:
 	var palette:ColorPalette = get_player_palette()
 	
 	if palette == null:
-		header_token_visual_display.setup(TokenLibrary.TokenType.BASIC, player_id)
+		header_token_visual_display.setup(
+			TokenLibrary.TokenType.BASIC,
+			player_id
+		)
 		return
 	
-	header_token_visual_display.setup_with_palette(TokenLibrary.TokenType.BASIC, player_id, palette)
+	header_token_visual_display.setup_with_palette(
+		TokenLibrary.TokenType.BASIC,
+		player_id,
+		palette
+	)
 
 
 func _on_token_type_added(changed_player_id:int, token_type:int) -> void:

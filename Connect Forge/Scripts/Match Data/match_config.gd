@@ -7,7 +7,7 @@ signal token_settings_changed
 signal match_rules_changed
 
 const MINIMUM_PLAYERS:int = 2
-const MAXIMUM_PLAYERS:int = 6
+const MAXIMUM_PLAYERS:int = 5
 const MINIMUM_BOARD_COLUMNS:int = 4
 const MAXIMUM_BOARD_COLUMNS:int = 14
 const MINIMUM_BOARD_ROWS:int = 4
@@ -117,13 +117,20 @@ func set_player_palette(player_id:int, palette:ColorPalette) -> bool:
 	if palette == null:
 		return false
 	
+	if player.colour_palette == palette:
+		return true
+	
 	player.colour_palette = palette
 	players_changed.emit()
 	return true
 
 
 func set_starting_token_points(new_amount:int) -> void:
-	var used_amount:int = clamp(new_amount, MINIMUM_STARTING_TOKEN_POINTS, MAXIMUM_STARTING_TOKEN_POINTS)
+	var used_amount:int = clamp(
+		new_amount,
+		MINIMUM_STARTING_TOKEN_POINTS,
+		MAXIMUM_STARTING_TOKEN_POINTS
+	)
 	
 	if starting_token_points == used_amount:
 		return
@@ -140,21 +147,39 @@ func set_starting_token_points(new_amount:int) -> void:
 
 
 func set_board_size(new_columns:int, new_rows:int) -> void:
-	var used_columns:int = clamp(new_columns, MINIMUM_BOARD_COLUMNS, MAXIMUM_BOARD_COLUMNS)
-	var used_rows:int = clamp(new_rows, MINIMUM_BOARD_ROWS, MAXIMUM_BOARD_ROWS)
+	var used_columns:int = clamp(
+		new_columns,
+		MINIMUM_BOARD_COLUMNS,
+		MAXIMUM_BOARD_COLUMNS
+	)
+	
+	var used_rows:int = clamp(
+		new_rows,
+		MINIMUM_BOARD_ROWS,
+		MAXIMUM_BOARD_ROWS
+	)
 	
 	if board_columns == used_columns and board_rows == used_rows:
 		return
 	
 	board_columns = used_columns
 	board_rows = used_rows
+	
 	clamp_tokens_to_win()
 	board_settings_changed.emit()
 
 
 func set_tokens_to_win(new_amount:int) -> void:
-	var maximum_line_length:int = max(board_columns, board_rows)
-	var used_amount:int = clamp(new_amount, MINIMUM_TOKENS_TO_WIN, maximum_line_length)
+	var maximum_line_length:int = max(
+		board_columns,
+		board_rows
+	)
+	
+	var used_amount:int = clamp(
+		new_amount,
+		MINIMUM_TOKENS_TO_WIN,
+		maximum_line_length
+	)
 	
 	if tokens_to_win == used_amount:
 		return
@@ -164,8 +189,16 @@ func set_tokens_to_win(new_amount:int) -> void:
 
 
 func clamp_tokens_to_win() -> void:
-	var maximum_line_length:int = max(board_columns, board_rows)
-	tokens_to_win = clamp(tokens_to_win, MINIMUM_TOKENS_TO_WIN, maximum_line_length)
+	var maximum_line_length:int = max(
+		board_columns,
+		board_rows
+	)
+	
+	tokens_to_win = clamp(
+		tokens_to_win,
+		MINIMUM_TOKENS_TO_WIN,
+		maximum_line_length
+	)
 
 
 func set_turn_timer_seconds(new_seconds:int) -> void:
@@ -195,8 +228,9 @@ func clamp_starting_player_id() -> bool:
 	if starting_player_id == RANDOM_STARTING_PLAYER_ID:
 		return false
 	
-	if starting_player_id >= 0 and starting_player_id < get_player_count():
-		return false
+	if starting_player_id >= 0:
+		if starting_player_id < get_player_count():
+			return false
 	
 	if get_player_count() > 0:
 		starting_player_id = 0

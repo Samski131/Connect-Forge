@@ -18,7 +18,7 @@ corner_radius_bottom_left = 12
 [node name="Button" type="Button" unique_id=415151106]
 custom_minimum_size = Vector2(90, 44)
 theme_override_colors/font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxEmpty_ya15j")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_kejf6")
