@@ -183,11 +183,6 @@ func _on_token_settings_changed() -> void:
 	
 	setup_token_trays_from_match_data()
 
-
-func get_match_config() -> MatchConfig:
-	return MatchData.config
-
-
 func get_player_data(player_id:int) -> MatchPlayerData:
 	if MatchData.config == null:
 		return null
@@ -200,21 +195,6 @@ func get_player_count() -> int:
 		return 0
 	
 	return MatchData.config.get_player_count()
-
-
-func get_minimum_player_count() -> int:
-	return MatchConfig.MINIMUM_PLAYERS
-
-
-func get_maximum_player_count() -> int:
-	return MatchConfig.MAXIMUM_PLAYERS
-
-
-func get_player_name(player_id:int) -> String:
-	if MatchData.config == null:
-		return "Player " + str(player_id + 1)
-	
-	return MatchData.config.get_player_name(player_id)
 
 
 func get_player_palette(player_id:int) -> ColorPalette:
@@ -232,82 +212,6 @@ func is_valid_player_id(player_id:int) -> bool:
 		return false
 	
 	return true
-
-
-func add_player() -> bool:
-	if MatchData.config == null:
-		return false
-	
-	var new_player_id:int = get_player_count()
-	var player_name:String = "Player " + str(new_player_id + 1)
-	
-	var palette:ColorPalette = get_default_palette_for_player(
-		new_player_id
-	)
-	
-	if palette == null:
-		return false
-	
-	return MatchData.config.add_player(
-		player_name,
-		palette
-	)
-
-
-func remove_player() -> bool:
-	if MatchData.config == null:
-		return false
-	
-	return MatchData.config.remove_last_player()
-
-
-func set_player_name(
-	player_id:int,
-	new_name:String
-) -> bool:
-	if MatchData.config == null:
-		return false
-	
-	return MatchData.config.set_player_name(
-		player_id,
-		new_name
-	)
-
-
-func set_player_palette(
-	player_id:int,
-	palette:ColorPalette
-) -> bool:
-	if MatchData.config == null:
-		return false
-	
-	return MatchData.config.set_player_palette(
-		player_id,
-		palette
-	)
-
-
-func get_default_palette_for_player(
-	player_id:int
-) -> ColorPalette:
-	var palettes:Array[ColorPalette] = [
-		MatchData.YELLOW_PALETTE,
-		MatchData.RED_PALETTE,
-		MatchData.GREEN_PALETTE,
-		MatchData.PINK_PALETTE,
-		MatchData.VIOLET_PALETTE,
-		MatchData.BLUE_PALETTE
-	]
-	
-	if palettes.is_empty():
-		return null
-	
-	var palette_index:int = (
-		player_id %
-		palettes.size()
-	)
-	
-	return palettes[palette_index]
 
 
 func apply_board_config(
@@ -416,7 +320,7 @@ func _process(delta:float) -> void:
 	match current_turn_phase:
 		Global.TURN_PHASE.PLACEMENT:
 			if placement_state != null:
-				placement_state.process_state()
+				pass
 		
 		Global.TURN_PHASE.ACTION:
 			if action_state != null:
@@ -425,20 +329,6 @@ func _process(delta:float) -> void:
 		Global.TURN_PHASE.RESOLUTION:
 			if resolution_state != null:
 				resolution_state.process_state()
-
-
-func reset_game() -> void:
-	if board_builder != null:
-		board_builder.rebuild_board()
-	
-	reset_token_trays()
-	
-	get_tree().call_group(
-		"winning_line_visual",
-		"queue_free"
-	)
-	
-	start_game()
 
 
 func debug_gravity_changes() -> void:
@@ -470,12 +360,6 @@ func debug_gravity_changes() -> void:
 	
 	if changed == false:
 		return
-	
-	if placement_state != null:
-		if placement_state.has_method(
-			"clear_placement_token"
-		):
-			placement_state.clear_placement_token()
 	
 	if action_state != null:
 		action_state.enter_state()
@@ -671,31 +555,6 @@ func get_player_wins(player_id:int) -> int:
 		return 0
 	
 	return player.wins
-
-
-func get_player_losses(player_id:int) -> int:
-	var player:MatchPlayerData = get_player_data(
-		player_id
-	)
-	
-	if player == null:
-		return 0
-	
-	return player.losses
-
-
-func reset_scores() -> void:
-	if MatchData.config == null:
-		return
-	
-	for player in MatchData.config.players:
-		if player == null:
-			continue
-		
-		player.wins = 0
-		player.losses = 0
-	
-	score_changed.emit()
 
 
 func start_next_round() -> void:

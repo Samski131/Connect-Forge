@@ -74,8 +74,6 @@ func _ready() -> void:
 	_apply_shader_parameters()
 
 
-func _process(_delta:float) -> void:
-	_apply_shader_parameters()
 
 
 func _notification(what:int) -> void:

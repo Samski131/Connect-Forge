@@ -24,7 +24,6 @@
 [ext_resource type="Resource" uid="uid://dva8qc0tdhfjq" path="res://Assets/User Interface/Resources/Feedback/pulse.tres" id="23_8yoh8"]
 [ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="23_lif33"]
 [ext_resource type="Script" uid="uid://cfpun1657r1aw" path="res://Scripts/User Interface/Token Trays/player_token_trays_ui.gd" id="23_o6jnn"]
-[ext_resource type="Script" uid="uid://drml0evch0llu" path="res://Scripts/debug mouse position.gd" id="23_y1aqv"]
 [ext_resource type="Script" uid="uid://xwhddg75nyps" path="res://Scripts/User Interface/Juice/ui_juice_preset.gd" id="24_8yoh8"]
 [ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="24_15wax"]
 [ext_resource type="Script" uid="uid://pkloqfoaqfl7" path="res://Scripts/User Interface/score_counter_ui_label.gd" id="24_byhpu"]
@@ -125,9 +124,6 @@ steps = Array[ExtResource("25_15wax")]([SubResource("Resource_4jevw"), SubResour
 reset_offset_scale = true
 reset_modulate = true
 metadata/_custom_type_script = "uid://xwhddg75nyps"
-
-[sub_resource type="LabelSettings" id="LabelSettings_sygxm"]
-font_size = 100
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_245tq"]
 shader = ExtResource("15_7vatw")
@@ -485,17 +481,6 @@ visible = false
 layout_mode = 1
 menu_context = 1
 toggle_button = NodePath("../Panels/Top Panel/MarginContainer/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Options Button/Button")
-
-[node name="Mouse Position Debug" type="Node2D" parent="." unique_id=1753000040]
-visible = false
-position = Vector2(1659, 451)
-script = ExtResource("23_y1aqv")
-
-[node name="Label" type="Label" parent="Mouse Position Debug" unique_id=229987343]
-offset_right = 40.0
-offset_bottom = 20.0
-label_settings = SubResource("LabelSettings_sygxm")
-horizontal_alignment = 1
 
 [node name="Background Layer" type="CanvasLayer" parent="." unique_id=565565989]
 layer = -10

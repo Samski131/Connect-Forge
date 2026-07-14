@@ -10,8 +10,7 @@ var token_stagger:float = 0.006
 
 # Kept so existing board_manager.gd assignments do not break.
 # Trapdoor Drop does not use these.
-var side_scatter:float = 0.0
-var spin_degrees:float = 0.0
+
 
 var fade_out:bool = true
 var shrink_out:bool = false

@@ -153,16 +153,12 @@ func try_apply_gravity_to_token(token:Token) -> bool:
 	var fall_path:Array[Vector2i] = board.trigger_resolver.get_fall_path(token)
 	
 	if fall_path.is_empty():
-		if board.get_token(token.token_pos) == token:
-			token.debug_token()
 		return false
 	
 	var destination:Vector2i = fall_path.back()
 	var extra_effects:Array[BoardVisualEffect] = []
 	var moved:bool = move_token_on_board(token, destination, BoardVisualManager.MOVE_VISUAL.FALL, extra_effects, true, fall_path)
 	
-	if board.get_token(token.token_pos) == token:
-		token.debug_token()
 	
 	return moved
 

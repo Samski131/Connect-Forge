@@ -129,15 +129,6 @@ func find_winning_result() -> Dictionary:
 	return {}
 
 
-func check_for_win() -> int:
-	var winning_result:Dictionary = find_winning_result()
-	
-	if winning_result.is_empty():
-		return -1
-	
-	return int(winning_result["player_id"])
-
-
 func get_winning_slots(start_position:Vector2i, direction:Vector2i, player_id:int, tokens_to_win:int) -> Array[Vector2i]:
 	var winning_slots:Array[Vector2i] = []
 	var final_position:Vector2i = start_position + direction * (tokens_to_win - 1)
@@ -168,11 +159,6 @@ func get_winning_slots(start_position:Vector2i, direction:Vector2i, player_id:in
 		winning_slots.append(checked_position)
 	
 	return winning_slots
-
-
-func is_winning_line(start_position:Vector2i, direction:Vector2i, player_id:int, tokens_to_win:int) -> bool:
-	var winning_slots:Array[Vector2i] = get_winning_slots(start_position, direction, player_id, tokens_to_win)
-	return winning_slots.is_empty() == false
 
 
 func is_valid_winning_player(player_id:int) -> bool:

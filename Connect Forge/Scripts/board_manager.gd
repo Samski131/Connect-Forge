@@ -244,8 +244,6 @@ func apply_token_gravity_visual(token:Token) -> void:
 	token.gravity_visual_rotation_degrees = target_rotation_degrees
 	token.sprites.rotation_degrees = target_rotation_degrees
 
-func refresh_slot_visuals() -> void:
-	get_tree().call_group("slot", "refresh_visual_state")
 
 func get_all_tokens_on_board() -> Array[Token]:
 	var found_tokens:Array[Token] = []
@@ -319,8 +317,7 @@ func empty_board_with_fall_effect() -> void:
 	effect.fall_distance = visuals.clear_fall_distance
 	effect.row_stagger = visuals.clear_fall_row_stagger
 	effect.token_stagger = visuals.clear_fall_token_stagger
-	effect.side_scatter = visuals.clear_fall_side_scatter
-	effect.spin_degrees = visuals.clear_fall_spin_degrees
+
 	
 	visuals.queue_effect(effect)
 	

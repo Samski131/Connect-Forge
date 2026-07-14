@@ -63,16 +63,6 @@ func stop_turn_timer() -> void:
 	is_running = false
 
 
-func reset_turn_timer() -> void:
-	is_running = false
-	timeout_is_being_handled = false
-	time_remaining = 0.0
-	displayed_seconds_remaining = 0
-	
-	refresh_limit_from_match_data()
-	emit_current_state()
-
-
 func update_turn_timer(delta:float) -> void:
 	if is_running == false:
 		return
@@ -116,7 +106,7 @@ func handle_turn_timeout() -> void:
 	
 	game_manager.current_turn_phase = Global.TURN_PHASE.NONE
 	cancel_current_drag()
-	clear_placement_visual()
+
 	
 	turn_timed_out.emit(expired_player_id)
 	game_manager.end_turn()
@@ -131,43 +121,11 @@ func cancel_current_drag() -> void:
 	drag_controller.cancel_drag()
 
 
-func clear_placement_visual() -> void:
-	if game_manager == null:
-		return
-	
-	if game_manager.placement_state == null:
-		return
-	
-	if game_manager.placement_state.has_method("clear_placement_token"):
-		game_manager.placement_state.clear_placement_token()
-
-
 func is_timer_enabled() -> bool:
 	return turn_limit_seconds > 0
 
-
 func get_seconds_remaining() -> int:
 	return max(displayed_seconds_remaining, 0)
-
-
-func get_total_seconds() -> int:
-	return max(turn_limit_seconds, 0)
-
-
-func get_time_text() -> String:
-	var used_seconds:int = get_seconds_remaining()
-	var minutes:int = int(used_seconds / 60.0)
-	var seconds:int = used_seconds % 60
-	
-	return "%02d:%02d" % [minutes, seconds]
-
-
-func get_progress_ratio() -> float:
-	if turn_limit_seconds <= 0:
-		return 0.0
-	
-	return clamp(time_remaining / float(turn_limit_seconds), 0.0, 1.0)
-
 
 func emit_current_state() -> void:
 	timer_enabled_changed.emit(is_timer_enabled())

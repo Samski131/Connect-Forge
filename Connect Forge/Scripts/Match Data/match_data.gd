@@ -87,7 +87,3 @@ func get_resolved_starting_player_id() -> int:
 		return config.starting_player_id
 	
 	return randi_range(0, player_count - 1)
-
-
-func reset_match() -> void:
-	create_default_config()

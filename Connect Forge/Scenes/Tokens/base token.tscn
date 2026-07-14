@@ -15,9 +15,6 @@ size = Vector2(340, 340)
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0ocfi"]
 load_path = "res://.godot/imported/Asset 80.png-b9fd4c1000c540fdfeb773a6ae500bd6.ctex"
 
-[sub_resource type="LabelSettings" id="LabelSettings_tmv1v"]
-font_size = 100
-
 [node name="Token" type="Area2D" unique_id=658385762 groups=["token"]]
 script = ExtResource("2_1njb1")
 
@@ -59,19 +56,3 @@ texture = ExtResource("6_gbndv")
 [node name="blue - center body" type="Sprite2D" parent="Sprites" unique_id=830925483]
 modulate = Color(0, 0, 1, 1)
 texture = ExtResource("7_yqn01")
-
-[node name="Token_pos Label" type="Label" parent="." unique_id=630047586]
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -71.0
-offset_top = 50.0
-offset_right = 71.0
-offset_bottom = 187.0
-grow_horizontal = 2
-grow_vertical = 2
-label_settings = SubResource("LabelSettings_tmv1v")
-horizontal_alignment = 1

@@ -72,7 +72,3 @@ func add_tokens(token_type:int, amount:int = 1) -> void:
 	
 	var current_count:int = get_count(token_type)
 	token_counts[token_type] = current_count + amount
-
-
-func get_all_counts() -> Dictionary:
-	return token_counts.duplicate()

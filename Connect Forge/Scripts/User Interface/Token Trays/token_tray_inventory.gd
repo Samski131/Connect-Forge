@@ -22,21 +22,6 @@ func setup_for_players(player_count:int) -> void:
 	trays_reset.emit()
 
 
-func resize_for_players(player_count:int) -> void:
-	var used_player_count:int = max(player_count, 0)
-	
-	while player_trays.size() < used_player_count:
-		var new_player_id:int = player_trays.size()
-		var tray:PlayerTokenTrayData = PlayerTokenTrayData.new()
-		tray.setup(new_player_id)
-		player_trays.append(tray)
-	
-	while player_trays.size() > used_player_count:
-		player_trays.pop_back()
-	
-	trays_reset.emit()
-
-
 func reset_all_trays() -> void:
 	for tray in player_trays:
 		if tray == null:
@@ -55,15 +40,6 @@ func get_player_tray(player_id:int) -> PlayerTokenTrayData:
 		return null
 	
 	return player_trays[player_id]
-
-
-func player_has_token_type(player_id:int, token_type:int) -> bool:
-	var tray:PlayerTokenTrayData = get_player_tray(player_id)
-	
-	if tray == null:
-		return false
-	
-	return tray.has_token_type(token_type)
 
 
 func get_token_types_for_player(player_id:int) -> Array[int]:
@@ -207,10 +183,6 @@ func get_token_description(token_type:int) -> String:
 
 func get_token_scene(token_type:int) -> PackedScene:
 	return TokenLibrary.get_token_scene(token_type)
-
-
-func get_token_icon(token_type:int) -> Texture2D:
-	return TokenLibrary.get_icon_texture(token_type)
 
 
 func can_token_flip(token_type:int) -> bool:

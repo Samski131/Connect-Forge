@@ -15,24 +15,11 @@ var is_flipped:bool = false
 var gravity_visual_rotation_degrees:float = 0.0
 
 @onready var sprites:Node2D = $Sprites
-@onready var token_pos_label:Label = $"Token_pos Label"
-
-var debug_label_visibility:bool = false
 
 @export_group("Charges")
 @export var charges:int = 0
 @export var ability_cost:int = 0
 
-@export_group("Visual Effects")
-@export var destroy_duration:float = 0.2
-@export var shimmer_duration:float = 0.45
-@export var charge_darken_duration:float = 0.12
-@export var charge_darken_amount:float = 0.3
-
-@export_group("Flip Visual")
-@export var flip_duration:float = 0.4
-@export var flip_min_scale_x:float = 0.08
-@export var flip_pop_scale_y:float = 1.08
 func _ready():
 	pass
 
@@ -97,25 +84,12 @@ func deduct_charges(cost:int):
 		sprites.darken(0.3)
 
 
-func regain_charges(cost:int) -> void:
-	charges += cost
-	
-	if sprites != null and sprites.has_method("recolor"):
-		sprites.recolor(player_id)
-
-
 func recolor():
 	if sprites == null:
 		return
 	
 	if sprites.has_method("recolor"):
 		sprites.recolor(player_id)
-
-
-func debug_token():
-	token_pos_label.visible = debug_label_visibility
-	token_pos_label.text = str(player_id)
-
 
 func has_keyword(keyword:Global.KEYWORD)->bool:
 	return keyword in keywords
@@ -182,12 +156,6 @@ func _can_trigger_keyword(keyword:Global.KEYWORD, _context:Dictionary = {})->boo
 	return true
 
 
-
-func toggle_flipped() -> void:
-	set_flipped(not is_flipped)
-
-
-
 func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
 	if effect == null:
 		return
@@ -204,13 +172,6 @@ func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) 
 func set_flipped(new_is_flipped:bool) -> void:
 	is_flipped = new_is_flipped
 	apply_flipped_visual()
-
-
-func flip_token() -> void:
-	if is_flipped:
-		set_flipped(false)
-	else:
-		set_flipped(true)
 
 
 func apply_starting_flipped_visual() -> void:

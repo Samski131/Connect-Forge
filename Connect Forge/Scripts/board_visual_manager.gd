@@ -37,8 +37,7 @@ signal visual_queue_empty
 @export var clear_fall_distance:float = 2600.0
 @export var clear_fall_row_stagger:float = 0.035
 @export var clear_fall_token_stagger:float = 0.006
-@export var clear_fall_side_scatter:float = 0.0
-@export var clear_fall_spin_degrees:float = 0.0
+
 
 var visual_busy:bool = false
 var visual_queue:Array[BoardVisualEffect] = []

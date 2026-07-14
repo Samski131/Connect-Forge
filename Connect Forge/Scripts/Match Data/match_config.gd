@@ -238,13 +238,3 @@ func clamp_starting_player_id() -> bool:
 		starting_player_id = RANDOM_STARTING_PLAYER_ID
 	
 	return true
-
-
-func reset_token_selections() -> void:
-	for player in players:
-		if player == null:
-			continue
-		
-		player.reset_token_selection(starting_token_points)
-	
-	token_settings_changed.emit()

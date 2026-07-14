@@ -21,7 +21,6 @@ extends Node2D
 @onready var token_pool:Node2D = $"../Token Pool"
 
 var slot_instance:PackedScene = preload("res://Scenes/Slot.tscn")
-var sprite_2d_rectangle:PackedScene = preload("uid://dcdpt1usuprbf")
 var slot_width_and_height:float = 0.0
 var board_area_fitter:PanelContainer = null
 
@@ -276,20 +275,12 @@ func assign_slot_types(x:int, y:int) -> Array:
 
 
 func resize_border_rectangles() -> void:
-	if sprite_2d_rectangle == null:
-		return
+
+	var new_exterior_border:Sprite2D = Sprite2D.new()
 	
-	var new_exterior_border:Sprite2D = (
-		sprite_2d_rectangle.instantiate() as Sprite2D
-	)
+	var new_exterior_border_highlight:Sprite2D = Sprite2D.new()
 	
-	var new_exterior_border_highlight:Sprite2D = (
-		sprite_2d_rectangle.instantiate() as Sprite2D
-	)
-	
-	var new_interior_border:Sprite2D = (
-		sprite_2d_rectangle.instantiate() as Sprite2D
-	)
+	var new_interior_border:Sprite2D = Sprite2D.new()
 	
 	if new_exterior_border == null:
 		return

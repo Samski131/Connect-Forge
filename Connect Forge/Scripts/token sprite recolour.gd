@@ -1,7 +1,7 @@
 extends Node2D
 
 const SHIMMER_SHADER:Shader = preload("res://Shaders/token_shimmer.gdshader")
-const FALLBACK_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/blue.tres")
+const FALLBACK_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/blue_v3.tres")
 
 enum PART {
 	red,
@@ -20,7 +20,7 @@ var darken_tween:Tween = null
 
 func _ready() -> void:
 	gather_sprites()
-	setup_shimmer_materials()
+	
 	
 	var game_manager:Node = get_tree().get_first_node_in_group("game manager")
 	
@@ -215,27 +215,6 @@ func get_shimmer_center() -> Vector2:
 	
 	return global_position
 
-
-func tween_darken(amount:float = 0.3, duration:float = 0.18) -> Tween:
-	gather_sprites()
-	
-	if darken_tween != null and darken_tween.is_running():
-		darken_tween.kill()
-	
-	darken_tween = create_tween()
-	darken_tween.set_parallel(true)
-	
-	for sprite in sprites:
-		if sprite == null:
-			continue
-		
-		if is_instance_valid(sprite) == false:
-			continue
-		
-		var target_color:Color = sprite.modulate.darkened(amount)
-		darken_tween.tween_property(sprite, "modulate", target_color, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	
-	return darken_tween
 
 
 func set_flipped_visual(is_flipped:bool) -> void:

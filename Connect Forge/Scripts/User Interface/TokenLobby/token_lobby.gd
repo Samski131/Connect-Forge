@@ -235,10 +235,6 @@ func _on_match_options_applied() -> void:
 	create_player_trays()
 
 
-func _on_player_count_changed(_player_count:int) -> void:
-	setup_inventory()
-	create_player_trays()
-
 func setup_pause_menu() -> void:
 	if pause_menu == null:
 		push_error("TokenLobby: PauseMenuPopupUI could not be found.")
