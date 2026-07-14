@@ -3,32 +3,42 @@ extends Label
 
 @export var label_prefix:String = "Turn "
 
-var game_manager:Node = null
+var game_manager:GameManager = null
 
 
 func _ready() -> void:
-	game_manager = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager != null:
-		if game_manager.has_signal("turn_number_changed"):
-			if game_manager.turn_number_changed.is_connected(_on_turn_number_changed) == false:
-				game_manager.turn_number_changed.connect(_on_turn_number_changed)
-	
 	refresh()
 
 
-func refresh() -> void:
+func setup(new_game_manager:GameManager) -> void:
+	disconnect_game_manager_signals()
+	game_manager = new_game_manager
+	connect_game_manager_signals()
+	refresh()
 
-	
-	if self == null:
-		return
-	
+
+func connect_game_manager_signals() -> void:
 	if game_manager == null:
-		self.text = label_prefix + "1"
 		return
 	
-	var turn_number:int = int(game_manager.get("current_turn_number"))
-	self.text = label_prefix + str(turn_number)
+	if game_manager.turn_number_changed.is_connected(_on_turn_number_changed) == false:
+		game_manager.turn_number_changed.connect(_on_turn_number_changed)
+
+
+func disconnect_game_manager_signals() -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.turn_number_changed.is_connected(_on_turn_number_changed):
+		game_manager.turn_number_changed.disconnect(_on_turn_number_changed)
+
+
+func refresh() -> void:
+	if game_manager == null:
+		text = label_prefix + "1"
+		return
+	
+	text = label_prefix + str(game_manager.get_current_turn_number())
 
 
 func _on_turn_number_changed(_turn_number:int) -> void:

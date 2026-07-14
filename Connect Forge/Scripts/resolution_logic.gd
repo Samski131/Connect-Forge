@@ -10,7 +10,7 @@ const WIN_DIRECTIONS:Array[Vector2i] = [
 @export_group("Winning Line")
 @export var winning_line_colour_index:int = 0
 
-var game_manager:Node = null
+var game_manager:GameManager = null
 var board:BoardManager = null
 
 var win_sequence_started:bool = false
@@ -18,7 +18,7 @@ var stored_winner_id:int = -1
 var stored_winning_slots:Array[Vector2i] = []
 
 
-func setup(new_game_manager:Node, new_board:BoardManager) -> void:
+func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 	game_manager = new_game_manager
 	board = new_board
 
@@ -28,7 +28,7 @@ func enter_state() -> void:
 		return
 	
 	clear_stored_win()
-	game_manager.current_turn_phase = Global.TURN_PHASE.RESOLUTION
+	game_manager.set_current_turn_phase(Global.TURN_PHASE.RESOLUTION)
 
 
 func exit_state() -> void:
@@ -64,8 +64,9 @@ func process_state() -> void:
 	
 	var found_slots:Array = winning_result["slots"]
 	
-	for slot in found_slots:
-		stored_winning_slots.append(slot)
+	for slot_value in found_slots:
+		var slot_position:Vector2i = slot_value
+		stored_winning_slots.append(slot_position)
 	
 	win_sequence_started = true
 	
@@ -166,10 +167,7 @@ func is_valid_winning_player(player_id:int) -> bool:
 		return false
 	
 	if game_manager == null:
-		return true
-	
-	if game_manager.has_method("is_valid_player_id") == false:
-		return true
+		return false
 	
 	return game_manager.is_valid_player_id(player_id)
 
@@ -198,9 +196,6 @@ func queue_winning_line(winner_id:int, winning_slots:Array[Vector2i]) -> void:
 
 func get_winning_line_colour(winner_id:int) -> Color:
 	if game_manager == null:
-		return Color.WHITE
-	
-	if game_manager.has_method("get_player_palette") == false:
 		return Color.WHITE
 	
 	var palette:ColorPalette = game_manager.get_player_palette(winner_id)
@@ -241,14 +236,16 @@ func reveal_chameleon_tokens_after_win() -> void:
 		if can_reveal == false:
 			continue
 		
+		var reveal_effect:BoardVisualEffect = null
+		
 		if board.visuals != null and token.has_method("create_chameleon_reveal_effect"):
-			var reveal_effect:BoardVisualEffect = token.call("create_chameleon_reveal_effect") as BoardVisualEffect
-			
-			if reveal_effect != null:
-				reveal_effects.append(reveal_effect)
-			elif token.has_method("reveal_chameleon_instantly"):
-				token.call("reveal_chameleon_instantly")
-		elif token.has_method("reveal_chameleon_instantly"):
+			reveal_effect = token.call("create_chameleon_reveal_effect") as BoardVisualEffect
+		
+		if reveal_effect != null:
+			reveal_effects.append(reveal_effect)
+			continue
+		
+		if token.has_method("reveal_chameleon_instantly"):
 			token.call("reveal_chameleon_instantly")
 	
 	if reveal_effects.is_empty():
@@ -264,12 +261,10 @@ func finish_game_with_winner(winner_id:int) -> void:
 	if game_manager == null:
 		return
 	
-	if game_manager.has_method("is_valid_player_id"):
-		if game_manager.is_valid_player_id(winner_id) == false:
-			return
+	if game_manager.is_valid_player_id(winner_id) == false:
+		return
 	
-	if game_manager.has_method("record_match_result"):
-		game_manager.record_match_result(winner_id)
+	game_manager.record_match_result(winner_id)
 	
 	if game_manager.game_over_state != null:
 		game_manager.game_over_state.enter_state(winner_id)

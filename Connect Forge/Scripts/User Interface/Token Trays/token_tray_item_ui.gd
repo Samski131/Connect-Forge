@@ -6,7 +6,7 @@ extends PanelContainer
 
 var player_id:int = -1
 var token_type:int = -1
-var game_manager:Node = null
+var game_manager:GameManager = null
 var token_tray_inventory:TokenTrayInventory = null
 var drag_controller:TokenDragController = null
 
@@ -14,27 +14,51 @@ var drag_controller:TokenDragController = null
 @onready var count_label:Label = $"Margin/Root (Vbox)/Icon Control/Count Badge Panel/Count Label"
 
 
-func setup(new_game_manager:Node, new_player_id:int, new_token_type:int) -> void:
+func setup(new_game_manager:GameManager, new_token_tray_inventory:TokenTrayInventory, new_drag_controller:TokenDragController, new_player_id:int, new_token_type:int) -> void:
+	disconnect_inventory_signals()
+	
 	game_manager = new_game_manager
+	token_tray_inventory = new_token_tray_inventory
+	drag_controller = new_drag_controller
 	player_id = new_player_id
 	token_type = new_token_type
 	
-	token_tray_inventory = get_tree().get_first_node_in_group("token tray inventory") as TokenTrayInventory
-	drag_controller = get_tree().get_first_node_in_group("token drag controller") as TokenDragController
-	
-	if token_tray_inventory != null:
-		if token_tray_inventory.token_count_changed.is_connected(_on_token_count_changed) == false:
-			token_tray_inventory.token_count_changed.connect(_on_token_count_changed)
-	
+	connect_inventory_signals()
 	setup_visual()
 	refresh()
+
+
+func connect_inventory_signals() -> void:
+	if token_tray_inventory == null:
+		return
+	
+	if token_tray_inventory.token_count_changed.is_connected(_on_token_count_changed) == false:
+		token_tray_inventory.token_count_changed.connect(_on_token_count_changed)
+
+
+func disconnect_inventory_signals() -> void:
+	if token_tray_inventory == null:
+		return
+	
+	if token_tray_inventory.token_count_changed.is_connected(_on_token_count_changed):
+		token_tray_inventory.token_count_changed.disconnect(_on_token_count_changed)
 
 
 func setup_visual() -> void:
 	if token_visual_display == null:
 		return
 	
-	token_visual_display.setup(token_type, player_id)
+	if game_manager == null:
+		token_visual_display.setup(token_type, player_id)
+		return
+	
+	var palette:ColorPalette = game_manager.get_player_palette(player_id)
+	
+	if palette == null:
+		token_visual_display.setup(token_type, player_id)
+		return
+	
+	token_visual_display.setup_with_palette(token_type, player_id, palette)
 
 
 func refresh() -> void:
@@ -93,7 +117,7 @@ func is_wrong_player_turn() -> bool:
 	if game_manager == null:
 		return false
 	
-	if player_id != game_manager.current_player_id:
+	if player_id != game_manager.get_current_player_id():
 		return true
 	
 	return false
@@ -125,6 +149,7 @@ func play_invalid_turn_feedback() -> void:
 
 func _on_invalid_feedback_finished() -> void:
 	refresh()
+
 
 func play_count_changed_feedback() -> void:
 	var preset:UIJuicePreset = UIJuice.create_pulse_preset()

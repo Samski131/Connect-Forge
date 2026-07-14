@@ -3,6 +3,11 @@ extends Control
 
 signal options_applied
 
+enum DisplayMode {
+	EDIT_CONFIG,
+	VIEW_SESSION
+}
+
 const DEFAULT_PLAYER_COUNT:int = 2
 const DEFAULT_STARTING_POINTS:int = 10
 const DEFAULT_TOKENS_TO_WIN:int = 4
@@ -13,6 +18,7 @@ const DEFAULT_STARTING_PLAYER_ID:int = 0
 
 @export_group("Starting Points")
 @export var starting_points_step:int = 1
+
 @export_group("Header Token")
 @export var header_token_palette:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
 
@@ -31,10 +37,14 @@ const DEFAULT_STARTING_PLAYER_ID:int = 0
 @onready var tokens_to_win_value:Label = %TokensToWinValue
 @onready var tokens_to_win_plus:Button = %TokensToWinPlus
 
+@onready var board_size_buttons:HBoxContainer = %BoardSizeButtons
+@onready var board_size_read_only_label:Label = %BoardSizeReadOnlyLabel
 @onready var board_7x6_button:Button = %Board7x6Button
 @onready var board_10x9_button:Button = %Board10x9Button
 @onready var board_14x12_button:Button = %Board14x12Button
 
+@onready var timer_buttons:HBoxContainer = %TimerButtons
+@onready var turn_timer_read_only_label:Label = %TurnTimerReadOnlyLabel
 @onready var timer_off_button:Button = %TimerOffButton
 @onready var timer_30_button:Button = %Timer30Button
 @onready var timer_60_button:Button = %Timer60Button
@@ -44,6 +54,9 @@ const DEFAULT_STARTING_PLAYER_ID:int = 0
 @onready var restore_defaults_button:Button = %RestoreDefaultsButton
 @onready var apply_options_button:Button = %ApplyOptionsButton
 @onready var header_token_display:TokenVisualDisplay = $"PopupCenter/PopupRoot/OuterFrame/Token Overlay/Token Visual Display"
+
+var display_mode:DisplayMode = DisplayMode.EDIT_CONFIG
+var match_session:MatchSession = null
 var hamburger_button:BaseButton = null
 
 var draft_player_count:int = DEFAULT_PLAYER_COUNT
@@ -53,6 +66,7 @@ var draft_board_columns:int = DEFAULT_BOARD_COLUMNS
 var draft_board_rows:int = DEFAULT_BOARD_ROWS
 var draft_turn_timer_seconds:int = DEFAULT_TURN_TIMER_SECONDS
 var draft_starting_player_id:int = DEFAULT_STARTING_PLAYER_ID
+var hidden_arrow_texture:ImageTexture = null
 
 var is_refreshing_ui:bool = false
 
@@ -63,12 +77,37 @@ func _ready() -> void:
 	add_to_group(MenuBackdrop.CLOSABLE_MENU_GROUP)
 	
 	visible = true
+	
 	setup_button_groups()
 	connect_option_controls()
-	load_draft_from_config()
+	apply_display_mode()
+	load_values_for_display_mode()
 	setup_header_token()
 
+
 func setup(new_hamburger_button:BaseButton) -> void:
+	display_mode = DisplayMode.EDIT_CONFIG
+	match_session = null
+	
+	bind_hamburger_button(new_hamburger_button)
+	
+	if is_node_ready():
+		apply_display_mode()
+		load_values_for_display_mode()
+
+
+func setup_read_only(new_hamburger_button:BaseButton, new_match_session:MatchSession) -> void:
+	display_mode = DisplayMode.VIEW_SESSION
+	match_session = new_match_session
+	
+	bind_hamburger_button(new_hamburger_button)
+	
+	if is_node_ready():
+		apply_display_mode()
+		load_values_for_display_mode()
+
+
+func bind_hamburger_button(new_hamburger_button:BaseButton) -> void:
 	if hamburger_button != null:
 		if is_instance_valid(hamburger_button):
 			if hamburger_button.pressed.is_connected(_on_hamburger_button_pressed):
@@ -81,6 +120,10 @@ func setup(new_hamburger_button:BaseButton) -> void:
 	
 	if hamburger_button.pressed.is_connected(_on_hamburger_button_pressed) == false:
 		hamburger_button.pressed.connect(_on_hamburger_button_pressed)
+
+
+func is_read_only() -> bool:
+	return display_mode == DisplayMode.VIEW_SESSION
 
 
 func setup_button_groups() -> void:
@@ -124,7 +167,7 @@ func connect_option_controls() -> void:
 	connect_button(timer_60_button, _on_timer_60_pressed)
 	
 	connect_button(restore_defaults_button, restore_defaults)
-	connect_button(apply_options_button, apply_options)
+	connect_button(apply_options_button, _on_primary_button_pressed)
 	
 	if starting_player_option != null:
 		if starting_player_option.item_selected.is_connected(_on_starting_player_selected) == false:
@@ -139,6 +182,32 @@ func connect_button(button:BaseButton, function:Callable) -> void:
 		button.pressed.connect(function)
 
 
+func apply_display_mode() -> void:
+	var editable:bool = is_read_only() == false
+	
+	player_count_minus.visible = editable
+	player_count_plus.visible = editable
+	starting_points_minus.visible = editable
+	starting_points_plus.visible = editable
+	tokens_to_win_minus.visible = editable
+	tokens_to_win_plus.visible = editable
+	
+	board_size_buttons.visible = editable
+	board_size_read_only_label.visible = editable == false
+	
+	timer_buttons.visible = editable
+	turn_timer_read_only_label.visible = editable == false
+	
+	starting_player_option.disabled = editable == false
+	set_starting_player_arrow_visible(editable)
+	
+	restore_defaults_button.visible = editable
+	
+	if editable:
+		apply_options_button.text = "Apply Options"
+	else:
+		apply_options_button.text = "Close"
+
 func open_popup() -> void:
 	if popup_juice_player == null:
 		return
@@ -146,7 +215,7 @@ func open_popup() -> void:
 	if popup_juice_player.is_transitioning:
 		return
 	
-	load_draft_from_config()
+	load_values_for_display_mode()
 	setup_header_token()
 	visible = true
 	
@@ -188,10 +257,19 @@ func force_close_popup() -> void:
 
 func force_close_menu() -> void:
 	force_close_popup()
+
+
+func load_values_for_display_mode() -> void:
+	if is_read_only():
+		load_values_from_session()
+		return
 	
+	load_draft_from_config()
+
+
 func load_draft_from_config() -> void:
 	if MatchData.config == null:
-		restore_defaults()
+		load_default_values()
 		return
 	
 	var config:MatchConfig = MatchData.config
@@ -209,7 +287,26 @@ func load_draft_from_config() -> void:
 	refresh_ui()
 
 
-func restore_defaults() -> void:
+func load_values_from_session() -> void:
+	if match_session == null:
+		push_error("MatchOptionsPopupUI: Read-only mode requires a MatchSession.")
+		load_default_values()
+		return
+	
+	draft_player_count = match_session.get_player_count()
+	draft_starting_points = match_session.get_starting_token_points()
+	draft_tokens_to_win = match_session.get_tokens_to_win()
+	draft_board_columns = match_session.get_board_columns()
+	draft_board_rows = match_session.get_board_rows()
+	draft_turn_timer_seconds = match_session.get_turn_timer_seconds()
+	draft_starting_player_id = match_session.get_configured_starting_player_id()
+	
+	clamp_draft_values()
+	rebuild_starting_player_options()
+	refresh_ui()
+
+
+func load_default_values() -> void:
 	draft_player_count = DEFAULT_PLAYER_COUNT
 	draft_starting_points = DEFAULT_STARTING_POINTS
 	draft_tokens_to_win = DEFAULT_TOKENS_TO_WIN
@@ -221,6 +318,13 @@ func restore_defaults() -> void:
 	clamp_draft_values()
 	rebuild_starting_player_options()
 	refresh_ui()
+
+
+func restore_defaults() -> void:
+	if is_read_only():
+		return
+	
+	load_default_values()
 
 
 func clamp_draft_values() -> void:
@@ -243,14 +347,25 @@ func refresh_ui() -> void:
 	starting_points_value.text = str(draft_starting_points)
 	tokens_to_win_value.text = str(draft_tokens_to_win)
 	
-	player_count_minus.disabled = draft_player_count <= MatchConfig.MINIMUM_PLAYERS
-	player_count_plus.disabled = draft_player_count >= MatchConfig.MAXIMUM_PLAYERS
+	board_size_read_only_label.text = format_board_size()
+	turn_timer_read_only_label.text = format_turn_timer()
 	
-	starting_points_minus.disabled = draft_starting_points <= MatchConfig.MINIMUM_STARTING_TOKEN_POINTS
-	starting_points_plus.disabled = draft_starting_points >= MatchConfig.MAXIMUM_STARTING_TOKEN_POINTS
-	
-	tokens_to_win_minus.disabled = draft_tokens_to_win <= MatchConfig.MINIMUM_TOKENS_TO_WIN
-	tokens_to_win_plus.disabled = draft_tokens_to_win >= max(draft_board_columns, draft_board_rows)
+	if is_read_only():
+		player_count_minus.disabled = true
+		player_count_plus.disabled = true
+		starting_points_minus.disabled = true
+		starting_points_plus.disabled = true
+		tokens_to_win_minus.disabled = true
+		tokens_to_win_plus.disabled = true
+	else:
+		player_count_minus.disabled = draft_player_count <= MatchConfig.MINIMUM_PLAYERS
+		player_count_plus.disabled = draft_player_count >= MatchConfig.MAXIMUM_PLAYERS
+		
+		starting_points_minus.disabled = draft_starting_points <= MatchConfig.MINIMUM_STARTING_TOKEN_POINTS
+		starting_points_plus.disabled = draft_starting_points >= MatchConfig.MAXIMUM_STARTING_TOKEN_POINTS
+		
+		tokens_to_win_minus.disabled = draft_tokens_to_win <= MatchConfig.MINIMUM_TOKENS_TO_WIN
+		tokens_to_win_plus.disabled = draft_tokens_to_win >= max(draft_board_columns, draft_board_rows)
 	
 	board_7x6_button.button_pressed = draft_board_columns == 7 and draft_board_rows == 6
 	board_10x9_button.button_pressed = draft_board_columns == 10 and draft_board_rows == 9
@@ -265,6 +380,20 @@ func refresh_ui() -> void:
 	is_refreshing_ui = false
 
 
+func format_board_size() -> String:
+	return str(draft_board_columns) + " × " + str(draft_board_rows)
+
+
+func format_turn_timer() -> String:
+	if draft_turn_timer_seconds <= 0:
+		return "Off"
+	
+	if draft_turn_timer_seconds == 1:
+		return "1 second"
+	
+	return str(draft_turn_timer_seconds) + " seconds"
+
+
 func rebuild_starting_player_options() -> void:
 	if starting_player_option == null:
 		return
@@ -274,11 +403,7 @@ func rebuild_starting_player_options() -> void:
 	starting_player_option.set_item_metadata(0, MatchConfig.RANDOM_STARTING_PLAYER_ID)
 	
 	for player_id in range(draft_player_count):
-		var player_name:String = "Player " + str(player_id + 1)
-		
-		if MatchData.config != null:
-			if player_id < MatchData.config.get_player_count():
-				player_name = MatchData.config.get_player_name(player_id)
+		var player_name:String = get_display_player_name(player_id)
 		
 		starting_player_option.add_item(player_name)
 		
@@ -286,6 +411,20 @@ func rebuild_starting_player_options() -> void:
 		starting_player_option.set_item_metadata(option_index, player_id)
 	
 	select_starting_player_option()
+
+
+func get_display_player_name(player_id:int) -> String:
+	if is_read_only():
+		if match_session != null:
+			return match_session.get_player_name(player_id)
+		
+		return "Player " + str(player_id + 1)
+	
+	if MatchData.config != null:
+		if player_id < MatchData.config.get_player_count():
+			return MatchData.config.get_player_name(player_id)
+	
+	return "Player " + str(player_id + 1)
 
 
 func select_starting_player_option() -> void:
@@ -306,6 +445,10 @@ func select_starting_player_option() -> void:
 
 
 func apply_options() -> void:
+	if is_read_only():
+		close_popup()
+		return
+	
 	if MatchData.config == null:
 		return
 	
@@ -323,6 +466,14 @@ func apply_options() -> void:
 	close_popup()
 
 
+func _on_primary_button_pressed() -> void:
+	if is_read_only():
+		close_popup()
+		return
+	
+	apply_options()
+
+
 func _on_hamburger_button_pressed() -> void:
 	if popup_juice_player == null:
 		return
@@ -335,6 +486,9 @@ func _on_hamburger_button_pressed() -> void:
 
 
 func _on_player_count_minus_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_player_count -= 1
 	clamp_draft_values()
 	rebuild_starting_player_options()
@@ -342,6 +496,9 @@ func _on_player_count_minus_pressed() -> void:
 
 
 func _on_player_count_plus_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_player_count += 1
 	clamp_draft_values()
 	rebuild_starting_player_options()
@@ -349,42 +506,66 @@ func _on_player_count_plus_pressed() -> void:
 
 
 func _on_starting_points_minus_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_starting_points -= max(starting_points_step, 1)
 	clamp_draft_values()
 	refresh_ui()
 
 
 func _on_starting_points_plus_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_starting_points += max(starting_points_step, 1)
 	clamp_draft_values()
 	refresh_ui()
 
 
 func _on_tokens_to_win_minus_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_tokens_to_win -= 1
 	clamp_draft_values()
 	refresh_ui()
 
 
 func _on_tokens_to_win_plus_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_tokens_to_win += 1
 	clamp_draft_values()
 	refresh_ui()
 
 
 func _on_board_7x6_pressed() -> void:
+	if is_read_only():
+		return
+	
 	set_draft_board_size(7, 6)
 
 
 func _on_board_10x9_pressed() -> void:
+	if is_read_only():
+		return
+	
 	set_draft_board_size(10, 9)
 
 
 func _on_board_14x12_pressed() -> void:
+	if is_read_only():
+		return
+	
 	set_draft_board_size(14, 12)
 
 
 func set_draft_board_size(columns:int, rows:int) -> void:
+	if is_read_only():
+		return
+	
 	draft_board_columns = columns
 	draft_board_rows = rows
 	
@@ -393,16 +574,25 @@ func set_draft_board_size(columns:int, rows:int) -> void:
 
 
 func _on_timer_off_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_turn_timer_seconds = 0
 	refresh_ui()
 
 
 func _on_timer_30_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_turn_timer_seconds = 30
 	refresh_ui()
 
 
 func _on_timer_60_pressed() -> void:
+	if is_read_only():
+		return
+	
 	draft_turn_timer_seconds = 60
 	refresh_ui()
 
@@ -411,12 +601,17 @@ func _on_starting_player_selected(option_index:int) -> void:
 	if is_refreshing_ui:
 		return
 	
+	if is_read_only():
+		select_starting_player_option()
+		return
+	
 	var metadata:Variant = starting_player_option.get_item_metadata(option_index)
 	
 	if metadata == null:
 		return
 	
 	draft_starting_player_id = int(metadata)
+
 
 func setup_header_token() -> void:
 	if header_token_display == null:
@@ -427,3 +622,20 @@ func setup_header_token() -> void:
 		return
 	
 	header_token_display.setup(TokenLibrary.TokenType.BASIC, 0)
+
+func set_starting_player_arrow_visible(arrow_visible:bool) -> void:
+	if starting_player_option == null:
+		return
+	
+	if arrow_visible:
+		starting_player_option.remove_theme_icon_override("arrow")
+		starting_player_option.remove_theme_constant_override("arrow_margin")
+		return
+	
+	if hidden_arrow_texture == null:
+		var image:Image = Image.create(1, 1, false, Image.FORMAT_RGBA8)
+		image.fill(Color.TRANSPARENT)
+		hidden_arrow_texture = ImageTexture.create_from_image(image)
+	
+	starting_player_option.add_theme_icon_override("arrow", hidden_arrow_texture)
+	starting_player_option.add_theme_constant_override("arrow_margin", 0)

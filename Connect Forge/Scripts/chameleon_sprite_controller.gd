@@ -6,7 +6,7 @@ const WAVE_COLOUR_INDEX:int = 4
 @onready var fake_sprites:Node2D = $FakeSprites
 @onready var chameleon_sprites:Node2D = $ChameleonSprites
 
-var game_manager:Node = null
+var token:Token = null
 var current_fake_player_id:int = -1
 var current_real_player_id:int = -1
 var dissolve_materials:Array[ShaderMaterial] = []
@@ -14,7 +14,7 @@ var reveal_materials:Array[ShaderMaterial] = []
 
 
 func _ready() -> void:
-	game_manager = get_tree().get_first_node_in_group("game manager")
+	token = get_parent() as Token
 
 
 func recolor(player_id:int) -> void:
@@ -37,8 +37,8 @@ func play_shimmer(duration:float = 0.45, direction:Vector2 = Vector2(1.0, -1.0),
 
 
 func set_flipped_visual(is_flipped:bool) -> void:
-	_set_layer_flipped(chameleon_sprites, is_flipped)
-	_set_layer_flipped(fake_sprites, is_flipped)
+	set_layer_flipped(chameleon_sprites, is_flipped)
+	set_layer_flipped(fake_sprites, is_flipped)
 
 
 func hide_fake_layer() -> void:
@@ -110,7 +110,7 @@ func setup_dissolve_materials() -> void:
 		return
 	
 	var sprite_list:Array[Sprite2D] = []
-	_collect_sprites(chameleon_sprites, sprite_list)
+	collect_sprites(chameleon_sprites, sprite_list)
 	
 	var wave_color:Color = get_change_wave_color()
 	
@@ -189,7 +189,7 @@ func setup_reveal_dissolve_materials() -> void:
 		return
 	
 	var sprite_list:Array[Sprite2D] = []
-	_collect_sprites(chameleon_sprites, sprite_list)
+	collect_sprites(chameleon_sprites, sprite_list)
 	
 	var wave_color:Color = get_reveal_wave_color()
 	
@@ -234,19 +234,27 @@ func get_player_palette(player_id:int) -> ColorPalette:
 	if player_id < 0:
 		return null
 	
-	if game_manager == null:
-		game_manager = get_tree().get_first_node_in_group("game manager")
+	var owning_token:Token = get_owning_token()
 	
-	if game_manager != null and game_manager.has_method("get_player_palette"):
-		return game_manager.get_player_palette(player_id)
-	
-	if MatchData.config == null:
+	if owning_token == null:
 		return null
 	
-	return MatchData.config.get_player_palette(player_id)
+	if owning_token.board == null:
+		return null
+	
+	return owning_token.board.get_player_palette(player_id)
 
 
-func _collect_sprites(node:Node, results:Array[Sprite2D]) -> void:
+func get_owning_token() -> Token:
+	if token != null:
+		if is_instance_valid(token):
+			return token
+	
+	token = get_parent() as Token
+	return token
+
+
+func collect_sprites(node:Node, results:Array[Sprite2D]) -> void:
 	if node == null:
 		return
 	
@@ -256,10 +264,10 @@ func _collect_sprites(node:Node, results:Array[Sprite2D]) -> void:
 		if sprite != null:
 			results.append(sprite)
 		
-		_collect_sprites(child, results)
+		collect_sprites(child, results)
 
 
-func _set_layer_flipped(layer:Node2D, is_flipped:bool) -> void:
+func set_layer_flipped(layer:Node2D, is_flipped:bool) -> void:
 	if layer == null:
 		return
 	
@@ -272,7 +280,7 @@ func clear_dissolve_materials_from_layer(layer:Node2D) -> void:
 		return
 	
 	var sprite_list:Array[Sprite2D] = []
-	_collect_sprites(layer, sprite_list)
+	collect_sprites(layer, sprite_list)
 	
 	for sprite in sprite_list:
 		if sprite == null:
@@ -314,7 +322,6 @@ func get_dissolve_screen_data() -> Dictionary:
 	var parent_node:Node = get_parent()
 	var token_center_screen:Vector2 = global_position
 	var dissolve_height_pixels:float = 120.0
-	
 	var parent_2d:Node2D = parent_node as Node2D
 	
 	if parent_2d != null:

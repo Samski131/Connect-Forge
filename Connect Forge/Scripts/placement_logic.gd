@@ -1,24 +1,28 @@
 extends Node
-# This script handles the logic for the placement state.
-# This includes the ghostly placement token, detection of click inputs, and creating the token once it is placed.
+
+var game_manager:GameManager = null
+var board:BoardManager = null
 
 
-var game_manager:Node
-var board:BoardManager
-
-
-func setup(new_game_manager:Node, new_board:BoardManager):
+func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 	game_manager = new_game_manager
 	board = new_board
 
 
-func enter_state():
-	get_parent().current_turn_phase = Global.TURN_PHASE.PLACEMENT
-
+func enter_state() -> void:
+	if game_manager == null:
+		return
 	
+	game_manager.set_current_turn_phase(Global.TURN_PHASE.PLACEMENT)
 
-		
-func exit_state():
+
+func exit_state() -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.action_state == null:
+		return
+	
 	game_manager.action_state.enter_state()
 
 
@@ -29,7 +33,7 @@ func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bo
 	if board == null:
 		return false
 	
-	if game_manager.current_turn_phase != Global.TURN_PHASE.PLACEMENT:
+	if game_manager.get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
 		return false
 	
 	if is_valid_starting_slot(slot_pos) == false:
@@ -40,7 +44,12 @@ func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bo
 	if token_scene == null:
 		return false
 	
-	var new_token:Token = board.create_new_token(token_scene, slot_pos, game_manager.current_player_id, start_flipped)
+	var current_player_id:int = game_manager.get_current_player_id()
+	
+	if game_manager.is_valid_player_id(current_player_id) == false:
+		return false
+	
+	var new_token:Token = board.create_new_token(token_scene, slot_pos, current_player_id, start_flipped)
 	
 	if new_token == null:
 		return false

@@ -13,19 +13,12 @@ enum PART {
 
 var sprites:Array[Sprite2D] = []
 var shimmer_materials:Array[ShaderMaterial] = []
-
 var shimmer_tween:Tween = null
 var darken_tween:Tween = null
 
 
 func _ready() -> void:
 	gather_sprites()
-	
-	
-	var game_manager:Node = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager != null:
-		recolor(game_manager.current_player_id)
 
 
 func recolor(player_id:int) -> void:
@@ -58,15 +51,34 @@ func recolor_with_palette(palette:ColorPalette) -> void:
 
 
 func get_player_palette(player_id:int) -> ColorPalette:
-	if MatchData.config == null:
+	var owning_token:Token = get_owning_token()
+	
+	if owning_token == null:
 		return FALLBACK_PALETTE
 	
-	var palette:ColorPalette = MatchData.config.get_player_palette(player_id)
+	if owning_token.board == null:
+		return FALLBACK_PALETTE
+	
+	var palette:ColorPalette = owning_token.board.get_player_palette(player_id)
 	
 	if is_valid_palette(palette):
 		return palette
 	
 	return FALLBACK_PALETTE
+
+
+func get_owning_token() -> Token:
+	var current_node:Node = self
+	
+	while current_node != null:
+		var current_token:Token = current_node as Token
+		
+		if current_token != null:
+			return current_token
+		
+		current_node = current_node.get_parent()
+	
+	return null
 
 
 func get_valid_palette_or_fallback(palette:ColorPalette) -> ColorPalette:
@@ -116,10 +128,10 @@ func darken(amount:float) -> void:
 
 func gather_sprites() -> void:
 	sprites.clear()
-	_collect_sprites(self)
+	collect_sprites(self)
 
 
-func _collect_sprites(node:Node) -> void:
+func collect_sprites(node:Node) -> void:
 	if node == null:
 		return
 	
@@ -129,7 +141,7 @@ func _collect_sprites(node:Node) -> void:
 		if sprite != null:
 			sprites.append(sprite)
 		
-		_collect_sprites(child)
+		collect_sprites(child)
 
 
 func setup_shimmer_materials() -> void:
@@ -214,7 +226,6 @@ func get_shimmer_center() -> Vector2:
 		return parent_node_2d.global_position
 	
 	return global_position
-
 
 
 func set_flipped_visual(is_flipped:bool) -> void:

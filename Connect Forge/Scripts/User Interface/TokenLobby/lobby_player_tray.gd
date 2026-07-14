@@ -8,10 +8,10 @@ extends PanelContainer
 @export var purchased_token_item_scene:PackedScene
 
 @export_group("Player Colours")
-@export_range(0, 4) var header_colour_index:int = 6
-@export_range(0, 4) var border_colour_index:int = 3
-@export_range(0, 4) var strip_colour_index:int = 2
-@export_range(0, 5) var interior_colour_index:int = 5
+@export_range(0, 6) var header_colour_index:int = 6
+@export_range(0, 6) var border_colour_index:int = 3
+@export_range(0, 6) var strip_colour_index:int = 2
+@export_range(0, 6) var interior_colour_index:int = 5
 
 var player_data:MatchPlayerData = null
 var token_tray_inventory:TokenTrayInventory = null
@@ -31,11 +31,7 @@ func _ready() -> void:
 	connect_player_name_signals()
 
 
-func setup(
-	new_player_id:int,
-	new_player_data:MatchPlayerData,
-	new_token_tray_inventory:TokenTrayInventory
-) -> void:
+func setup(new_player_id:int, new_player_data:MatchPlayerData, new_token_tray_inventory:TokenTrayInventory) -> void:
 	player_id = new_player_id
 	player_data = new_player_data
 	token_tray_inventory = new_token_tray_inventory
@@ -54,62 +50,44 @@ func connect_player_name_signals() -> void:
 	if player_name_edit == null:
 		return
 	
-	if player_name_edit.text_submitted.is_connected(
-		_on_player_name_submitted
-	) == false:
-		player_name_edit.text_submitted.connect(
-			_on_player_name_submitted
-		)
+	if player_name_edit.text_submitted.is_connected(_on_player_name_submitted) == false:
+		player_name_edit.text_submitted.connect(_on_player_name_submitted)
 	
-	if player_name_edit.focus_exited.is_connected(
-		_on_player_name_focus_exited
-	) == false:
-		player_name_edit.focus_exited.connect(
-			_on_player_name_focus_exited
-		)
+	if player_name_edit.focus_exited.is_connected(_on_player_name_focus_exited) == false:
+		player_name_edit.focus_exited.connect(_on_player_name_focus_exited)
 
 
 func connect_inventory_signals() -> void:
 	if token_tray_inventory == null:
 		return
 	
-	if token_tray_inventory.token_type_added.is_connected(
-		_on_token_type_added
-	) == false:
-		token_tray_inventory.token_type_added.connect(
-			_on_token_type_added
-		)
+	if token_tray_inventory.token_type_added.is_connected(_on_token_type_added) == false:
+		token_tray_inventory.token_type_added.connect(_on_token_type_added)
 	
-	if token_tray_inventory.token_count_changed.is_connected(
-		_on_token_count_changed
-	) == false:
-		token_tray_inventory.token_count_changed.connect(
-			_on_token_count_changed
-		)
+	if token_tray_inventory.token_count_changed.is_connected(_on_token_count_changed) == false:
+		token_tray_inventory.token_count_changed.connect(_on_token_count_changed)
 	
-	if token_tray_inventory.trays_reset.is_connected(
-		_on_trays_reset
-	) == false:
-		token_tray_inventory.trays_reset.connect(
-			_on_trays_reset
-		)
+	if token_tray_inventory.trays_reset.is_connected(_on_trays_reset) == false:
+		token_tray_inventory.trays_reset.connect(_on_trays_reset)
 
 
 func refresh_player_details() -> void:
 	refresh_player_name()
 	
+	if header_token_visual_display == null:
+		return
+	
 	if player_data == null:
-		header_token_visual_display.setup(
-			TokenLibrary.TokenType.BASIC,
-			player_id
-		)
+		header_token_visual_display.setup(TokenLibrary.TokenType.BASIC, player_id)
 		return
 	
 	apply_player_colours()
-	header_token_visual_display.setup(
-		TokenLibrary.TokenType.BASIC,
-		player_id
-	)
+	
+	if player_data.colour_palette == null:
+		header_token_visual_display.setup(TokenLibrary.TokenType.BASIC, player_id)
+		return
+	
+	header_token_visual_display.setup_with_palette(TokenLibrary.TokenType.BASIC, player_id, player_data.colour_palette)
 
 
 func refresh_player_name() -> void:
@@ -117,9 +95,7 @@ func refresh_player_name() -> void:
 		return
 	
 	if MatchData.config != null:
-		player_name_edit.text = MatchData.config.get_player_name(
-			player_id
-		)
+		player_name_edit.text = MatchData.config.get_player_name(player_id)
 		return
 	
 	if player_data != null:
@@ -157,22 +133,20 @@ func commit_player_name() -> void:
 		player_name_edit.text = new_name
 		return
 	
-	var name_was_changed:bool = MatchData.config.set_player_name(
-		player_id,
-		new_name
-	)
+	var name_was_changed:bool = MatchData.config.set_player_name(player_id, new_name)
 	
 	if name_was_changed == false:
 		refresh_player_name()
 		return
 	
 	player_data = MatchData.config.get_player(player_id)
-	player_name_edit.text = MatchData.config.get_player_name(
-		player_id
-	)
+	player_name_edit.text = MatchData.config.get_player_name(player_id)
 
 
 func refresh_points() -> void:
+	if points_label == null:
+		return
+	
 	if player_data == null:
 		points_label.text = "0"
 		return
@@ -180,10 +154,7 @@ func refresh_points() -> void:
 	points_label.text = str(player_data.token_points_remaining)
 
 
-func _can_drop_data(
-	_at_position:Vector2,
-	data:Variant
-) -> bool:
+func _can_drop_data(_at_position:Vector2, data:Variant) -> bool:
 	if data is Dictionary == false:
 		return false
 	
@@ -205,14 +176,10 @@ func _can_drop_data(
 		return false
 	
 	var token_type:int = int(drag_data["token_type"])
-	var can_afford:bool = player_data.can_afford_token(token_type)
-	return can_afford
+	return player_data.can_afford_token(token_type)
 
 
-func _drop_data(
-	_at_position:Vector2,
-	data:Variant
-) -> void:
+func _drop_data(_at_position:Vector2, data:Variant) -> void:
 	if data is Dictionary == false:
 		return
 	
@@ -243,12 +210,7 @@ func try_purchase_token(token_type:int) -> bool:
 	if player_data.try_purchase_token(token_type) == false:
 		return false
 	
-	token_tray_inventory.add_tokens(
-		player_id,
-		token_type,
-		1
-	)
-	
+	token_tray_inventory.add_tokens(player_id, token_type, 1)
 	refresh_points()
 	return true
 
@@ -259,9 +221,7 @@ func rebuild_purchased_tokens() -> void:
 	if token_tray_inventory == null:
 		return
 	
-	var token_types:Array[int] = token_tray_inventory.get_token_types_for_player(
-		player_id
-	)
+	var token_types:Array[int] = token_tray_inventory.get_token_types_for_player(player_id)
 	
 	for token_type in token_types:
 		ensure_purchased_item_exists(token_type)
@@ -269,6 +229,9 @@ func rebuild_purchased_tokens() -> void:
 
 func clear_purchased_tokens() -> void:
 	purchased_item_uis.clear()
+	
+	if purchased_tokens == null:
+		return
 	
 	for child in purchased_tokens.get_children():
 		child.queue_free()
@@ -294,23 +257,16 @@ func ensure_purchased_item_exists(token_type:int) -> void:
 	
 	purchased_tokens.add_child(item)
 	
-	var token_count:int = token_tray_inventory.get_token_count(
-		player_id,
-		token_type
-	)
+	var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
+	var palette:ColorPalette = null
 	
-	item.setup(
-		player_id,
-		token_type,
-		token_count
-	)
+	if player_data != null:
+		palette = player_data.colour_palette
 	
-	if item.refund_requested.is_connected(
-		_on_refund_requested
-	) == false:
-		item.refund_requested.connect(
-			_on_refund_requested
-		)
+	item.setup(player_id, token_type, token_count, palette)
+	
+	if item.refund_requested.is_connected(_on_refund_requested) == false:
+		item.refund_requested.connect(_on_refund_requested)
 	
 	purchased_item_uis[token_type] = item
 	sort_purchased_items()
@@ -326,38 +282,20 @@ func sort_purchased_items() -> void:
 		if item == null:
 			continue
 		
-		purchased_tokens.move_child(
-			item,
-			purchased_tokens.get_child_count() - 1
-		)
+		purchased_tokens.move_child(item, purchased_tokens.get_child_count() - 1)
 
 
-func _sort_token_types(
-	first_token_type:int,
-	second_token_type:int
-) -> bool:
-	var first_order:int = TokenLibrary.get_tray_order(
-		first_token_type
-	)
-	
-	var second_order:int = TokenLibrary.get_tray_order(
-		second_token_type
-	)
-	
+func _sort_token_types(first_token_type:int, second_token_type:int) -> bool:
+	var first_order:int = TokenLibrary.get_tray_order(first_token_type)
+	var second_order:int = TokenLibrary.get_tray_order(second_token_type)
 	return first_order < second_order
 
 
-func refresh_purchased_item(
-	token_type:int,
-	play_feedback:bool
-) -> void:
+func refresh_purchased_item(token_type:int, play_feedback:bool) -> void:
 	if token_tray_inventory == null:
 		return
 	
-	var token_count:int = token_tray_inventory.get_token_count(
-		player_id,
-		token_type
-	)
+	var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
 	
 	if token_count <= 0:
 		remove_purchased_item(token_type)
@@ -368,9 +306,7 @@ func refresh_purchased_item(
 	if purchased_item_uis.has(token_type) == false:
 		return
 	
-	var item:LobbyPurchasedTokenItem = purchased_item_uis[
-		token_type
-	] as LobbyPurchasedTokenItem
+	var item:LobbyPurchasedTokenItem = purchased_item_uis[token_type] as LobbyPurchasedTokenItem
 	
 	if item == null:
 		return
@@ -404,98 +340,66 @@ func apply_player_colours() -> void:
 	if palette == null:
 		return
 	
-	if palette.colors.size() < 5:
-		return
+	var header_colour:Color = get_palette_colour(palette, header_colour_index, Color.WHITE)
+	var border_colour:Color = get_palette_colour(palette, border_colour_index, header_colour)
+	var strip_colour:Color = get_palette_colour(palette, strip_colour_index, header_colour)
+	var interior_colour:Color = get_interior_colour(palette)
 	
-	var header_colour:Color = palette.colors[
-		header_colour_index
-	]
-	
-	var border_colour:Color = palette.colors[
-		border_colour_index
-	]
-	
-	var strip_colour:Color = palette.colors[
-		strip_colour_index
-	]
-	
-	var interior_colour:Color = get_interior_colour(
-		palette
-	)
-	
-	apply_panel_style(
-		self,
-		header_colour,
-		border_colour
-	)
-	
-	apply_panel_style(
-		colour_strip,
-		strip_colour,
-		strip_colour
-	)
-	
-	apply_panel_style(
-		token_grid_background,
-		interior_colour,
-		interior_colour
-	)
+	apply_panel_style(self, header_colour, border_colour)
+	apply_panel_style(colour_strip, strip_colour, strip_colour)
+	apply_panel_style(token_grid_background, interior_colour, interior_colour)
 
 
-func get_interior_colour(
-	palette:ColorPalette
-) -> Color:
-	if palette.colors.size() > interior_colour_index:
-		return palette.colors[interior_colour_index]
+func get_palette_colour(palette:ColorPalette, colour_index:int, fallback:Color) -> Color:
+	if palette == null:
+		return fallback
 	
-	var fallback_base:Color = Color("#F2EBDD")
-	return fallback_base.lerp(
-		palette.colors[0],
-		0.18
-	)
+	if colour_index < 0:
+		return fallback
+	
+	if colour_index >= palette.colors.size():
+		return fallback
+	
+	return palette.colors[colour_index]
 
 
-func apply_panel_style(
-	panel:PanelContainer,
-	background_colour:Color,
-	border_colour:Color
-) -> void:
+func get_interior_colour(palette:ColorPalette) -> Color:
+	if palette != null:
+		if interior_colour_index >= 0 and interior_colour_index < palette.colors.size():
+			return palette.colors[interior_colour_index]
+		
+		if palette.colors.is_empty() == false:
+			var fallback_base:Color = Color("#F2EBDD")
+			return fallback_base.lerp(palette.colors[0], 0.18)
+	
+	return Color("#F2EBDD")
+
+
+func apply_panel_style(panel:PanelContainer, background_colour:Color, border_colour:Color) -> void:
 	if panel == null:
 		return
 	
-	var source_style:StyleBoxFlat = panel.get_theme_stylebox(
-		"panel"
-	) as StyleBoxFlat
-	
+	var source_style:StyleBoxFlat = panel.get_theme_stylebox("panel") as StyleBoxFlat
 	var new_style:StyleBoxFlat = null
 	
 	if source_style == null:
 		new_style = StyleBoxFlat.new()
 	else:
-		new_style = source_style.duplicate(
-			true
-		) as StyleBoxFlat
+		new_style = source_style.duplicate(true) as StyleBoxFlat
 	
 	if new_style == null:
 		return
 	
 	new_style.bg_color = background_colour
 	new_style.border_color = border_colour
-	
-	panel.add_theme_stylebox_override(
-		"panel",
-		new_style
-	)
+	panel.add_theme_stylebox_override("panel", new_style)
 
 
 func remove_purchased_item(token_type:int) -> void:
 	if purchased_item_uis.has(token_type) == false:
 		return
 	
-	var item:LobbyPurchasedTokenItem = purchased_item_uis[
-		token_type
-	] as LobbyPurchasedTokenItem
-	
+	var item:LobbyPurchasedTokenItem = purchased_item_uis[token_type] as LobbyPurchasedTokenItem
 	purchased_item_uis.erase(token_type)
 	
 	if item == null:
@@ -505,9 +409,7 @@ func remove_purchased_item(token_type:int) -> void:
 		item.queue_free()
 
 
-func _on_player_name_submitted(
-	_submitted_text:String
-) -> void:
+func _on_player_name_submitted(_submitted_text:String) -> void:
 	commit_player_name()
 	
 	if player_name_edit != null:
@@ -518,28 +420,18 @@ func _on_player_name_focus_exited() -> void:
 	commit_player_name()
 
 
-func _on_token_type_added(
-	changed_player_id:int,
-	token_type:int
-) -> void:
+func _on_token_type_added(changed_player_id:int, token_type:int) -> void:
 	if changed_player_id != player_id:
 		return
 	
 	ensure_purchased_item_exists(token_type)
 
 
-func _on_token_count_changed(
-	changed_player_id:int,
-	token_type:int,
-	_new_count:int
-) -> void:
+func _on_token_count_changed(changed_player_id:int, token_type:int, _new_count:int) -> void:
 	if changed_player_id != player_id:
 		return
 	
-	refresh_purchased_item(
-		token_type,
-		true
-	)
+	refresh_purchased_item(token_type, true)
 
 
 func _on_trays_reset() -> void:
@@ -550,10 +442,7 @@ func _on_trays_reset() -> void:
 	rebuild_purchased_tokens()
 
 
-func _on_refund_requested(
-	changed_player_id:int,
-	token_type:int
-) -> void:
+func _on_refund_requested(changed_player_id:int, token_type:int) -> void:
 	if changed_player_id != player_id:
 		return
 	
@@ -566,15 +455,9 @@ func _on_refund_requested(
 	if player_data.try_refund_token(token_type) == false:
 		return
 	
-	if token_tray_inventory.spend_token(
-		player_id,
-		token_type
-	) == false:
+	if token_tray_inventory.spend_token(player_id, token_type) == false:
 		player_data.try_purchase_token(token_type)
 		return
 	
 	refresh_points()
-	refresh_purchased_item(
-		token_type,
-		false
-	)
+	refresh_purchased_item(token_type, false)

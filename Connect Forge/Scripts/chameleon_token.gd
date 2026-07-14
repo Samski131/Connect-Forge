@@ -1,6 +1,4 @@
 extends Token
-# Chameleon Token
-# Visually disguises itself as another player's basic token, but still belongs to its original player.
 
 var fake_player_id:int = -1
 var transform_duration:float = 1.0
@@ -37,7 +35,7 @@ func _on_land(_context:Dictionary) -> bool:
 	has_revealed = false
 	charges -= ability_cost
 	
-	if board.visuals != null:
+	if board != null and board.visuals != null:
 		queue_visual_effect(ChameleonTransformVisualEffect.new(self, fake_player_id, transform_duration))
 	else:
 		prepare_chameleon_transform(fake_player_id)
@@ -48,20 +46,24 @@ func _on_land(_context:Dictionary) -> bool:
 
 
 func pick_fake_player_id() -> int:
-	var game_manager:Node = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager == null:
+	if board == null:
 		return -1
 	
-	if game_manager.has_method("get_player_count") == false:
+	var player_count:int = board.get_player_count()
+	
+	if player_count <= 1:
 		return -1
 	
-	var player_count:int = game_manager.get_player_count()
 	var valid_player_ids:Array[int] = []
 	
 	for possible_player_id in range(player_count):
-		if possible_player_id != player_id:
-			valid_player_ids.append(possible_player_id)
+		if possible_player_id == player_id:
+			continue
+		
+		if board.is_valid_player_id(possible_player_id) == false:
+			continue
+		
+		valid_player_ids.append(possible_player_id)
 	
 	if valid_player_ids.is_empty():
 		return -1

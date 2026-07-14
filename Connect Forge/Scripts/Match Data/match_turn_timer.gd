@@ -5,7 +5,8 @@ signal timer_enabled_changed(enabled:bool)
 signal time_changed(seconds_remaining:int, total_seconds:int)
 signal turn_timed_out(player_id:int)
 
-var game_manager:Node = null
+var game_manager:GameManager = null
+var drag_controller:TokenDragController = null
 
 var turn_limit_seconds:int = 0
 var time_remaining:float = 0.0
@@ -16,13 +17,13 @@ var timeout_is_being_handled:bool = false
 
 
 func _ready() -> void:
-	add_to_group("turn timer")
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 
 
-func setup(new_game_manager:Node) -> void:
+func setup(new_game_manager:GameManager, new_drag_controller:TokenDragController) -> void:
 	game_manager = new_game_manager
-	refresh_limit_from_match_data()
+	drag_controller = new_drag_controller
+	refresh_limit_from_session()
 	emit_current_state()
 
 
@@ -30,23 +31,24 @@ func _process(delta:float) -> void:
 	update_turn_timer(delta)
 
 
-func refresh_limit_from_match_data() -> void:
+func refresh_limit_from_session() -> void:
 	turn_limit_seconds = 0
 	
-	if MatchData.config == null:
+	if game_manager == null:
 		return
 	
-	turn_limit_seconds = max(MatchData.config.turn_timer_seconds, 0)
+	turn_limit_seconds = max(game_manager.get_turn_timer_seconds(), 0)
 
 
 func start_turn_timer() -> void:
-	refresh_limit_from_match_data()
+	refresh_limit_from_session()
 	timeout_is_being_handled = false
 	
 	if turn_limit_seconds <= 0:
 		is_running = false
 		time_remaining = 0.0
 		displayed_seconds_remaining = 0
+		
 		timer_enabled_changed.emit(false)
 		time_changed.emit(0, 0)
 		return
@@ -71,7 +73,7 @@ func update_turn_timer(delta:float) -> void:
 		stop_turn_timer()
 		return
 	
-	if game_manager.current_turn_phase != Global.TURN_PHASE.PLACEMENT:
+	if game_manager.get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
 		return
 	
 	time_remaining = max(time_remaining - delta, 0.0)
@@ -102,19 +104,16 @@ func handle_turn_timeout() -> void:
 	
 	time_changed.emit(0, turn_limit_seconds)
 	
-	var expired_player_id:int = game_manager.current_player_id
+	var expired_player_id:int = game_manager.get_current_player_id()
 	
-	game_manager.current_turn_phase = Global.TURN_PHASE.NONE
+	game_manager.set_current_turn_phase(Global.TURN_PHASE.NONE)
 	cancel_current_drag()
-
 	
 	turn_timed_out.emit(expired_player_id)
 	game_manager.end_turn()
 
 
 func cancel_current_drag() -> void:
-	var drag_controller:TokenDragController = get_tree().get_first_node_in_group("token drag controller") as TokenDragController
-	
 	if drag_controller == null:
 		return
 	
@@ -124,8 +123,10 @@ func cancel_current_drag() -> void:
 func is_timer_enabled() -> bool:
 	return turn_limit_seconds > 0
 
+
 func get_seconds_remaining() -> int:
 	return max(displayed_seconds_remaining, 0)
+
 
 func emit_current_state() -> void:
 	timer_enabled_changed.emit(is_timer_enabled())

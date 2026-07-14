@@ -1,30 +1,38 @@
 extends Node
-# This script handles the logic for the action state.
-# It handles entry, processing and exiting states.
-# The action state is where tokens affect each other, fall, and generally interact.
-# Each token handles its own interactions and reports when it is finished during the processed state.
 
-enum Report {RESOLVED, IN_PROGRESS, EMPTY}
+enum Report {RESOLVED, IN_PROGRESS,EMPTY}
 
-var game_manager:Node
-var board:BoardManager
+var game_manager:GameManager = null
+var board:BoardManager = null
 
 
-func setup(new_game_manager:Node, new_board:BoardManager):
+func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 	game_manager = new_game_manager
 	board = new_board
 
 
-func enter_state():
-	game_manager.current_turn_phase = Global.TURN_PHASE.ACTION
+func enter_state() -> void:
+	if game_manager == null:
+		return
+	
+	game_manager.set_current_turn_phase(Global.TURN_PHASE.ACTION)
 	reset_token_resolution()
 
 
-func exit_state():
+func exit_state() -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.resolution_state == null:
+		return
+	
 	game_manager.resolution_state.enter_state()
 
 
-func process_state():
+func process_state() -> void:
+	if board == null:
+		return
+	
 	if board.visuals != null and board.visuals.is_busy():
 		return
 	
@@ -49,7 +57,7 @@ func process_state():
 	process_resolution_pass()
 
 
-func report_on_token(token:Token)->Report:
+func report_on_token(token:Token) -> Report:
 	if token == null:
 		return Report.EMPTY
 	
@@ -75,18 +83,21 @@ func report_on_token(token:Token)->Report:
 	return Report.RESOLVED
 
 
-func reset_token_resolution():
+func reset_token_resolution() -> void:
 	get_tree().call_group("token", "reset_resolved")
 
 
-func process_movement_pass()->bool:
+func process_movement_pass() -> bool:
+	if board == null:
+		return false
+	
 	var moved_any_token:bool = false
 	
 	if board.visuals != null:
 		board.visuals.begin_move_batch()
 	
-	for pos in board.get_positions_in_gravity_order():
-		var token:Token = board.get_token(pos)
+	for position in board.get_positions_in_gravity_order():
+		var token:Token = board.get_token(position)
 		
 		if token == null:
 			continue
@@ -97,9 +108,11 @@ func process_movement_pass()->bool:
 		if token.being_destroyed:
 			continue
 		
-		if board.token_mover.is_token_supported(token) == false:
-			if board.token_mover.try_apply_gravity_to_token(token):
-				moved_any_token = true
+		if board.token_mover.is_token_supported(token):
+			continue
+		
+		if board.token_mover.try_apply_gravity_to_token(token):
+			moved_any_token = true
 	
 	if board.visuals != null:
 		board.visuals.end_move_batch()
@@ -107,9 +120,12 @@ func process_movement_pass()->bool:
 	return moved_any_token
 
 
-func process_resolution_pass():
-	for pos in board.get_positions_in_gravity_order():
-		var token:Token = board.get_token(pos)
+func process_resolution_pass() -> void:
+	if board == null:
+		return
+	
+	for position in board.get_positions_in_gravity_order():
+		var token:Token = board.get_token(position)
 		var report:Report = report_on_token(token)
 		
 		if report == Report.IN_PROGRESS:

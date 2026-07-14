@@ -1,6 +1,7 @@
 extends Node
 
 signal config_changed
+signal session_changed
 
 const YELLOW_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/yellow_v3.tres")
 const RED_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
@@ -10,6 +11,7 @@ const VIOLET_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour re
 const BLUE_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/blue_v3.tres")
 
 var config:MatchConfig = null
+var session:MatchSession = null
 
 
 func _ready() -> void:
@@ -17,6 +19,8 @@ func _ready() -> void:
 
 
 func create_default_config() -> void:
+	clear_session()
+	
 	config = MatchConfig.new()
 	config.starting_token_points = 10
 	config.board_columns = 7
@@ -26,7 +30,46 @@ func create_default_config() -> void:
 	config.starting_player_id = 0
 	config.add_player("Player 1", YELLOW_PALETTE)
 	config.add_player("Player 2", RED_PALETTE)
+	
 	config_changed.emit()
+
+
+func set_config(new_config:MatchConfig) -> bool:
+	if new_config == null:
+		return false
+	
+	clear_session()
+	config = new_config
+	config_changed.emit()
+	return true
+
+
+func create_session_from_config() -> MatchSession:
+	if config == null:
+		push_error("MatchData: Cannot create a match session without a MatchConfig.")
+		return null
+	
+	var new_session:MatchSession = MatchSession.new()
+	
+	if new_session.setup(config) == false:
+		push_error("MatchData: MatchSession could not be created from the current configuration.")
+		return null
+	
+	session = new_session
+	session_changed.emit()
+	return session
+
+
+func clear_session() -> void:
+	if session == null:
+		return
+	
+	session = null
+	session_changed.emit()
+
+
+func has_active_session() -> bool:
+	return session != null
 
 
 func get_player(player_id:int) -> MatchPlayerData:
@@ -34,6 +77,13 @@ func get_player(player_id:int) -> MatchPlayerData:
 		return null
 	
 	return config.get_player(player_id)
+
+
+func get_session_player(player_id:int) -> MatchSessionPlayerData:
+	if session == null:
+		return null
+	
+	return session.get_player(player_id)
 
 
 func get_default_palette_for_player(player_id:int) -> ColorPalette:

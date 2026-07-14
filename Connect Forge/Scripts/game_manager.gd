@@ -1,3 +1,4 @@
+class_name GameManager
 extends Node
 
 signal current_player_changed(player_id:int)
@@ -7,60 +8,110 @@ signal turn_number_changed(turn_number:int)
 signal game_time_changed(total_seconds:int)
 signal score_changed
 
-const BASIC_TOKEN_COUNT:int = 99
-
-var current_turn_phase:Global.TURN_PHASE = Global.TURN_PHASE.NONE
-var current_player_id:int = 0
-var current_turn_number:int = 1
-var elapsed_game_time:float = 0.0
-var elapsed_game_seconds:int = 0
-var game_timer_running:bool = false
-var match_result_recorded:bool = false
+var session:MatchSession = null
 
 @onready var placement_state:Node = $"Placement State"
 @onready var action_state:Node = $"Action State"
 @onready var resolution_state:Node = $"Resolution State"
 @onready var game_over_state:Node = $"Game Over State"
-@onready var turn_timer:MatchTurnTimer = $"Turn Timer"
 
 var board_builder:BoardBuilder = null
 var board:BoardManager = null
 var token_tray_inventory:TokenTrayInventory = null
 var player_token_trays_ui:PlayerTokenTraysUI = null
-var connected_match_config:MatchConfig = null
+var turn_timer:MatchTurnTimer = null
+var token_drag_controller:TokenDragController = null
+var game_over_menu:GameOverMenu = null
+
+var connected_session:MatchSession = null
+var is_initialized:bool = false
 
 
-func _ready() -> void:
-	gather_groups()
-	connect_match_data_signals()
-	connect_match_config_signals()
-	apply_board_config(false)
-	setup_token_tray_inventory()
-	setup_states()
-	rebuild_player_trays()
+func setup(new_board_builder:BoardBuilder, new_board:BoardManager, new_token_tray_inventory:TokenTrayInventory, new_player_token_trays_ui:PlayerTokenTraysUI, new_turn_timer:MatchTurnTimer, new_token_drag_controller:TokenDragController, new_game_over_menu:GameOverMenu) -> void:
+	board_builder = new_board_builder
+	board = new_board
+	token_tray_inventory = new_token_tray_inventory
+	player_token_trays_ui = new_player_token_trays_ui
+	turn_timer = new_turn_timer
+	token_drag_controller = new_token_drag_controller
+	game_over_menu = new_game_over_menu
+
+
+func initialize_game() -> void:
+	if is_initialized:
+		return
 	
-	if turn_timer != null:
-		turn_timer.setup(self)
-		
+	if validate_dependencies() == false:
+		return
+	
+	if create_match_session() == false:
+		return
+	
+	apply_board_session(false)
+	board_builder.rebuild_board(false)
+	
+	if setup_token_inventory_from_session() == false:
+		return
+	
+	setup_states()
+	
+	is_initialized = true
+	
+	players_changed.emit()
+	player_names_changed.emit()
+	score_changed.emit()
+	
 	start_game()
 
 
-func gather_groups() -> void:
-	board = (
-		get_tree().get_first_node_in_group("board pool")
-		as BoardManager
-	)
+func create_match_session() -> bool:
+	disconnect_session_signals()
 	
-	board_builder = (
-		get_tree().get_first_node_in_group("board builder")
-		as BoardBuilder
-	)
+	session = MatchData.create_session_from_config()
 	
-	player_token_trays_ui = (
-		get_tree().get_first_node_in_group(
-			"player token trays ui"
-		) as PlayerTokenTraysUI
-	)
+	if session == null:
+		push_error("GameManager: MatchData could not create a MatchSession.")
+		return false
+	
+	board.set_match_session(session)
+	
+	connected_session = session
+	connect_session_signals()
+	return true
+
+
+func validate_dependencies() -> bool:
+	var dependencies_are_valid:bool = true
+	
+	if board_builder == null:
+		push_error("GameManager: BoardBuilder dependency is missing.")
+		dependencies_are_valid = false
+	
+	if board == null:
+		push_error("GameManager: BoardManager dependency is missing.")
+		dependencies_are_valid = false
+	
+	if token_tray_inventory == null:
+		push_error("GameManager: TokenTrayInventory dependency is missing.")
+		dependencies_are_valid = false
+	
+	if player_token_trays_ui == null:
+		push_error("GameManager: PlayerTokenTraysUI dependency is missing.")
+		dependencies_are_valid = false
+	
+	if turn_timer == null:
+		push_error("GameManager: MatchTurnTimer dependency is missing.")
+		dependencies_are_valid = false
+	
+	if token_drag_controller == null:
+		push_error("GameManager: TokenDragController dependency is missing.")
+		dependencies_are_valid = false
+	
+	if game_over_menu == null:
+		push_error("GameManager: GameOverMenu dependency is missing.")
+		dependencies_are_valid = false
+	
+	return dependencies_are_valid
 
 
 func setup_states() -> void:
@@ -74,201 +125,226 @@ func setup_states() -> void:
 		resolution_state.setup(self, board)
 	
 	if game_over_state != null:
-		game_over_state.setup(self, board)
+		game_over_state.setup(self, board, game_over_menu)
 
 
-func connect_match_data_signals() -> void:
-	if MatchData.config_changed.is_connected(
-		_on_match_config_changed
-	) == false:
-		MatchData.config_changed.connect(
-			_on_match_config_changed
-		)
-
-
-func connect_match_config_signals() -> void:
-	disconnect_match_config_signals()
-	
-	if MatchData.config == null:
+func connect_session_signals() -> void:
+	if connected_session == null:
 		return
 	
-	connected_match_config = MatchData.config
+	if connected_session.players_changed.is_connected(_on_session_players_changed) == false:
+		connected_session.players_changed.connect(_on_session_players_changed)
 	
-	if connected_match_config.players_changed.is_connected(
-		_on_match_players_changed
-	) == false:
-		connected_match_config.players_changed.connect(
-			_on_match_players_changed
-		)
+	if connected_session.current_player_changed.is_connected(_on_session_current_player_changed) == false:
+		connected_session.current_player_changed.connect(_on_session_current_player_changed)
 	
-	if connected_match_config.board_settings_changed.is_connected(
-		_on_board_settings_changed
-	) == false:
-		connected_match_config.board_settings_changed.connect(
-			_on_board_settings_changed
-		)
+	if connected_session.turn_number_changed.is_connected(_on_session_turn_number_changed) == false:
+		connected_session.turn_number_changed.connect(_on_session_turn_number_changed)
 	
-	if connected_match_config.token_settings_changed.is_connected(
-		_on_token_settings_changed
-	) == false:
-		connected_match_config.token_settings_changed.connect(
-			_on_token_settings_changed
-		)
+	if connected_session.game_time_changed.is_connected(_on_session_game_time_changed) == false:
+		connected_session.game_time_changed.connect(_on_session_game_time_changed)
+	
+	if connected_session.score_changed.is_connected(_on_session_score_changed) == false:
+		connected_session.score_changed.connect(_on_session_score_changed)
 
 
-func disconnect_match_config_signals() -> void:
-	if connected_match_config == null:
+func disconnect_session_signals() -> void:
+	if connected_session == null:
 		return
 	
-	if connected_match_config.players_changed.is_connected(
-		_on_match_players_changed
-	):
-		connected_match_config.players_changed.disconnect(
-			_on_match_players_changed
-		)
+	if connected_session.players_changed.is_connected(_on_session_players_changed):
+		connected_session.players_changed.disconnect(_on_session_players_changed)
 	
-	if connected_match_config.board_settings_changed.is_connected(
-		_on_board_settings_changed
-	):
-		connected_match_config.board_settings_changed.disconnect(
-			_on_board_settings_changed
-		)
+	if connected_session.current_player_changed.is_connected(_on_session_current_player_changed):
+		connected_session.current_player_changed.disconnect(_on_session_current_player_changed)
 	
-	if connected_match_config.token_settings_changed.is_connected(
-		_on_token_settings_changed
-	):
-		connected_match_config.token_settings_changed.disconnect(
-			_on_token_settings_changed
-		)
+	if connected_session.turn_number_changed.is_connected(_on_session_turn_number_changed):
+		connected_session.turn_number_changed.disconnect(_on_session_turn_number_changed)
 	
-	connected_match_config = null
+	if connected_session.game_time_changed.is_connected(_on_session_game_time_changed):
+		connected_session.game_time_changed.disconnect(_on_session_game_time_changed)
+	
+	if connected_session.score_changed.is_connected(_on_session_score_changed):
+		connected_session.score_changed.disconnect(_on_session_score_changed)
+	
+	connected_session = null
 
 
-func _on_match_config_changed() -> void:
-	connect_match_config_signals()
-	apply_board_config()
-	
-	if token_tray_inventory != null:
-		setup_token_trays_from_match_data()
-	
-	if current_player_id >= get_player_count():
-		current_player_id = 0
-	
-	rebuild_player_trays()
+func _on_session_players_changed() -> void:
 	players_changed.emit()
 	player_names_changed.emit()
+
+
+func _on_session_current_player_changed(player_id:int) -> void:
+	current_player_changed.emit(player_id)
+
+
+func _on_session_turn_number_changed(turn_number:int) -> void:
+	turn_number_changed.emit(turn_number)
+
+
+func _on_session_game_time_changed(total_seconds:int) -> void:
+	game_time_changed.emit(total_seconds)
+
+
+func _on_session_score_changed() -> void:
 	score_changed.emit()
 
 
-func _on_match_players_changed() -> void:
-	if token_tray_inventory != null:
-		setup_token_trays_from_match_data()
+func get_current_turn_phase() -> Global.TURN_PHASE:
+	if session == null:
+		return Global.TURN_PHASE.NONE
 	
-	if current_player_id >= get_player_count():
-		current_player_id = 0
-	
-	rebuild_player_trays()
-	players_changed.emit()
-	player_names_changed.emit()
-	score_changed.emit()
+	return session.current_turn_phase
 
 
-func _on_board_settings_changed() -> void:
-	apply_board_config()
-
-
-func _on_token_settings_changed() -> void:
-	if token_tray_inventory == null:
+func set_current_turn_phase(new_phase:Global.TURN_PHASE) -> void:
+	if session == null:
 		return
 	
-	setup_token_trays_from_match_data()
+	session.set_turn_phase(new_phase)
 
-func get_player_data(player_id:int) -> MatchPlayerData:
-	if MatchData.config == null:
+
+func get_current_player_id() -> int:
+	if session == null:
+		return -1
+	
+	return session.current_player_id
+
+
+func set_current_player_id(player_id:int) -> bool:
+	if session == null:
+		return false
+	
+	return session.set_current_player(player_id)
+
+
+func get_current_turn_number() -> int:
+	if session == null:
+		return 1
+	
+	return session.current_turn_number
+
+
+func set_current_turn_number(new_turn_number:int) -> void:
+	if session == null:
+		return
+	
+	session.set_turn_number(new_turn_number)
+
+
+func increment_current_turn_number() -> void:
+	if session == null:
+		return
+	
+	session.increment_turn_number()
+
+
+func get_session_player_data(player_id:int) -> MatchSessionPlayerData:
+	if session == null:
 		return null
 	
-	return MatchData.config.get_player(player_id)
+	return session.get_player(player_id)
 
 
 func get_player_count() -> int:
-	if MatchData.config == null:
+	if session == null:
 		return 0
 	
-	return MatchData.config.get_player_count()
+	return session.get_player_count()
+
+
+func get_player_name(player_id:int) -> String:
+	if session == null:
+		return "Player " + str(player_id + 1)
+	
+	return session.get_player_name(player_id)
 
 
 func get_player_palette(player_id:int) -> ColorPalette:
-	if MatchData.config == null:
+	if session == null:
 		return null
 	
-	return MatchData.config.get_player_palette(player_id)
+	return session.get_player_palette(player_id)
 
 
 func is_valid_player_id(player_id:int) -> bool:
-	if player_id < 0:
+	if session == null:
 		return false
 	
-	if player_id >= get_player_count():
-		return false
+	return session.is_valid_player_id(player_id)
+
+
+func get_current_round_number() -> int:
+	if session == null:
+		return 1
 	
-	return true
+	return session.current_round_number
 
 
-func apply_board_config(
-	rebuild_if_size_changed:bool = true
-) -> void:
-	if MatchData.config == null:
+func get_turn_timer_seconds() -> int:
+	if session == null:
+		return 0
+	
+	return session.get_turn_timer_seconds()
+
+
+func apply_board_session(rebuild_if_size_changed:bool = true) -> void:
+	if session == null:
 		return
 	
 	if board_builder != null:
-		board_builder.apply_match_config(
-			MatchData.config,
-			rebuild_if_size_changed
-		)
-		
+		board_builder.apply_match_session(session, rebuild_if_size_changed)
 		return
 	
-	# Fallback only. Dimensions must not be changed here.
-	# Doing so would desynchronise the logical and visual boards.
 	if board == null:
 		return
 	
 	if board.settings == null:
 		return
 	
-	board.settings.tokens_to_win = (
-		MatchData.config.tokens_to_win
-	)
+	board.settings.columns = session.get_board_columns()
+	board.settings.rows = session.get_board_rows()
+	board.settings.tokens_to_win = session.get_tokens_to_win()
+	board.refresh_gravity_order()
 
 
 func start_game() -> void:
-	match_result_recorded = false
-	current_turn_number = 1
-	turn_number_changed.emit(current_turn_number)
-	
-	reset_game_timer()
-	start_game_timer()
-	
-	if get_player_count() <= 0:
-		current_turn_phase = Global.TURN_PHASE.NONE
+	if session == null:
 		return
 	
-	var starting_player_id:int = (
-		MatchData.get_resolved_starting_player_id()
-	)
+	if get_player_count() <= 0:
+		set_current_turn_phase(Global.TURN_PHASE.NONE)
+		return
+	
+	var starting_player_id:int = session.get_resolved_starting_player_id()
 	
 	if is_valid_player_id(starting_player_id) == false:
 		starting_player_id = 0
 	
+	session.prepare_first_round(starting_player_id)
+	session.start_game_timer()
+	
 	start_turn(starting_player_id)
+	
+	turn_number_changed.emit(get_current_turn_number())
+	game_time_changed.emit(session.elapsed_game_seconds)
+	score_changed.emit()
 
 
 func start_turn(player_id:int) -> void:
+	if session == null:
+		return
+	
 	if is_valid_player_id(player_id) == false:
 		return
 	
-	current_player_id = player_id
-	current_player_changed.emit(current_player_id)
+	var player_changed:bool = get_current_player_id() != player_id
+	
+	set_current_player_id(player_id)
+	
+	if player_changed == false:
+		current_player_changed.emit(player_id)
 	
 	if placement_state != null:
 		placement_state.enter_state()
@@ -277,51 +353,44 @@ func start_turn(player_id:int) -> void:
 
 
 func end_turn() -> void:
+	if session == null:
+		return
+	
 	if get_player_count() <= 0:
 		return
 	
 	var next_player_id:int = get_next_player_id()
 	
 	if has_completed_full_turn(next_player_id):
-		current_turn_number += 1
-		turn_number_changed.emit(current_turn_number)
+		increment_current_turn_number()
 	
 	start_turn(next_player_id)
 
 
-func has_completed_full_turn(
-	next_player_id:int
-) -> bool:
+func has_completed_full_turn(next_player_id:int) -> bool:
 	if get_player_count() <= 1:
 		return true
 	
-	if next_player_id == 0 and current_player_id != 0:
+	if next_player_id == 0 and get_current_player_id() != 0:
 		return true
 	
 	return false
 
 
 func get_next_player_id() -> int:
-	var player_count:int = get_player_count()
+	if session == null:
+		return -1
 	
-	if player_count <= 0:
-		return 0
-	
-	return (
-		(current_player_id + 1) %
-		player_count
-	)
+	return session.get_next_player_id()
 
 
 func _process(delta:float) -> void:
-	update_game_timer(delta)
+	if session != null:
+		session.update_game_timer(delta)
+	
 	debug_gravity_changes()
 	
-	match current_turn_phase:
-		Global.TURN_PHASE.PLACEMENT:
-			if placement_state != null:
-				pass
-		
+	match get_current_turn_phase():
 		Global.TURN_PHASE.ACTION:
 			if action_state != null:
 				action_state.process_state()
@@ -339,24 +408,16 @@ func debug_gravity_changes() -> void:
 	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
 	
 	if Input.is_action_just_pressed("right_arrow"):
-		changed = board.set_gravity_direction(
-			GRID_DIRECTION.RIGHT
-		)
+		changed = board.set_gravity_direction(GRID_DIRECTION.RIGHT)
 	
 	if Input.is_action_just_pressed("left_arrow"):
-		changed = board.set_gravity_direction(
-			GRID_DIRECTION.LEFT
-		)
+		changed = board.set_gravity_direction(GRID_DIRECTION.LEFT)
 	
 	if Input.is_action_just_pressed("up_arrow"):
-		changed = board.set_gravity_direction(
-			GRID_DIRECTION.UP
-		)
+		changed = board.set_gravity_direction(GRID_DIRECTION.UP)
 	
 	if Input.is_action_just_pressed("down_arrow"):
-		changed = board.set_gravity_direction(
-			GRID_DIRECTION.DOWN
-		)
+		changed = board.set_gravity_direction(GRID_DIRECTION.DOWN)
 	
 	if changed == false:
 		return
@@ -365,84 +426,19 @@ func debug_gravity_changes() -> void:
 		action_state.enter_state()
 
 
-func setup_token_tray_inventory() -> void:
-	token_tray_inventory = (
-		get_tree().get_first_node_in_group(
-			"token tray inventory"
-		) as TokenTrayInventory
-	)
-	
+func setup_token_inventory_from_session() -> bool:
 	if token_tray_inventory == null:
-		token_tray_inventory = TokenTrayInventory.new()
-		token_tray_inventory.add_to_group(
-			"token tray inventory"
-		)
-		
-		add_child(token_tray_inventory)
+		push_error("GameManager: TokenTrayInventory dependency is missing.")
+		return false
 	
-	setup_token_trays_from_match_data()
-
-
-func setup_token_trays_from_match_data() -> void:
-	if token_tray_inventory == null:
-		return
+	if session == null:
+		push_error("GameManager: Cannot configure gameplay inventory without a MatchSession.")
+		return false
 	
-	token_tray_inventory.setup_for_players(
-		get_player_count()
-	)
-	
-	for player_id in range(get_player_count()):
-		load_player_tokens_into_tray(player_id)
-
-
-func load_player_tokens_into_tray(
-	player_id:int
-) -> void:
-	if token_tray_inventory == null:
-		return
-	
-	var player:MatchPlayerData = get_player_data(
-		player_id
-	)
-	
-	if player == null:
-		return
-	
-	token_tray_inventory.set_token_count(
-		player_id,
-		TokenLibrary.TokenType.BASIC,
-		BASIC_TOKEN_COUNT
-	)
-	
-	for token_type_value in player.selected_tokens.keys():
-		var token_type:int = int(token_type_value)
-		
-		var token_count:int = player.get_token_count(
-			token_type
-		)
-		
-		if token_count <= 0:
-			continue
-		
-		token_tray_inventory.set_token_count(
-			player_id,
-			token_type,
-			token_count
-		)
-
-
-func reset_token_trays() -> void:
-	setup_token_trays_from_match_data()
+	return token_tray_inventory.setup_for_session(session)
 
 
 func rebuild_player_trays() -> void:
-	if player_token_trays_ui == null:
-		player_token_trays_ui = (
-			get_tree().get_first_node_in_group(
-				"player token trays ui"
-			) as PlayerTokenTraysUI
-		)
-	
 	if player_token_trays_ui == null:
 		return
 	
@@ -450,151 +446,102 @@ func rebuild_player_trays() -> void:
 
 
 func reset_game_timer() -> void:
-	elapsed_game_time = 0.0
-	elapsed_game_seconds = 0
+	if session == null:
+		return
 	
-	game_time_changed.emit(
-		elapsed_game_seconds
-	)
+	session.reset_game_timer()
 
 
 func start_game_timer() -> void:
-	game_timer_running = true
+	if session == null:
+		return
+	
+	session.start_game_timer()
 
 
 func stop_game_timer() -> void:
-	game_timer_running = false
+	if session == null:
+		return
 	
-	game_time_changed.emit(
-		elapsed_game_seconds
-	)
+	session.stop_game_timer()
 
 
-func update_game_timer(delta:float) -> void:
-	if game_timer_running == false:
-		return
+func get_elapsed_game_seconds() -> int:
+	if session == null:
+		return 0
 	
-	if current_turn_phase == Global.TURN_PHASE.GAME_OVER:
-		stop_game_timer()
-		return
-	
-	elapsed_game_time += delta
-	
-	var new_elapsed_seconds:int = int(
-		floor(elapsed_game_time)
-	)
-	
-	if new_elapsed_seconds == elapsed_game_seconds:
-		return
-	
-	elapsed_game_seconds = new_elapsed_seconds
-	
-	game_time_changed.emit(
-		elapsed_game_seconds
-	)
+	return session.elapsed_game_seconds
 
 
 func get_elapsed_time_text() -> String:
-	return format_seconds_as_minutes_seconds(
-		elapsed_game_seconds
-	)
+	if session == null:
+		return "00:00"
+	
+	return session.get_elapsed_time_text()
 
 
-func format_seconds_as_minutes_seconds(
-	total_seconds:int
-) -> String:
-	var used_seconds:int = max(
-		total_seconds,
-		0
-	)
+func format_seconds_as_minutes_seconds(total_seconds:int) -> String:
+	if session != null:
+		return session.format_seconds_as_minutes_seconds(total_seconds)
 	
-	var minutes:int = int(
-		used_seconds /
-		60.0
-	)
-	
+	var used_seconds:int = max(total_seconds, 0)
+	var minutes:int = int(used_seconds / 60.0)
 	var seconds:int = used_seconds % 60
 	
-	return "%02d:%02d" % [
-		minutes,
-		seconds
-	]
+	return "%02d:%02d" % [minutes, seconds]
 
 
 func record_match_result(winner_id:int) -> bool:
-	if match_result_recorded:
+	if session == null:
 		return false
 	
-	if is_valid_player_id(winner_id) == false:
-		return false
-	
-	for player_id in range(get_player_count()):
-		var player:MatchPlayerData = get_player_data(
-			player_id
-		)
-		
-		if player == null:
-			continue
-		
-		if player_id == winner_id:
-			player.wins += 1
-		else:
-			player.losses += 1
-	
-	match_result_recorded = true
-	score_changed.emit()
-	return true
+	return session.record_match_result(winner_id)
 
 
 func get_player_wins(player_id:int) -> int:
-	var player:MatchPlayerData = get_player_data(
-		player_id
-	)
-	
-	if player == null:
+	if session == null:
 		return 0
 	
-	return player.wins
+	return session.get_player_wins(player_id)
+
+
+func get_player_losses(player_id:int) -> int:
+	if session == null:
+		return 0
+	
+	return session.get_player_losses(player_id)
 
 
 func start_next_round() -> void:
-	get_tree().call_group(
-		"winning_line_visual",
-		"queue_free"
-	)
+	if session == null:
+		return
 	
-	current_turn_phase = Global.TURN_PHASE.NONE
+	get_tree().call_group("winning_line_visual", "queue_free")
+	set_current_turn_phase(Global.TURN_PHASE.NONE)
+	stop_turn_timer()
 	
-	var drag_controller:TokenDragController = (
-		get_tree().get_first_node_in_group(
-			"token drag controller"
-		) as TokenDragController
-	)
-	
-	if drag_controller != null:
-		drag_controller.cancel_drag()
-	
-	if placement_state != null:
-		if placement_state.has_method(
-			"clear_placement_token"
-		):
-			placement_state.clear_placement_token()
+	if token_drag_controller != null:
+		token_drag_controller.cancel_drag()
 	
 	if board != null:
 		await board.empty_board_with_fall_effect()
-		
-		board.set_gravity_direction(
-			BoardSetting.GRID_DIRECTION.DOWN,
-			false
-		)
+		board.set_gravity_direction(BoardSetting.GRID_DIRECTION.DOWN, false)
 	
-	apply_board_config(false)
+	apply_board_session(false)
 	
 	if board_builder != null:
-		board_builder.rebuild_board()
+		board_builder.rebuild_board(false)
 	
-	reset_token_trays()
-	start_game()
+	var starting_player_id:int = session.get_resolved_starting_player_id()
+	
+	if is_valid_player_id(starting_player_id) == false:
+		starting_player_id = 0
+	
+	session.prepare_next_round(starting_player_id)
+	session.start_game_timer()
+	
+	start_turn(starting_player_id)
+
 
 func start_turn_timer() -> void:
 	if turn_timer == null:

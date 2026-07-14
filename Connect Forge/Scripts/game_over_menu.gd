@@ -2,6 +2,7 @@ class_name GameOverMenu
 extends Control
 
 const DEFAULT_PLAYER_SCORE_ROW_SCENE:PackedScene = preload("res://Scenes/User Interface/player_score_row.tscn")
+const TOKEN_LOBBY_SCENE_PATH:String = "res://Scenes/User Interface/Token Lobby/token_lobby.tscn"
 
 @export_group("Scenes")
 @export var player_score_row_scene:PackedScene = DEFAULT_PLAYER_SCORE_ROW_SCENE
@@ -24,16 +25,13 @@ const DEFAULT_PLAYER_SCORE_ROW_SCENE:PackedScene = preload("res://Scenes/User In
 @onready var backdrop:ColorRect = $Backdrop
 @onready var popup_juice_player:UIJuicePlayer = $PopupCenter/PopupRoot/UIJuicePlayer
 @onready var backdrop_juice_player:UIJuicePlayer = $PopupCenter/PopupRoot/UIJuicePlayerBackdrop
-const TOKEN_LOBBY_SCENE_PATH:String = "res://Scenes/User Interface/Token Lobby/token_lobby.tscn"
-var game_manager:Node = null
+
+var game_manager:GameManager = null
 var winner_id:int = -1
 var show_request_id:int = 0
 
 
 func _ready() -> void:
-	add_to_group("game over menu")
-	game_manager = get_tree().get_first_node_in_group("game manager")
-	
 	if player_score_row_scene == null:
 		player_score_row_scene = DEFAULT_PLAYER_SCORE_ROW_SCENE
 	
@@ -46,14 +44,13 @@ func _ready() -> void:
 			return_to_lobby_button.pressed.connect(_on_return_to_lobby_pressed)
 	
 	hide_menu_instant()
-	
-	
-	hide_menu_instant()
+
+
+func setup(new_game_manager:GameManager) -> void:
+	game_manager = new_game_manager
 
 
 func show_game_over(new_winner_id:int) -> void:
-	resolve_game_manager()
-	
 	if game_manager == null:
 		return
 	
@@ -190,7 +187,6 @@ func setup_outer_frame(winner_palette:ColorPalette) -> void:
 
 func rebuild_score_rows() -> void:
 	clear_score_rows()
-	resolve_game_manager()
 	
 	if game_manager == null:
 		return
@@ -282,64 +278,31 @@ func get_row_position(row_index:int, row_count:int) -> PlayerScoreRow.RowPositio
 
 
 func get_player_count() -> int:
-	resolve_game_manager()
+	if game_manager == null:
+		return 0
 	
-	if game_manager != null:
-		if game_manager.has_method("get_player_count"):
-			return int(game_manager.get_player_count())
-	
-	if MatchData.config != null:
-		return MatchData.config.get_player_count()
-	
-	return 0
+	return game_manager.get_player_count()
 
 
 func get_player_name(player_id:int) -> String:
-	resolve_game_manager()
+	if game_manager == null:
+		return "Player " + str(player_id + 1)
 	
-	if game_manager != null:
-		if game_manager.has_method("get_player_name"):
-			return str(game_manager.get_player_name(player_id))
-	
-	if MatchData.config != null:
-		return MatchData.config.get_player_name(player_id)
-	
-	return "Player " + str(player_id + 1)
+	return game_manager.get_player_name(player_id)
 
 
 func get_player_score(player_id:int) -> int:
-	resolve_game_manager()
-	
-	if game_manager != null:
-		if game_manager.has_method("get_player_wins"):
-			return int(game_manager.get_player_wins(player_id))
-	
-	var player_data:MatchPlayerData = get_player_data(player_id)
-	
-	if player_data == null:
+	if game_manager == null:
 		return 0
 	
-	return player_data.wins
+	return game_manager.get_player_wins(player_id)
 
 
 func get_player_palette(player_id:int) -> ColorPalette:
-	resolve_game_manager()
-	
-	if game_manager != null:
-		if game_manager.has_method("get_player_palette"):
-			return game_manager.get_player_palette(player_id) as ColorPalette
-	
-	if MatchData.config != null:
-		return MatchData.config.get_player_palette(player_id)
-	
-	return null
-
-
-func get_player_data(player_id:int) -> MatchPlayerData:
-	if MatchData.config == null:
+	if game_manager == null:
 		return null
 	
-	return MatchData.config.get_player(player_id)
+	return game_manager.get_player_palette(player_id)
 
 
 func get_palette_colour(palette:ColorPalette, colour_index:int, fallback:Color) -> Color:
@@ -356,18 +319,10 @@ func get_palette_colour(palette:ColorPalette, colour_index:int, fallback:Color) 
 
 
 func is_valid_player_id(player_id:int) -> bool:
-	if player_id < 0:
+	if game_manager == null:
 		return false
 	
-	return player_id < get_player_count()
-
-
-func resolve_game_manager() -> void:
-	if game_manager != null:
-		if is_instance_valid(game_manager):
-			return
-	
-	game_manager = get_tree().get_first_node_in_group("game manager")
+	return game_manager.is_valid_player_id(player_id)
 
 
 func _on_next_round_pressed() -> void:
@@ -393,13 +348,11 @@ func finish_next_round_transition() -> void:
 	if next_round_button != null:
 		next_round_button.disabled = false
 	
-	resolve_game_manager()
-	
 	if game_manager == null:
 		return
 	
-	if game_manager.has_method("start_next_round"):
-		game_manager.start_next_round()
+	game_manager.start_next_round()
+
 
 func _on_return_to_lobby_pressed() -> void:
 	if return_to_lobby_button != null:

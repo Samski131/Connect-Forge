@@ -1,41 +1,46 @@
 class_name TimeCounterLabelUI
 extends Label
 
-var game_manager:Node = null
+var game_manager:GameManager = null
 
 
 func _ready() -> void:
-	game_manager = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager != null:
-		if game_manager.has_signal("game_time_changed"):
-			if game_manager.game_time_changed.is_connected(_on_game_time_changed) == false:
-				game_manager.game_time_changed.connect(_on_game_time_changed)
-	
 	refresh()
 
 
-func refresh() -> void:
-	if self == null:
-		return
-	
+func setup(new_game_manager:GameManager) -> void:
+	disconnect_game_manager_signals()
+	game_manager = new_game_manager
+	connect_game_manager_signals()
+	refresh()
+
+
+func connect_game_manager_signals() -> void:
 	if game_manager == null:
-		self.text = "00:00"
 		return
 	
-	if game_manager.has_method("get_elapsed_time_text"):
-		self.text = game_manager.get_elapsed_time_text()
+	if game_manager.game_time_changed.is_connected(_on_game_time_changed) == false:
+		game_manager.game_time_changed.connect(_on_game_time_changed)
+
+
+func disconnect_game_manager_signals() -> void:
+	if game_manager == null:
 		return
 	
-	var elapsed_seconds:int = int(game_manager.get("elapsed_game_seconds"))
-	self.text = format_seconds_as_minutes_seconds(elapsed_seconds)
+	if game_manager.game_time_changed.is_connected(_on_game_time_changed):
+		game_manager.game_time_changed.disconnect(_on_game_time_changed)
+
+
+func refresh() -> void:
+	if game_manager == null:
+		text = "00:00"
+		return
+	
+	text = game_manager.get_elapsed_time_text()
 
 
 func _on_game_time_changed(total_seconds:int) -> void:
-	if self == null:
-		return
-	
-	self.text = format_seconds_as_minutes_seconds(total_seconds)
+	text = format_seconds_as_minutes_seconds(total_seconds)
 
 
 func format_seconds_as_minutes_seconds(total_seconds:int) -> String:

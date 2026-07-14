@@ -5,8 +5,6 @@ extends Resource
 @export var colour_palette:ColorPalette
 @export var token_points_remaining:int = 0
 @export var selected_tokens:Dictionary = {}
-@export var wins:int = 0
-@export var losses:int = 0
 
 
 func setup(new_name:String, new_palette:ColorPalette, starting_token_points:int) -> void:

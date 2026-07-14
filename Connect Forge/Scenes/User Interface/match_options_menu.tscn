@@ -94,11 +94,21 @@ resource_local_to_scene = false
 resource_local_to_scene = false
 allow_unpress = true
 
+[sub_resource type="LabelSettings" id="LabelSettings_ootgn"]
+font_size = 24
+font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+
 [sub_resource type="ButtonGroup" id="ButtonGroup_bqt2o"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_wx241"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_i32ml"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_so8ye"]
+font_size = 24
+font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wx241"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dhjdk"]
 content_margin_top = 8.0
@@ -628,6 +638,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
 
 [node name="BoardSizeButtons" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel" unique_id=2081229668]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -657,6 +668,16 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_3axpr")
 text = "14 x 12"
+
+[node name="BoardSizeReadOnlyLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/BoardSizeRow/BoardSizeRow/Margin/OptionsPanel" unique_id=1804414479]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(275, 44)
+layout_mode = 2
+text = "7 x 6"
+label_settings = SubResource("LabelSettings_ootgn")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Seperator4" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=674362423 instance=ExtResource("9_1tunj")]
 layout_mode = 2
@@ -714,6 +735,7 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_mmvkj")
 
 [node name="TimerButtons" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel" unique_id=384379960]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
@@ -744,6 +766,15 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_i32ml")
 text = "60s"
+
+[node name="TurnTimerReadOnlyLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows/TurnTimerRow/TurnTimerRow/Margin/OptionsPanel" unique_id=1702951885]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(275, 44)
+layout_mode = 2
+text = "Off"
+label_settings = SubResource("LabelSettings_so8ye")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Seperator5" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/OptionsMargin/OptionsPanel/OptionsRows" unique_id=749649251 instance=ExtResource("9_1tunj")]
 layout_mode = 2
@@ -804,10 +835,13 @@ theme_override_colors/font_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
 theme_override_colors/font_pressed_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
 theme_override_colors/font_hover_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+theme_override_colors/font_disabled_color = Color(0.023529412, 0.10980392, 0.19607843, 1)
+theme_override_colors/icon_disabled_color = Color(1, 1, 1, 0)
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_mmvkj")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_mmvkj")
 theme_override_styles/hover = SubResource("StyleBoxFlat_mmvkj")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_wx241")
 alignment = 1
 selected = 1
 item_count = 3

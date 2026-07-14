@@ -6,7 +6,7 @@ const PLAYER_COLOUR_INDEX:int = 2
 @export_group("Timer")
 @export var warning_seconds:int = 10
 
-var game_manager:Node = null
+var game_manager:GameManager = null
 var turn_timer:MatchTurnTimer = null
 var timer_is_displayed:bool = false
 var initial_timer_state_applied:bool = false
@@ -19,8 +19,18 @@ var last_warning_second:int = -1
 
 
 func _ready() -> void:
-	game_manager = get_tree().get_first_node_in_group("game manager")
-	turn_timer = get_tree().get_first_node_in_group("turn timer") as MatchTurnTimer
+	refresh_current_player()
+	hide_turn_timer_instant()
+
+
+func setup(new_game_manager:GameManager, new_turn_timer:MatchTurnTimer) -> void:
+	disconnect_game_manager_signals()
+	disconnect_turn_timer_signals()
+	
+	game_manager = new_game_manager
+	turn_timer = new_turn_timer
+	initial_timer_state_applied = false
+	last_warning_second = -1
 	
 	connect_game_manager_signals()
 	connect_turn_timer_signals()
@@ -32,17 +42,28 @@ func connect_game_manager_signals() -> void:
 	if game_manager == null:
 		return
 	
-	if game_manager.has_signal("current_player_changed"):
-		if game_manager.current_player_changed.is_connected(_on_current_player_changed) == false:
-			game_manager.current_player_changed.connect(_on_current_player_changed)
+	if game_manager.current_player_changed.is_connected(_on_current_player_changed) == false:
+		game_manager.current_player_changed.connect(_on_current_player_changed)
 	
-	if game_manager.has_signal("player_names_changed"):
-		if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
-			game_manager.player_names_changed.connect(_on_player_names_changed)
+	if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
+		game_manager.player_names_changed.connect(_on_player_names_changed)
 	
-	if game_manager.has_signal("players_changed"):
-		if game_manager.players_changed.is_connected(_on_players_changed) == false:
-			game_manager.players_changed.connect(_on_players_changed)
+	if game_manager.players_changed.is_connected(_on_players_changed) == false:
+		game_manager.players_changed.connect(_on_players_changed)
+
+
+func disconnect_game_manager_signals() -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.current_player_changed.is_connected(_on_current_player_changed):
+		game_manager.current_player_changed.disconnect(_on_current_player_changed)
+	
+	if game_manager.player_names_changed.is_connected(_on_player_names_changed):
+		game_manager.player_names_changed.disconnect(_on_player_names_changed)
+	
+	if game_manager.players_changed.is_connected(_on_players_changed):
+		game_manager.players_changed.disconnect(_on_players_changed)
 
 
 func connect_turn_timer_signals() -> void:
@@ -54,6 +75,17 @@ func connect_turn_timer_signals() -> void:
 	
 	if turn_timer.time_changed.is_connected(_on_turn_time_changed) == false:
 		turn_timer.time_changed.connect(_on_turn_time_changed)
+
+
+func disconnect_turn_timer_signals() -> void:
+	if turn_timer == null:
+		return
+	
+	if turn_timer.timer_enabled_changed.is_connected(_on_timer_enabled_changed):
+		turn_timer.timer_enabled_changed.disconnect(_on_timer_enabled_changed)
+	
+	if turn_timer.time_changed.is_connected(_on_turn_time_changed):
+		turn_timer.time_changed.disconnect(_on_turn_time_changed)
 
 
 func apply_initial_timer_state() -> void:
@@ -78,7 +110,7 @@ func refresh_current_player() -> void:
 		current_player_label.add_theme_color_override("font_color", Color.WHITE)
 		return
 	
-	var player_id:int = game_manager.current_player_id
+	var player_id:int = game_manager.get_current_player_id()
 	var player_name:String = get_display_player_name(player_id)
 	var player_colour:Color = get_player_colour(player_id)
 	
@@ -112,7 +144,7 @@ func should_display_turn_timer() -> bool:
 	if game_manager == null:
 		return false
 	
-	if game_manager.current_turn_phase == Global.TURN_PHASE.GAME_OVER:
+	if game_manager.get_current_turn_phase() == Global.TURN_PHASE.GAME_OVER:
 		return false
 	
 	return true
@@ -144,7 +176,8 @@ func hide_turn_timer() -> void:
 		timer_juice.exit()
 		return
 	
-	turn_time_label.visible = false
+	if turn_time_label != null:
+		turn_time_label.visible = false
 
 
 func show_turn_timer_instant() -> void:
@@ -228,16 +261,10 @@ func get_display_player_name(player_id:int) -> String:
 	if game_manager == null:
 		return "Player"
 	
-	if game_manager.has_method("is_valid_player_id"):
-		if game_manager.is_valid_player_id(player_id) == false:
-			return "Player"
-	elif player_id < 0:
+	if game_manager.is_valid_player_id(player_id) == false:
 		return "Player"
 	
-	if game_manager.has_method("get_player_name") == false:
-		return "Player"
-	
-	var player_name:String = str(game_manager.get_player_name(player_id)).strip_edges()
+	var player_name:String = game_manager.get_player_name(player_id).strip_edges()
 	
 	if player_name == "":
 		return "Player"
@@ -249,13 +276,7 @@ func get_player_colour(player_id:int) -> Color:
 	if game_manager == null:
 		return Color.WHITE
 	
-	if game_manager.has_method("is_valid_player_id"):
-		if game_manager.is_valid_player_id(player_id) == false:
-			return Color.WHITE
-	elif player_id < 0:
-		return Color.WHITE
-	
-	if game_manager.has_method("get_player_palette") == false:
+	if game_manager.is_valid_player_id(player_id) == false:
 		return Color.WHITE
 	
 	var palette:ColorPalette = game_manager.get_player_palette(player_id)

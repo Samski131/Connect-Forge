@@ -4,8 +4,9 @@ extends MarginContainer
 @export var player_id:int = 0
 @export var item_scene:PackedScene
 
-var game_manager:Node = null
+var game_manager:GameManager = null
 var token_tray_inventory:TokenTrayInventory = null
+var drag_controller:TokenDragController = null
 var item_uis:Dictionary = {}
 
 @onready var color_indicator:Panel = $"Token Tray (Outline)/Token Tray (Hbox)/Color Indicator"
@@ -14,23 +15,13 @@ var item_uis:Dictionary = {}
 @onready var header_token_visual_display:TokenVisualDisplay = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)/Header Token Visual Display"
 
 
-func _ready() -> void:
-	if game_manager == null:
-		game_manager = get_tree().get_first_node_in_group("game manager")
+func setup_tray(new_game_manager:GameManager, new_token_tray_inventory:TokenTrayInventory, new_drag_controller:TokenDragController, new_player_id:int) -> void:
+	disconnect_inventory_signals()
 	
-	token_tray_inventory = get_tree().get_first_node_in_group("token tray inventory") as TokenTrayInventory
-	
-	clear_existing_items()
-	connect_inventory_signals()
-	refresh_player_details()
-	rebuild_from_inventory()
-
-
-func setup_tray(new_game_manager:Node, new_player_id:int) -> void:
 	game_manager = new_game_manager
+	token_tray_inventory = new_token_tray_inventory
+	drag_controller = new_drag_controller
 	player_id = new_player_id
-	
-	token_tray_inventory = get_tree().get_first_node_in_group("token tray inventory") as TokenTrayInventory
 	
 	clear_existing_items()
 	connect_inventory_signals()
@@ -44,29 +35,22 @@ func refresh_player_details() -> void:
 	set_header_token_visual()
 
 
-func get_player_data() -> MatchPlayerData:
-	if MatchData.config == null:
-		return null
-	
-	return MatchData.config.get_player(player_id)
-
-
 func get_player_palette() -> ColorPalette:
-	if MatchData.config == null:
+	if game_manager == null:
 		return null
 	
-	return MatchData.config.get_player_palette(player_id)
+	return game_manager.get_player_palette(player_id)
 
 
 func set_player_name() -> void:
 	if player_name_label == null:
 		return
 	
-	if MatchData.config == null:
+	if game_manager == null:
 		player_name_label.text = "Player " + str(player_id + 1)
 		return
 	
-	player_name_label.text = MatchData.config.get_player_name(player_id)
+	player_name_label.text = game_manager.get_player_name(player_id)
 
 
 func set_color_indicator() -> void:
@@ -97,16 +81,6 @@ func get_player_indicator_color() -> Color:
 	return palette.colors[2]
 
 
-func clear_existing_items() -> void:
-	item_uis.clear()
-	
-	if token_grid == null:
-		return
-	
-	for child in token_grid.get_children():
-		child.queue_free()
-
-
 func connect_inventory_signals() -> void:
 	if token_tray_inventory == null:
 		return
@@ -116,6 +90,27 @@ func connect_inventory_signals() -> void:
 	
 	if token_tray_inventory.trays_reset.is_connected(_on_trays_reset) == false:
 		token_tray_inventory.trays_reset.connect(_on_trays_reset)
+
+
+func disconnect_inventory_signals() -> void:
+	if token_tray_inventory == null:
+		return
+	
+	if token_tray_inventory.token_type_added.is_connected(_on_token_type_added):
+		token_tray_inventory.token_type_added.disconnect(_on_token_type_added)
+	
+	if token_tray_inventory.trays_reset.is_connected(_on_trays_reset):
+		token_tray_inventory.trays_reset.disconnect(_on_trays_reset)
+
+
+func clear_existing_items() -> void:
+	item_uis.clear()
+	
+	if token_grid == null:
+		return
+	
+	for child in token_grid.get_children():
+		child.queue_free()
 
 
 func rebuild_from_inventory() -> void:
@@ -138,13 +133,22 @@ func ensure_item_ui_exists(token_type:int) -> void:
 	if token_grid == null:
 		return
 	
+	if game_manager == null:
+		return
+	
+	if token_tray_inventory == null:
+		return
+	
+	if drag_controller == null:
+		return
+	
 	var item:TokenTrayItemUI = item_scene.instantiate() as TokenTrayItemUI
 	
 	if item == null:
 		return
 	
 	token_grid.add_child(item)
-	item.setup(game_manager, player_id, token_type)
+	item.setup(game_manager, token_tray_inventory, drag_controller, player_id, token_type)
 	item_uis[token_type] = item
 	
 	sort_items_by_tray_order()
@@ -177,17 +181,10 @@ func set_header_token_visual() -> void:
 	var palette:ColorPalette = get_player_palette()
 	
 	if palette == null:
-		header_token_visual_display.setup(
-			TokenLibrary.TokenType.BASIC,
-			player_id
-		)
+		header_token_visual_display.setup(TokenLibrary.TokenType.BASIC, player_id)
 		return
 	
-	header_token_visual_display.setup_with_palette(
-		TokenLibrary.TokenType.BASIC,
-		player_id,
-		palette
-	)
+	header_token_visual_display.setup_with_palette(TokenLibrary.TokenType.BASIC, player_id, palette)
 
 
 func _on_token_type_added(changed_player_id:int, token_type:int) -> void:

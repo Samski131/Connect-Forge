@@ -1,0 +1,179 @@
+class_name MatchSessionPlayerData
+extends RefCounted
+
+signal score_changed(player_id:int, wins:int, losses:int)
+signal token_type_added(player_id:int, token_type:int)
+signal token_count_changed(player_id:int, token_type:int, new_count:int)
+signal tokens_reset(player_id:int)
+
+var player_id:int = -1
+var player_name:String = ""
+var colour_palette:ColorPalette = null
+
+var wins:int = 0
+var losses:int = 0
+
+var starting_token_counts:Dictionary = {}
+var token_counts:Dictionary = {}
+
+
+func setup(new_player_id:int, source_player:MatchPlayerData) -> void:
+	player_id = new_player_id
+	player_name = "Player " + str(player_id + 1)
+	colour_palette = null
+	wins = 0
+	losses = 0
+	starting_token_counts.clear()
+	token_counts.clear()
+	
+	if source_player != null:
+		player_name = get_valid_player_name(source_player.player_name)
+		colour_palette = source_player.colour_palette
+		set_starting_token_counts(source_player.selected_tokens)
+	
+	reset_tokens_for_round()
+
+
+func get_valid_player_name(new_name:String) -> String:
+	var used_name:String = new_name.strip_edges()
+	
+	if used_name == "":
+		return "Player " + str(player_id + 1)
+	
+	return used_name
+
+
+func set_starting_token_counts(new_counts:Dictionary) -> void:
+	starting_token_counts.clear()
+	
+	for token_type_value in new_counts.keys():
+		var token_type:int = int(token_type_value)
+		var token_count:int = max(int(new_counts[token_type_value]), 0)
+		
+		if token_count <= 0:
+			continue
+		
+		starting_token_counts[token_type] = token_count
+
+
+func set_starting_token_count(token_type:int, amount:int) -> void:
+	var used_amount:int = max(amount, 0)
+	
+	if used_amount <= 0:
+		starting_token_counts.erase(token_type)
+		return
+	
+	starting_token_counts[token_type] = used_amount
+
+
+func get_starting_token_count(token_type:int) -> int:
+	if starting_token_counts.has(token_type) == false:
+		return 0
+	
+	return int(starting_token_counts[token_type])
+
+
+func get_starting_token_counts() -> Dictionary:
+	return starting_token_counts.duplicate(true)
+
+
+func reset_tokens_for_round() -> void:
+	token_counts = starting_token_counts.duplicate(true)
+	tokens_reset.emit(player_id)
+
+
+func has_token_type(token_type:int) -> bool:
+	return token_counts.has(token_type)
+
+
+func has_token(token_type:int) -> bool:
+	return get_token_count(token_type) > 0
+
+
+func get_token_count(token_type:int) -> int:
+	if token_counts.has(token_type) == false:
+		return 0
+	
+	return int(token_counts[token_type])
+
+
+func get_token_counts() -> Dictionary:
+	return token_counts.duplicate(true)
+
+
+func get_token_types() -> Array[int]:
+	var result:Array[int] = []
+	
+	for token_type_value in token_counts.keys():
+		result.append(int(token_type_value))
+	
+	return result
+
+
+func get_token_types_in_tray_order() -> Array[int]:
+	var result:Array[int] = []
+	
+	for token_type in TokenLibrary.get_token_types_in_tray_order():
+		if has_token_type(token_type):
+			result.append(token_type)
+	
+	return result
+
+
+func set_token_count(token_type:int, amount:int) -> void:
+	var used_amount:int = max(amount, 0)
+	var is_new_token_type:bool = has_token_type(token_type) == false
+	
+	token_counts[token_type] = used_amount
+	
+	if is_new_token_type:
+		token_type_added.emit(player_id, token_type)
+	
+	token_count_changed.emit(player_id, token_type, used_amount)
+
+
+func spend_token(token_type:int, amount:int = 1) -> bool:
+	if amount <= 0:
+		return false
+	
+	var current_count:int = get_token_count(token_type)
+	
+	if current_count < amount:
+		return false
+	
+	set_token_count(token_type, current_count - amount)
+	return true
+
+
+func refund_token(token_type:int, amount:int = 1) -> bool:
+	if amount <= 0:
+		return false
+	
+	var current_count:int = get_token_count(token_type)
+	set_token_count(token_type, current_count + amount)
+	return true
+
+
+func add_tokens(token_type:int, amount:int = 1) -> bool:
+	if amount <= 0:
+		return false
+	
+	var current_count:int = get_token_count(token_type)
+	set_token_count(token_type, current_count + amount)
+	return true
+
+
+func record_win() -> void:
+	wins += 1
+	score_changed.emit(player_id, wins, losses)
+
+
+func record_loss() -> void:
+	losses += 1
+	score_changed.emit(player_id, wins, losses)
+
+
+func reset_score() -> void:
+	wins = 0
+	losses = 0
+	score_changed.emit(player_id, wins, losses)

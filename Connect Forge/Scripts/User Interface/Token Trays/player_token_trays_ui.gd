@@ -8,32 +8,48 @@ extends VBoxContainer
 @export var active_tray_preset:UIJuicePreset
 @export var inactive_tray_preset:UIJuicePreset
 
-var game_manager:Node = null
+var game_manager:GameManager = null
+var token_tray_inventory:TokenTrayInventory = null
+var drag_controller:TokenDragController = null
 var trays:Array[PlayerTokenTrayUI] = []
 
 
-func _ready() -> void:
-	game_manager = get_tree().get_first_node_in_group("game manager")
-	add_to_group("player token trays ui")
+func setup(new_game_manager:GameManager, new_token_tray_inventory:TokenTrayInventory, new_drag_controller:TokenDragController) -> void:
+	disconnect_game_manager_signals()
+	
+	game_manager = new_game_manager
+	token_tray_inventory = new_token_tray_inventory
+	drag_controller = new_drag_controller
+	
 	connect_game_manager_signals()
-	rebuild_trays()
 
 
 func connect_game_manager_signals() -> void:
 	if game_manager == null:
 		return
 	
-	if game_manager.has_signal("current_player_changed"):
-		if game_manager.current_player_changed.is_connected(_on_current_player_changed) == false:
-			game_manager.current_player_changed.connect(_on_current_player_changed)
+	if game_manager.current_player_changed.is_connected(_on_current_player_changed) == false:
+		game_manager.current_player_changed.connect(_on_current_player_changed)
 	
-	if game_manager.has_signal("players_changed"):
-		if game_manager.players_changed.is_connected(_on_players_changed) == false:
-			game_manager.players_changed.connect(_on_players_changed)
+	if game_manager.players_changed.is_connected(_on_players_changed) == false:
+		game_manager.players_changed.connect(_on_players_changed)
 	
-	if game_manager.has_signal("player_names_changed"):
-		if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
-			game_manager.player_names_changed.connect(_on_player_names_changed)
+	if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
+		game_manager.player_names_changed.connect(_on_player_names_changed)
+
+
+func disconnect_game_manager_signals() -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.current_player_changed.is_connected(_on_current_player_changed):
+		game_manager.current_player_changed.disconnect(_on_current_player_changed)
+	
+	if game_manager.players_changed.is_connected(_on_players_changed):
+		game_manager.players_changed.disconnect(_on_players_changed)
+	
+	if game_manager.player_names_changed.is_connected(_on_player_names_changed):
+		game_manager.player_names_changed.disconnect(_on_player_names_changed)
 
 
 func rebuild_trays() -> void:
@@ -42,12 +58,13 @@ func rebuild_trays() -> void:
 	if game_manager == null:
 		return
 	
-	connect_game_manager_signals()
-	
-	if player_tray_scene == null:
+	if token_tray_inventory == null:
 		return
 	
-	if game_manager.has_method("get_player_count") == false:
+	if drag_controller == null:
+		return
+	
+	if player_tray_scene == null:
 		return
 	
 	var player_count:int = game_manager.get_player_count()
@@ -68,7 +85,7 @@ func create_player_tray(player_id:int) -> void:
 		return
 	
 	add_child(tray)
-	tray.setup_tray(game_manager, player_id)
+	tray.setup_tray(game_manager, token_tray_inventory, drag_controller, player_id)
 	setup_tray_offset_transform(tray)
 	trays.append(tray)
 
@@ -130,7 +147,7 @@ func get_tray_state_preset(tray:PlayerTokenTrayUI) -> UIJuicePreset:
 	if game_manager == null:
 		return null
 	
-	if tray.player_id == game_manager.current_player_id:
+	if tray.player_id == game_manager.get_current_player_id():
 		return active_tray_preset
 	
 	return inactive_tray_preset

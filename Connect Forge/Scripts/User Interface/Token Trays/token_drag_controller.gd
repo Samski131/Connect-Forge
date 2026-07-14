@@ -1,7 +1,7 @@
 class_name TokenDragController
 extends Node2D
 
-var game_manager:Node = null
+var game_manager:GameManager = null
 var board:BoardManager = null
 var token_tray_inventory:TokenTrayInventory = null
 var preview_parent:Node = null
@@ -13,12 +13,10 @@ var dragged_is_flipped:bool = false
 var preview_token:Token = null
 
 
-func _ready() -> void:
-	add_to_group("token drag controller")
-	
-	game_manager = get_tree().get_first_node_in_group("game manager")
-	board = get_tree().get_first_node_in_group("board pool") as BoardManager
-	token_tray_inventory = get_tree().get_first_node_in_group("token tray inventory") as TokenTrayInventory
+func setup(new_game_manager:GameManager, new_board:BoardManager, new_token_tray_inventory:TokenTrayInventory) -> void:
+	game_manager = new_game_manager
+	board = new_board
+	token_tray_inventory = new_token_tray_inventory
 	
 	if board != null:
 		preview_parent = board.token_pool
@@ -40,10 +38,12 @@ func begin_drag(player_id:int, token_type:int) -> void:
 	if token_tray_inventory == null:
 		return
 	
-	if game_manager.current_turn_phase != Global.TURN_PHASE.PLACEMENT:
+	if game_manager.get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
 		return
 	
-	if token_tray_inventory.can_player_drag_token(player_id, token_type, game_manager.current_player_id) == false:
+	var current_player_id:int = game_manager.get_current_player_id()
+	
+	if token_tray_inventory.can_player_drag_token(player_id, token_type, current_player_id) == false:
 		return
 	
 	if token_tray_inventory.spend_token(player_id, token_type) == false:
@@ -173,6 +173,15 @@ func flip_dragged_token() -> void:
 
 
 func try_drop_dragged_token() -> void:
+	if game_manager == null:
+		return
+	
+	if board == null:
+		return
+	
+	if token_tray_inventory == null:
+		return
+	
 	var placement_state:Node = game_manager.placement_state
 	var slot_pos:Vector2i = board.global_position_to_slot(get_global_mouse_position())
 	var placed:bool = false
