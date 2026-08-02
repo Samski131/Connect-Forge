@@ -1,3 +1,4 @@
+class_name ActionLogic
 extends Node
 
 enum Report {RESOLVED, IN_PROGRESS,EMPTY}
@@ -12,10 +13,6 @@ func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 
 
 func enter_state() -> void:
-	if game_manager == null:
-		return
-	
-	game_manager.set_current_turn_phase(Global.TURN_PHASE.ACTION)
 	reset_token_resolution()
 
 
@@ -23,10 +20,7 @@ func exit_state() -> void:
 	if game_manager == null:
 		return
 	
-	if game_manager.resolution_state == null:
-		return
-	
-	game_manager.resolution_state.enter_state()
+	game_manager.enter_resolution_phase()
 
 
 func process_state() -> void:

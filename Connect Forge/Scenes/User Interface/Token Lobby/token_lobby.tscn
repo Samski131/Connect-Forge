@@ -10,7 +10,6 @@
 [ext_resource type="Texture2D" uid="uid://bam4msago30gp" path="res://Assets/User Interface/Styles/Pause.png" id="4_rfmhd"]
 [ext_resource type="Texture2D" uid="uid://cv86goefpeljg" path="res://Assets/User Interface/information-button.png" id="5_fr2p3"]
 [ext_resource type="Texture2D" uid="uid://88j63f6o5cmn" path="res://Assets/User Interface/tick.png" id="7_rfmhd"]
-[ext_resource type="Script" uid="uid://2mu2n8qbrdwp" path="res://Scripts/User Interface/Token Trays/token_tray_inventory.gd" id="9_ewep4"]
 [ext_resource type="Texture2D" uid="uid://db5aqeinjcrte" path="res://Assets/tokens/Asset 39@4x.png" id="10_hk3g5"]
 [ext_resource type="StyleBox" uid="uid://buwpa3b31eccc" path="res://Assets/User Interface/Resources/Buttons/green_normal.stylebox" id="12_7wkn7"]
 [ext_resource type="StyleBox" uid="uid://cp3c1isr71xkd" path="res://Assets/User Interface/Resources/Buttons/green_pressed.stylebox" id="13_qdbar"]
@@ -546,6 +545,3 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 toggle_button = NodePath("../ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Pause Button/Button")
-
-[node name="TokenTrayInventory" type="Node" parent="." unique_id=706902379 groups=["token tray inventory"]]
-script = ExtResource("9_ewep4")

@@ -63,7 +63,7 @@ func show_game_over(new_winner_id:int) -> void:
 	var current_request_id:int = show_request_id
 	var winner_palette:ColorPalette = get_player_palette(winner_id)
 	
-	setup_winner_token()
+	setup_winner_token(winner_palette)
 	setup_winner_name(winner_palette)
 	setup_outer_frame(winner_palette)
 	rebuild_score_rows()
@@ -136,12 +136,11 @@ func hide_menu_instant() -> void:
 	visible = false
 
 
-func setup_winner_token() -> void:
+func setup_winner_token(winner_palette:ColorPalette) -> void:
 	if winner_token_display == null:
 		return
 	
-	winner_token_display.setup(TokenLibrary.TokenType.BASIC, winner_id, false)
-
+	winner_token_display.setup_with_palette(TokenLibrary.TokenType.BASIC, winner_id, winner_palette, false)
 
 func setup_winner_name(winner_palette:ColorPalette) -> void:
 	if winner_name_label == null:
@@ -364,7 +363,10 @@ func _on_return_to_lobby_pressed() -> void:
 	var change_error:Error = get_tree().change_scene_to_file(TOKEN_LOBBY_SCENE_PATH)
 	
 	if change_error == OK:
+		MatchData.clear_session()
 		return
+	
+	push_error("GameOverMenu: Could not return to the token lobby. Error code: " + str(change_error))
 	
 	if return_to_lobby_button != null:
 		return_to_lobby_button.disabled = false

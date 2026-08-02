@@ -7,41 +7,43 @@ extends PanelContainer
 var player_id:int = -1
 var token_type:int = -1
 var game_manager:GameManager = null
-var token_tray_inventory:TokenTrayInventory = null
 var drag_controller:TokenDragController = null
 
 @onready var token_visual_display:TokenVisualDisplay = $"Margin/Root (Vbox)/Icon Control/Token Visual Display"
 @onready var count_label:Label = $"Margin/Root (Vbox)/Icon Control/Count Badge Panel/Count Label"
 
 
-func setup(new_game_manager:GameManager, new_token_tray_inventory:TokenTrayInventory, new_drag_controller:TokenDragController, new_player_id:int, new_token_type:int) -> void:
-	disconnect_inventory_signals()
+func _exit_tree() -> void:
+	disconnect_game_manager_signals()
+
+
+func setup(new_game_manager:GameManager, new_drag_controller:TokenDragController, new_player_id:int, new_token_type:int) -> void:
+	disconnect_game_manager_signals()
 	
 	game_manager = new_game_manager
-	token_tray_inventory = new_token_tray_inventory
 	drag_controller = new_drag_controller
 	player_id = new_player_id
 	token_type = new_token_type
 	
-	connect_inventory_signals()
+	connect_game_manager_signals()
 	setup_visual()
 	refresh()
 
 
-func connect_inventory_signals() -> void:
-	if token_tray_inventory == null:
+func connect_game_manager_signals() -> void:
+	if game_manager == null:
 		return
 	
-	if token_tray_inventory.token_count_changed.is_connected(_on_token_count_changed) == false:
-		token_tray_inventory.token_count_changed.connect(_on_token_count_changed)
+	if game_manager.token_count_changed.is_connected(_on_token_count_changed) == false:
+		game_manager.token_count_changed.connect(_on_token_count_changed)
 
 
-func disconnect_inventory_signals() -> void:
-	if token_tray_inventory == null:
+func disconnect_game_manager_signals() -> void:
+	if game_manager == null:
 		return
 	
-	if token_tray_inventory.token_count_changed.is_connected(_on_token_count_changed):
-		token_tray_inventory.token_count_changed.disconnect(_on_token_count_changed)
+	if game_manager.token_count_changed.is_connected(_on_token_count_changed):
+		game_manager.token_count_changed.disconnect(_on_token_count_changed)
 
 
 func setup_visual() -> void:
@@ -62,16 +64,16 @@ func setup_visual() -> void:
 
 
 func refresh() -> void:
-	if token_tray_inventory == null:
+	if game_manager == null:
 		return
 	
 	if count_label == null:
 		return
 	
-	var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
+	var token_count:int = game_manager.get_token_count(player_id, token_type)
 	
 	count_label.text = "x" + str(token_count)
-	tooltip_text = token_tray_inventory.get_token_description(token_type)
+	tooltip_text = TokenLibrary.get_description(token_type)
 	
 	apply_count_visual(token_count)
 
@@ -124,10 +126,10 @@ func is_wrong_player_turn() -> bool:
 
 
 func player_has_no_tokens() -> bool:
-	if token_tray_inventory == null:
+	if game_manager == null:
 		return false
 	
-	var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
+	var token_count:int = game_manager.get_token_count(player_id, token_type)
 	
 	if token_count <= 0:
 		return true

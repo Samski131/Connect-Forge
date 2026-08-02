@@ -1,3 +1,4 @@
+class_name ResolutionLogic
 extends Node
 
 const WIN_DIRECTIONS:Array[Vector2i] = [
@@ -24,11 +25,7 @@ func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 
 
 func enter_state() -> void:
-	if game_manager == null:
-		return
-	
 	clear_stored_win()
-	game_manager.set_current_turn_phase(Global.TURN_PHASE.RESOLUTION)
 
 
 func exit_state() -> void:
@@ -261,13 +258,7 @@ func finish_game_with_winner(winner_id:int) -> void:
 	if game_manager == null:
 		return
 	
-	if game_manager.is_valid_player_id(winner_id) == false:
-		return
-	
-	game_manager.record_match_result(winner_id)
-	
-	if game_manager.game_over_state != null:
-		game_manager.game_over_state.enter_state(winner_id)
+	game_manager.finish_match_with_winner(winner_id)
 
 
 func clear_stored_win() -> void:

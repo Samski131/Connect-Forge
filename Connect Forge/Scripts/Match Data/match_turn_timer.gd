@@ -3,10 +3,8 @@ extends Node
 
 signal timer_enabled_changed(enabled:bool)
 signal time_changed(seconds_remaining:int, total_seconds:int)
-signal turn_timed_out(player_id:int)
 
 var game_manager:GameManager = null
-var drag_controller:TokenDragController = null
 
 var turn_limit_seconds:int = 0
 var time_remaining:float = 0.0
@@ -20,9 +18,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 
 
-func setup(new_game_manager:GameManager, new_drag_controller:TokenDragController) -> void:
+func setup(new_game_manager:GameManager) -> void:
 	game_manager = new_game_manager
-	drag_controller = new_drag_controller
 	refresh_limit_from_session()
 	emit_current_state()
 
@@ -103,21 +100,7 @@ func handle_turn_timeout() -> void:
 	displayed_seconds_remaining = 0
 	
 	time_changed.emit(0, turn_limit_seconds)
-	
-	var expired_player_id:int = game_manager.get_current_player_id()
-	
-	game_manager.set_current_turn_phase(Global.TURN_PHASE.NONE)
-	cancel_current_drag()
-	
-	turn_timed_out.emit(expired_player_id)
-	game_manager.end_turn()
-
-
-func cancel_current_drag() -> void:
-	if drag_controller == null:
-		return
-	
-	drag_controller.cancel_drag()
+	game_manager.handle_turn_timeout()
 
 
 func is_timer_enabled() -> bool:

@@ -14,7 +14,6 @@ extends PanelContainer
 @export_range(0, 6) var interior_colour_index:int = 5
 
 var player_data:MatchPlayerData = null
-var token_tray_inventory:TokenTrayInventory = null
 var purchased_item_uis:Dictionary = {}
 
 @onready var player_name_edit:LineEdit = %PlayerNameEdit
@@ -31,16 +30,14 @@ func _ready() -> void:
 	connect_player_name_signals()
 
 
-func setup(new_player_id:int, new_player_data:MatchPlayerData, new_token_tray_inventory:TokenTrayInventory) -> void:
+func setup(new_player_id:int, new_player_data:MatchPlayerData) -> void:
 	player_id = new_player_id
 	player_data = new_player_data
-	token_tray_inventory = new_token_tray_inventory
 	
 	if is_node_ready() == false:
 		await ready
 	
 	connect_player_name_signals()
-	connect_inventory_signals()
 	refresh_player_details()
 	refresh_points()
 	rebuild_purchased_tokens()
@@ -55,20 +52,6 @@ func connect_player_name_signals() -> void:
 	
 	if player_name_edit.focus_exited.is_connected(_on_player_name_focus_exited) == false:
 		player_name_edit.focus_exited.connect(_on_player_name_focus_exited)
-
-
-func connect_inventory_signals() -> void:
-	if token_tray_inventory == null:
-		return
-	
-	if token_tray_inventory.token_type_added.is_connected(_on_token_type_added) == false:
-		token_tray_inventory.token_type_added.connect(_on_token_type_added)
-	
-	if token_tray_inventory.token_count_changed.is_connected(_on_token_count_changed) == false:
-		token_tray_inventory.token_count_changed.connect(_on_token_count_changed)
-	
-	if token_tray_inventory.trays_reset.is_connected(_on_trays_reset) == false:
-		token_tray_inventory.trays_reset.connect(_on_trays_reset)
 
 
 func refresh_player_details() -> void:
@@ -172,9 +155,6 @@ func _can_drop_data(_at_position:Vector2, data:Variant) -> bool:
 	if player_data == null:
 		return false
 	
-	if token_tray_inventory == null:
-		return false
-	
 	var token_type:int = int(drag_data["token_type"])
 	return player_data.can_afford_token(token_type)
 
@@ -201,29 +181,24 @@ func try_purchase_token(token_type:int) -> bool:
 	if player_data == null:
 		return false
 	
-	if token_tray_inventory == null:
-		return false
-	
-	if token_tray_inventory.get_player_tray(player_id) == null:
-		return false
-	
 	if player_data.try_purchase_token(token_type) == false:
 		return false
 	
-	token_tray_inventory.add_tokens(player_id, token_type, 1)
 	refresh_points()
+	refresh_purchased_item(token_type, true)
 	return true
 
 
 func rebuild_purchased_tokens() -> void:
 	clear_purchased_tokens()
 	
-	if token_tray_inventory == null:
+	if player_data == null:
 		return
 	
-	var token_types:Array[int] = token_tray_inventory.get_token_types_for_player(player_id)
-	
-	for token_type in token_types:
+	for token_type in TokenLibrary.get_token_types_in_tray_order():
+		if player_data.get_token_count(token_type) <= 0:
+			continue
+		
 		ensure_purchased_item_exists(token_type)
 
 
@@ -247,7 +222,12 @@ func ensure_purchased_item_exists(token_type:int) -> void:
 	if purchased_tokens == null:
 		return
 	
-	if token_tray_inventory == null:
+	if player_data == null:
+		return
+	
+	var token_count:int = player_data.get_token_count(token_type)
+	
+	if token_count <= 0:
 		return
 	
 	var item:LobbyPurchasedTokenItem = purchased_token_item_scene.instantiate() as LobbyPurchasedTokenItem
@@ -256,14 +236,7 @@ func ensure_purchased_item_exists(token_type:int) -> void:
 		return
 	
 	purchased_tokens.add_child(item)
-	
-	var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
-	var palette:ColorPalette = null
-	
-	if player_data != null:
-		palette = player_data.colour_palette
-	
-	item.setup(player_id, token_type, token_count, palette)
+	item.setup(player_id, token_type, token_count, player_data.colour_palette)
 	
 	if item.refund_requested.is_connected(_on_refund_requested) == false:
 		item.refund_requested.connect(_on_refund_requested)
@@ -292,10 +265,10 @@ func _sort_token_types(first_token_type:int, second_token_type:int) -> bool:
 
 
 func refresh_purchased_item(token_type:int, play_feedback:bool) -> void:
-	if token_tray_inventory == null:
+	if player_data == null:
 		return
 	
-	var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
+	var token_count:int = player_data.get_token_count(token_type)
 	
 	if token_count <= 0:
 		remove_purchased_item(token_type)
@@ -420,28 +393,6 @@ func _on_player_name_focus_exited() -> void:
 	commit_player_name()
 
 
-func _on_token_type_added(changed_player_id:int, token_type:int) -> void:
-	if changed_player_id != player_id:
-		return
-	
-	ensure_purchased_item_exists(token_type)
-
-
-func _on_token_count_changed(changed_player_id:int, token_type:int, _new_count:int) -> void:
-	if changed_player_id != player_id:
-		return
-	
-	refresh_purchased_item(token_type, true)
-
-
-func _on_trays_reset() -> void:
-	if player_data == null:
-		return
-	
-	refresh_points()
-	rebuild_purchased_tokens()
-
-
 func _on_refund_requested(changed_player_id:int, token_type:int) -> void:
 	if changed_player_id != player_id:
 		return
@@ -449,14 +400,7 @@ func _on_refund_requested(changed_player_id:int, token_type:int) -> void:
 	if player_data == null:
 		return
 	
-	if token_tray_inventory == null:
-		return
-	
 	if player_data.try_refund_token(token_type) == false:
-		return
-	
-	if token_tray_inventory.spend_token(player_id, token_type) == false:
-		player_data.try_purchase_token(token_type)
 		return
 	
 	refresh_points()

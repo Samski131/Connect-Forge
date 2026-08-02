@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://drb2o57qvwwuu"]
+
+[ext_resource type="StyleBox" uid="uid://co7yxw38b5sot" path="res://Assets/User Interface/Resources/Theme Presets/Hex panel border.stylebox" id="1_fnvof"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ugdan"]
+bg_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+corner_detail = 1
+
+[node name="Hex Container" type="Control" unique_id=1926777874]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Border" type="PanelContainer" parent="." unique_id=1921745755]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_fnvof")
+
+[node name="MarginContainer" type="MarginContainer" parent="Border" unique_id=136211999]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Main Panel" type="PanelContainer" parent="Border/MarginContainer" unique_id=1789954312]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ugdan")
+
+[node name="MarginContainer" type="MarginContainer" parent="Border/MarginContainer/Main Panel" unique_id=1635691421]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16

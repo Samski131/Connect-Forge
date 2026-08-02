@@ -1,7 +1,6 @@
 class_name MatchSession
 extends RefCounted
 
-signal players_changed
 signal current_player_changed(player_id:int)
 signal turn_phase_changed(turn_phase:Global.TURN_PHASE)
 signal turn_number_changed(turn_number:int)
@@ -12,7 +11,6 @@ signal result_recorded(winner_id:int)
 signal score_changed
 signal token_type_added(player_id:int, token_type:int)
 signal token_count_changed(player_id:int, token_type:int, new_count:int)
-signal player_tokens_reset(player_id:int)
 signal all_tokens_reset
 
 const BASIC_TOKEN_COUNT:int = 99
@@ -104,7 +102,6 @@ func create_players_from_config(config:MatchConfig) -> void:
 	players.clear()
 	
 	if config == null:
-		players_changed.emit()
 		return
 	
 	for player_id in range(config.get_player_count()):
@@ -118,9 +115,6 @@ func create_players_from_config(config:MatchConfig) -> void:
 		session_player.reset_tokens_for_round()
 		
 		players.append(session_player)
-	
-	players_changed.emit()
-
 
 func connect_player_signals(player:MatchSessionPlayerData) -> void:
 	if player == null:
@@ -134,9 +128,6 @@ func connect_player_signals(player:MatchSessionPlayerData) -> void:
 	
 	if player.token_count_changed.is_connected(_on_player_token_count_changed) == false:
 		player.token_count_changed.connect(_on_player_token_count_changed)
-	
-	if player.tokens_reset.is_connected(_on_player_tokens_reset) == false:
-		player.tokens_reset.connect(_on_player_tokens_reset)
 
 
 func reset_match_state() -> void:
@@ -530,7 +521,3 @@ func _on_player_token_type_added(player_id:int, token_type:int) -> void:
 
 func _on_player_token_count_changed(player_id:int, token_type:int, new_count:int) -> void:
 	token_count_changed.emit(player_id, token_type, new_count)
-
-
-func _on_player_tokens_reset(player_id:int) -> void:
-	player_tokens_reset.emit(player_id)

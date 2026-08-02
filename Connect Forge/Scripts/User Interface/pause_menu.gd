@@ -9,6 +9,7 @@ enum MenuContext {
 	TOKEN_LOBBY,
 	GAME_BOARD
 }
+
 const TOKEN_LOBBY_SCENE_PATH:String = "res://Scenes/User Interface/Token Lobby/token_lobby.tscn"
 const RED_TOKEN_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
 
@@ -194,6 +195,7 @@ func start_transition(opening:bool) -> void:
 		else:
 			player.exit()
 
+
 func get_transition_players() -> Array[UIJuicePlayer]:
 	var players:Array[UIJuicePlayer] = []
 	
@@ -205,6 +207,8 @@ func get_transition_players() -> Array[UIJuicePlayer]:
 		players.append(popup_juice_player)
 	
 	return players
+
+
 func _on_transition_player_finished() -> void:
 	pending_transition_players -= 1
 	
@@ -302,6 +306,7 @@ func change_to_token_lobby() -> void:
 	var scene_change_error:Error = get_tree().change_scene_to_file(TOKEN_LOBBY_SCENE_PATH)
 	
 	if scene_change_error == OK:
+		MatchData.clear_session()
 		return
 	
 	push_error("PauseMenu: Could not return to the token lobby. Error code: " + str(scene_change_error))
@@ -315,7 +320,7 @@ func change_to_token_lobby() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
-	
+
+
 func force_close_menu() -> void:
 	hide_menu_instant()
-	

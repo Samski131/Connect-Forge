@@ -45,9 +45,6 @@ func connect_game_manager_signals() -> void:
 	if game_manager.current_player_changed.is_connected(_on_current_player_changed) == false:
 		game_manager.current_player_changed.connect(_on_current_player_changed)
 	
-	if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
-		game_manager.player_names_changed.connect(_on_player_names_changed)
-	
 	if game_manager.players_changed.is_connected(_on_players_changed) == false:
 		game_manager.players_changed.connect(_on_players_changed)
 
@@ -58,9 +55,6 @@ func disconnect_game_manager_signals() -> void:
 	
 	if game_manager.current_player_changed.is_connected(_on_current_player_changed):
 		game_manager.current_player_changed.disconnect(_on_current_player_changed)
-	
-	if game_manager.player_names_changed.is_connected(_on_player_names_changed):
-		game_manager.player_names_changed.disconnect(_on_player_names_changed)
 	
 	if game_manager.players_changed.is_connected(_on_players_changed):
 		game_manager.players_changed.disconnect(_on_players_changed)
@@ -297,10 +291,6 @@ func _on_current_player_changed(_player_id:int) -> void:
 	
 	if turn_change_juice != null:
 		turn_change_juice.play_active()
-
-
-func _on_player_names_changed() -> void:
-	refresh_current_player()
 
 
 func _on_players_changed() -> void:

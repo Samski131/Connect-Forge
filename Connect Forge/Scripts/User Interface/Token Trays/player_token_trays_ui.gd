@@ -9,16 +9,18 @@ extends VBoxContainer
 @export var inactive_tray_preset:UIJuicePreset
 
 var game_manager:GameManager = null
-var token_tray_inventory:TokenTrayInventory = null
 var drag_controller:TokenDragController = null
 var trays:Array[PlayerTokenTrayUI] = []
 
 
-func setup(new_game_manager:GameManager, new_token_tray_inventory:TokenTrayInventory, new_drag_controller:TokenDragController) -> void:
+func _exit_tree() -> void:
+	disconnect_game_manager_signals()
+
+
+func setup(new_game_manager:GameManager, new_drag_controller:TokenDragController) -> void:
 	disconnect_game_manager_signals()
 	
 	game_manager = new_game_manager
-	token_tray_inventory = new_token_tray_inventory
 	drag_controller = new_drag_controller
 	
 	connect_game_manager_signals()
@@ -33,9 +35,6 @@ func connect_game_manager_signals() -> void:
 	
 	if game_manager.players_changed.is_connected(_on_players_changed) == false:
 		game_manager.players_changed.connect(_on_players_changed)
-	
-	if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
-		game_manager.player_names_changed.connect(_on_player_names_changed)
 
 
 func disconnect_game_manager_signals() -> void:
@@ -47,18 +46,12 @@ func disconnect_game_manager_signals() -> void:
 	
 	if game_manager.players_changed.is_connected(_on_players_changed):
 		game_manager.players_changed.disconnect(_on_players_changed)
-	
-	if game_manager.player_names_changed.is_connected(_on_player_names_changed):
-		game_manager.player_names_changed.disconnect(_on_player_names_changed)
 
 
 func rebuild_trays() -> void:
 	clear_trays()
 	
 	if game_manager == null:
-		return
-	
-	if token_tray_inventory == null:
 		return
 	
 	if drag_controller == null:
@@ -85,7 +78,7 @@ func create_player_tray(player_id:int) -> void:
 		return
 	
 	add_child(tray)
-	tray.setup_tray(game_manager, token_tray_inventory, drag_controller, player_id)
+	tray.setup_tray(game_manager, drag_controller, player_id)
 	setup_tray_offset_transform(tray)
 	trays.append(tray)
 
@@ -106,17 +99,6 @@ func clear_trays() -> void:
 	
 	for child in get_children():
 		child.queue_free()
-
-
-func refresh_trays() -> void:
-	for tray in trays:
-		if tray == null:
-			continue
-		
-		if is_instance_valid(tray) == false:
-			continue
-		
-		tray.refresh_player_details()
 
 
 func update_current_player_tray_visuals() -> void:
@@ -159,7 +141,3 @@ func _on_current_player_changed(_player_id:int) -> void:
 
 func _on_players_changed() -> void:
 	rebuild_trays()
-
-
-func _on_player_names_changed() -> void:
-	refresh_trays()

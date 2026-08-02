@@ -67,7 +67,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_ICON_PATH: "res://Assets/tokens/parts of tokens/token decoration/Anvil.png",
 			KEY_CAN_FLIP: false,
 			KEY_TRAY_ORDER: 1,
-			KEY_COST: 2,
+			KEY_COST: 4,
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.BOMB: {

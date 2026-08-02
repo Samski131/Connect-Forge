@@ -3,7 +3,6 @@ extends Node2D
 
 var game_manager:GameManager = null
 var board:BoardManager = null
-var token_tray_inventory:TokenTrayInventory = null
 var preview_parent:Node = null
 
 var is_dragging:bool = false
@@ -13,10 +12,9 @@ var dragged_is_flipped:bool = false
 var preview_token:Token = null
 
 
-func setup(new_game_manager:GameManager, new_board:BoardManager, new_token_tray_inventory:TokenTrayInventory) -> void:
+func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 	game_manager = new_game_manager
 	board = new_board
-	token_tray_inventory = new_token_tray_inventory
 	
 	if board != null:
 		preview_parent = board.token_pool
@@ -35,18 +33,13 @@ func begin_drag(player_id:int, token_type:int) -> void:
 	if board == null:
 		return
 	
-	if token_tray_inventory == null:
-		return
-	
 	if game_manager.get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
 		return
 	
-	var current_player_id:int = game_manager.get_current_player_id()
-	
-	if token_tray_inventory.can_player_drag_token(player_id, token_type, current_player_id) == false:
+	if game_manager.can_player_drag_token(player_id, token_type) == false:
 		return
 	
-	if token_tray_inventory.spend_token(player_id, token_type) == false:
+	if game_manager.spend_token(player_id, token_type) == false:
 		return
 	
 	dragged_player_id = player_id
@@ -54,7 +47,7 @@ func begin_drag(player_id:int, token_type:int) -> void:
 	dragged_is_flipped = false
 	
 	if create_preview_token() == false:
-		token_tray_inventory.refund_token(dragged_player_id, dragged_token_type)
+		game_manager.refund_token(dragged_player_id, dragged_token_type)
 		clear_drag_state()
 		return
 	
@@ -63,7 +56,7 @@ func begin_drag(player_id:int, token_type:int) -> void:
 
 
 func create_preview_token() -> bool:
-	var token_scene:PackedScene = token_tray_inventory.get_token_scene(dragged_token_type)
+	var token_scene:PackedScene = TokenLibrary.get_token_scene(dragged_token_type)
 	
 	if token_scene == null:
 		return false
@@ -82,7 +75,6 @@ func create_preview_token() -> bool:
 	preview_token.z_index = 1000
 	
 	disable_preview_collision(preview_token)
-	
 	return true
 
 
@@ -132,7 +124,6 @@ func _input(event:InputEvent) -> void:
 		if key_event.pressed and key_event.echo == false and key_event.keycode == KEY_ESCAPE:
 			cancel_drag()
 			get_viewport().set_input_as_handled()
-			return
 
 
 func update_preview_position() -> void:
@@ -143,10 +134,7 @@ func update_preview_position() -> void:
 
 
 func flip_dragged_token() -> void:
-	if token_tray_inventory == null:
-		return
-	
-	if token_tray_inventory.can_token_flip(dragged_token_type) == false:
+	if TokenLibrary.can_flip(dragged_token_type) == false:
 		return
 	
 	if preview_token == null:
@@ -179,25 +167,18 @@ func try_drop_dragged_token() -> void:
 	if board == null:
 		return
 	
-	if token_tray_inventory == null:
-		return
-	
-	var placement_state:Node = game_manager.placement_state
 	var slot_pos:Vector2i = board.global_position_to_slot(get_global_mouse_position())
-	var placed:bool = false
-	
-	if placement_state != null and placement_state.has_method("try_place_dragged_token"):
-		placed = placement_state.try_place_dragged_token(dragged_token_type, slot_pos, dragged_is_flipped)
+	var placed:bool = game_manager.try_place_dragged_token(dragged_token_type, slot_pos, dragged_is_flipped)
 	
 	if placed == false:
-		token_tray_inventory.refund_token(dragged_player_id, dragged_token_type)
+		game_manager.refund_token(dragged_player_id, dragged_token_type)
 	
 	clear_drag_state()
 
 
 func cancel_drag() -> void:
-	if token_tray_inventory != null and dragged_player_id != -1 and dragged_token_type != -1:
-		token_tray_inventory.refund_token(dragged_player_id, dragged_token_type)
+	if game_manager != null and dragged_player_id != -1 and dragged_token_type != -1:
+		game_manager.refund_token(dragged_player_id, dragged_token_type)
 	
 	clear_drag_state()
 

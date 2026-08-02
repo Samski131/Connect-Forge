@@ -24,9 +24,7 @@ func connect_game_manager_signals() -> void:
 	
 	if game_manager.score_changed.is_connected(_on_score_changed) == false:
 		game_manager.score_changed.connect(_on_score_changed)
-	
-	if game_manager.player_names_changed.is_connected(_on_player_names_changed) == false:
-		game_manager.player_names_changed.connect(_on_player_names_changed)
+
 	
 	if game_manager.players_changed.is_connected(_on_players_changed) == false:
 		game_manager.players_changed.connect(_on_players_changed)
@@ -38,9 +36,6 @@ func disconnect_game_manager_signals() -> void:
 	
 	if game_manager.score_changed.is_connected(_on_score_changed):
 		game_manager.score_changed.disconnect(_on_score_changed)
-	
-	if game_manager.player_names_changed.is_connected(_on_player_names_changed):
-		game_manager.player_names_changed.disconnect(_on_player_names_changed)
 	
 	if game_manager.players_changed.is_connected(_on_players_changed):
 		game_manager.players_changed.disconnect(_on_players_changed)
@@ -92,10 +87,6 @@ func get_display_player_name(player_id:int) -> String:
 
 func _on_score_changed() -> void:
 	UIJuice.play(self, UIJuice.create_pulse_preset())
-	refresh()
-
-
-func _on_player_names_changed() -> void:
 	refresh()
 
 

@@ -1,3 +1,4 @@
+class_name PlacementLogic
 extends Node
 
 var game_manager:GameManager = null
@@ -9,21 +10,13 @@ func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 	board = new_board
 
 
-func enter_state() -> void:
-	if game_manager == null:
-		return
-	
-	game_manager.set_current_turn_phase(Global.TURN_PHASE.PLACEMENT)
 
 
 func exit_state() -> void:
 	if game_manager == null:
 		return
 	
-	if game_manager.action_state == null:
-		return
-	
-	game_manager.action_state.enter_state()
+	game_manager.enter_action_phase()
 
 
 func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bool) -> bool:

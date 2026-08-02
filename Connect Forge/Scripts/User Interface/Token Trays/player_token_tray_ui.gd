@@ -5,7 +5,6 @@ extends MarginContainer
 @export var item_scene:PackedScene
 
 var game_manager:GameManager = null
-var token_tray_inventory:TokenTrayInventory = null
 var drag_controller:TokenDragController = null
 var item_uis:Dictionary = {}
 
@@ -15,18 +14,21 @@ var item_uis:Dictionary = {}
 @onready var header_token_visual_display:TokenVisualDisplay = $"Token Tray (Outline)/Token Tray (Hbox)/Token Tray (Vbox)/Player Header (Panel Container)/Margin/Header content (Hbox)/Header Token Visual Display"
 
 
-func setup_tray(new_game_manager:GameManager, new_token_tray_inventory:TokenTrayInventory, new_drag_controller:TokenDragController, new_player_id:int) -> void:
-	disconnect_inventory_signals()
+func _exit_tree() -> void:
+	disconnect_game_manager_signals()
+
+
+func setup_tray(new_game_manager:GameManager, new_drag_controller:TokenDragController, new_player_id:int) -> void:
+	disconnect_game_manager_signals()
 	
 	game_manager = new_game_manager
-	token_tray_inventory = new_token_tray_inventory
 	drag_controller = new_drag_controller
 	player_id = new_player_id
 	
 	clear_existing_items()
-	connect_inventory_signals()
+	connect_game_manager_signals()
 	refresh_player_details()
-	rebuild_from_inventory()
+	rebuild_from_session()
 
 
 func refresh_player_details() -> void:
@@ -81,26 +83,26 @@ func get_player_indicator_color() -> Color:
 	return palette.colors[2]
 
 
-func connect_inventory_signals() -> void:
-	if token_tray_inventory == null:
+func connect_game_manager_signals() -> void:
+	if game_manager == null:
 		return
 	
-	if token_tray_inventory.token_type_added.is_connected(_on_token_type_added) == false:
-		token_tray_inventory.token_type_added.connect(_on_token_type_added)
+	if game_manager.token_type_added.is_connected(_on_token_type_added) == false:
+		game_manager.token_type_added.connect(_on_token_type_added)
 	
-	if token_tray_inventory.trays_reset.is_connected(_on_trays_reset) == false:
-		token_tray_inventory.trays_reset.connect(_on_trays_reset)
+	if game_manager.tokens_reset.is_connected(_on_tokens_reset) == false:
+		game_manager.tokens_reset.connect(_on_tokens_reset)
 
 
-func disconnect_inventory_signals() -> void:
-	if token_tray_inventory == null:
+func disconnect_game_manager_signals() -> void:
+	if game_manager == null:
 		return
 	
-	if token_tray_inventory.token_type_added.is_connected(_on_token_type_added):
-		token_tray_inventory.token_type_added.disconnect(_on_token_type_added)
+	if game_manager.token_type_added.is_connected(_on_token_type_added):
+		game_manager.token_type_added.disconnect(_on_token_type_added)
 	
-	if token_tray_inventory.trays_reset.is_connected(_on_trays_reset):
-		token_tray_inventory.trays_reset.disconnect(_on_trays_reset)
+	if game_manager.tokens_reset.is_connected(_on_tokens_reset):
+		game_manager.tokens_reset.disconnect(_on_tokens_reset)
 
 
 func clear_existing_items() -> void:
@@ -113,11 +115,11 @@ func clear_existing_items() -> void:
 		child.queue_free()
 
 
-func rebuild_from_inventory() -> void:
-	if token_tray_inventory == null:
+func rebuild_from_session() -> void:
+	if game_manager == null:
 		return
 	
-	var token_types:Array[int] = token_tray_inventory.get_token_types_for_player(player_id)
+	var token_types:Array[int] = game_manager.get_token_types_for_player(player_id)
 	
 	for token_type in token_types:
 		ensure_item_ui_exists(token_type)
@@ -136,9 +138,6 @@ func ensure_item_ui_exists(token_type:int) -> void:
 	if game_manager == null:
 		return
 	
-	if token_tray_inventory == null:
-		return
-	
 	if drag_controller == null:
 		return
 	
@@ -148,7 +147,7 @@ func ensure_item_ui_exists(token_type:int) -> void:
 		return
 	
 	token_grid.add_child(item)
-	item.setup(game_manager, token_tray_inventory, drag_controller, player_id, token_type)
+	item.setup(game_manager, drag_controller, player_id, token_type)
 	item_uis[token_type] = item
 	
 	sort_items_by_tray_order()
@@ -170,7 +169,6 @@ func sort_items_by_tray_order() -> void:
 func _sort_token_types_by_tray_order(a:int, b:int) -> bool:
 	var a_order:int = TokenLibrary.get_tray_order(a)
 	var b_order:int = TokenLibrary.get_tray_order(b)
-	
 	return a_order < b_order
 
 
@@ -194,6 +192,6 @@ func _on_token_type_added(changed_player_id:int, token_type:int) -> void:
 	ensure_item_ui_exists(token_type)
 
 
-func _on_trays_reset() -> void:
+func _on_tokens_reset() -> void:
 	clear_existing_items()
-	rebuild_from_inventory()
+	rebuild_from_session()

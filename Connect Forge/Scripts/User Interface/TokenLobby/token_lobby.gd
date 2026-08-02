@@ -7,7 +7,6 @@ extends CanvasLayer
 @export var purchased_token_item_scene:PackedScene
 @export var game_board_scene:PackedScene = preload("res://Scenes/game_board.tscn")
 
-@onready var token_tray_inventory:TokenTrayInventory = $TokenTrayInventory
 @onready var token_grid:GridContainer = %TokenGrid
 @onready var player_tray_row:HBoxContainer = %PlayerTrayRow
 @onready var start_button:Button = $"Control/ScreenMargin/ScreenLayout/Footer/Footer/Start Button"
@@ -22,10 +21,10 @@ var is_starting_match:bool = false
 
 
 func _ready() -> void:
+	MatchData.clear_session()
 	connect_buttons()
 	setup_pause_menu()
 	setup_match_options_popup()
-	setup_inventory()
 	create_shop_cards()
 	create_player_trays()
 
@@ -34,7 +33,6 @@ func connect_buttons() -> void:
 	if start_button != null:
 		if start_button.pressed.is_connected(_on_start_button_pressed) == false:
 			start_button.pressed.connect(_on_start_button_pressed)
-
 
 
 func setup_match_options_popup() -> void:
@@ -50,66 +48,6 @@ func setup_match_options_popup() -> void:
 	
 	if match_options_popup.options_applied.is_connected(_on_match_options_applied) == false:
 		match_options_popup.options_applied.connect(_on_match_options_applied)
-
-
-func setup_inventory() -> void:
-	if token_tray_inventory == null:
-		return
-	
-	if MatchData.config == null:
-		return
-	
-	token_tray_inventory.setup_for_players(MatchData.config.get_player_count())
-	load_existing_selections_into_inventory()
-
-
-func load_existing_selections_into_inventory() -> void:
-	if token_tray_inventory == null:
-		return
-	
-	if MatchData.config == null:
-		return
-	
-	for player_id in range(MatchData.config.get_player_count()):
-		var player:MatchPlayerData = MatchData.config.get_player(player_id)
-		
-		if player == null:
-			continue
-		
-		for token_type_value in player.selected_tokens.keys():
-			var token_type:int = int(token_type_value)
-			var token_count:int = player.get_token_count(token_type)
-			
-			if token_count <= 0:
-				continue
-			
-			token_tray_inventory.set_token_count(player_id, token_type, token_count)
-
-
-func sync_inventory_to_match_data() -> void:
-	if token_tray_inventory == null:
-		return
-	
-	if MatchData.config == null:
-		return
-	
-	for player_id in range(MatchData.config.get_player_count()):
-		var player:MatchPlayerData = MatchData.config.get_player(player_id)
-		
-		if player == null:
-			continue
-		
-		player.selected_tokens.clear()
-		
-		var token_types:Array[int] = token_tray_inventory.get_token_types_for_player(player_id)
-		
-		for token_type in token_types:
-			var token_count:int = token_tray_inventory.get_token_count(player_id, token_type)
-			
-			if token_count <= 0:
-				continue
-			
-			player.add_token(token_type, token_count)
 
 
 func get_player_count() -> int:
@@ -179,7 +117,7 @@ func create_player_tray(player_id:int) -> void:
 	tray.size_flags_vertical = Control.SIZE_FILL
 	
 	player_tray_row.add_child(tray)
-	tray.setup(player_id, player, token_tray_inventory)
+	tray.setup(player_id, player)
 
 
 func clear_container(container:Container) -> void:
@@ -211,8 +149,6 @@ func start_match() -> void:
 	if start_button != null:
 		start_button.disabled = true
 	
-	sync_inventory_to_match_data()
-	
 	var change_error:Error = get_tree().change_scene_to_packed(game_board_scene)
 	
 	if change_error == OK:
@@ -231,7 +167,6 @@ func _on_start_button_pressed() -> void:
 
 
 func _on_match_options_applied() -> void:
-	setup_inventory()
 	create_player_trays()
 
 

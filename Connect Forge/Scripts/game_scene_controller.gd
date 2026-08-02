@@ -8,7 +8,6 @@ extends Node2D
 @onready var board_visual_manager:BoardVisualManager = $"Game Board/Board Visual Manager"
 
 @onready var game_manager:GameManager = $"Game Manager"
-@onready var token_tray_inventory:TokenTrayInventory = $"Game Manager/Token Tray Inventory"
 @onready var turn_timer:MatchTurnTimer = $"Game Manager/Turn Timer"
 @onready var token_drag_controller:TokenDragController = $"Token Drag Controller"
 
@@ -49,14 +48,13 @@ func wire_board_systems() -> void:
 
 
 func wire_match_systems() -> void:
-	game_manager.setup(board_builder, board_manager, token_tray_inventory, player_token_trays_ui, turn_timer, token_drag_controller, game_over_menu)
-	token_drag_controller.setup(game_manager, board_manager, token_tray_inventory)
-	turn_timer.setup(game_manager, token_drag_controller)
+	game_manager.setup(board_builder, board_manager, turn_timer, token_drag_controller, game_over_menu)
+	token_drag_controller.setup(game_manager, board_manager)
+	turn_timer.setup(game_manager)
 	game_over_menu.setup(game_manager)
 
-
 func wire_user_interface() -> void:
-	player_token_trays_ui.setup(game_manager, token_tray_inventory, token_drag_controller)
+	player_token_trays_ui.setup(game_manager, token_drag_controller)
 	current_turn_card.setup(game_manager, turn_timer)
 	turn_counter_label.setup(game_manager)
 	time_counter_label.setup(game_manager)
@@ -98,9 +96,6 @@ func validate_scene_references() -> bool:
 		references_are_valid = false
 	
 	if validate_reference(game_manager, "Game Manager") == false:
-		references_are_valid = false
-	
-	if validate_reference(token_tray_inventory, "Token Tray Inventory") == false:
 		references_are_valid = false
 	
 	if validate_reference(turn_timer, "Turn Timer") == false:
