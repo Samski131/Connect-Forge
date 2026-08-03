@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://q2xp28c6g8f1"]
+
+[ext_resource type="Texture2D" uid="uid://dlomhnn0a1rl3" path="res://Assets/User Interface/1x/Diamond.png" id="1_bdveg"]
+
+[node name="Diamond" type="TextureRect" unique_id=1046465350]
+modulate = Color(0.11764706, 0.23137255, 0.3647059, 1)
+custom_minimum_size = Vector2(8, 0)
+texture = ExtResource("1_bdveg")
+expand_mode = 5
+stretch_mode = 5

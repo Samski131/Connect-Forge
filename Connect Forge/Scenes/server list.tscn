@@ -1,0 +1,1287 @@
+[gd_scene format=3 uid="uid://dy2tnsfjl3qk4"]
+
+[ext_resource type="Shader" uid="uid://bnbioicp1sqn7" path="res://Shaders/background.gdshader" id="1_n6bel"]
+[ext_resource type="Script" uid="uid://djfb4d2f5wocp" path="res://Scripts/User Interface/animated_background.gd" id="2_1x6tw"]
+[ext_resource type="PackedScene" uid="uid://drb2o57qvwwuu" path="res://Scenes/User Interface/hex_container.tscn" id="3_e4fy6"]
+[ext_resource type="FontFile" uid="uid://dyfgahjk6a5lc" path="res://fonts/Fredoka-SemiBold.ttf" id="4_0hah0"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="5_vv0ui"]
+[ext_resource type="ColorPalette" uid="uid://cyq2equ0sidon" path="res://Scenes/Tokens/token colour resources/yellow_v3.tres" id="6_rssyj"]
+[ext_resource type="Texture2D" uid="uid://r1yrv1fxj6fo" path="res://Assets/User Interface/icons/Crown.png" id="7_itai0"]
+[ext_resource type="StyleBox" uid="uid://cm68ipo0w70sc" path="res://Scenes/User Interface/line_diamond_gold.tres" id="8_7blx1"]
+[ext_resource type="FontFile" uid="uid://dehtpv13sux26" path="res://fonts/Fredoka-Regular.ttf" id="9_ihdq7"]
+[ext_resource type="StyleBox" uid="uid://b5ssrbend1pgg" path="res://Assets/User Interface/Resources/Buttons/blue/blue_normal.stylebox" id="10_x1fj0"]
+[ext_resource type="StyleBox" uid="uid://bkl0pq7ws0lkx" path="res://Assets/User Interface/Resources/Buttons/blue/blue_pressed.stylebox" id="11_jt12c"]
+[ext_resource type="StyleBox" uid="uid://de5jbcaqgvy0t" path="res://Assets/User Interface/Resources/Buttons/blue/blue_hovered.stylebox" id="12_5s01e"]
+[ext_resource type="Texture2D" uid="uid://swcxn7pj5ghi" path="res://Assets/User Interface/icons/Host.png" id="13_xuacy"]
+[ext_resource type="ColorPalette" uid="uid://dq123hkj3anu7" path="res://Scenes/Tokens/token colour resources/blue_v3.tres" id="14_c5ink"]
+[ext_resource type="Texture2D" uid="uid://c36fidv633fa6" path="res://Assets/User Interface/icons/Join.png" id="15_sy38x"]
+[ext_resource type="ColorPalette" uid="uid://dpt8f5rnrn11b" path="res://Scenes/Tokens/token colour resources/green_v3.tres" id="16_03tqy"]
+[ext_resource type="Texture2D" uid="uid://bupgbdosrx1xe" path="res://Assets/User Interface/icons/Playback.png" id="17_qmiki"]
+[ext_resource type="ColorPalette" uid="uid://c5ns1i26eemb8" path="res://Scenes/Tokens/token colour resources/violet_v3.tres" id="18_0cyyw"]
+[ext_resource type="Texture2D" uid="uid://bnca64cq0u60n" path="res://Assets/User Interface/icons/Codex.png" id="19_5imtb"]
+[ext_resource type="ColorPalette" uid="uid://ctwlc7tm0wivk" path="res://Scenes/Tokens/token colour resources/menu_steel_blue.tres" id="20_lkqlo"]
+[ext_resource type="Texture2D" uid="uid://bt4pn4w7adeo6" path="res://Assets/User Interface/icons/Settings.png" id="21_x0b68"]
+[ext_resource type="ColorPalette" uid="uid://b4u7sst75bwto" path="res://Scenes/Tokens/token colour resources/red_v3.tres" id="22_re8ye"]
+[ext_resource type="Texture2D" uid="uid://iccntlihlngg" path="res://Assets/User Interface/icons/Quit.png" id="23_tladx"]
+[ext_resource type="ColorPalette" uid="uid://bm84nuqymslj4" path="res://Scenes/Tokens/token colour resources/menu_navy_star.tres" id="24_wawba"]
+[ext_resource type="Texture2D" uid="uid://co138ta4cl20" path="res://Assets/User Interface/icons/Star.png" id="25_mrsb4"]
+[ext_resource type="Texture2D" uid="uid://c1kplc6bgchqr" path="res://Assets/User Interface/icons/Clock.png" id="26_bi8m1"]
+[ext_resource type="Texture2D" uid="uid://b8h4uf5n3hlm2" path="res://Assets/User Interface/icons/Anouncements.png" id="27_g34j7"]
+[ext_resource type="Texture2D" uid="uid://b56mcl4wll4gs" path="res://Assets/User Interface/logos/Discord-Symbol-White.png" id="28_273js"]
+[ext_resource type="Texture2D" uid="uid://cyrfg7nj3aer6" path="res://Assets/User Interface/logos/youtube.png" id="29_l6af6"]
+[ext_resource type="Texture2D" uid="uid://qnnxsckmxlgb" path="res://Assets/User Interface/logos/steam logo.png" id="30_pbm1d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8o36d"]
+shader = ExtResource("1_n6bel")
+shader_parameter/top_color = Color(0.02, 0.1, 0.35, 1)
+shader_parameter/bottom_color = Color(0.03, 0.01, 0.18, 1)
+shader_parameter/accent_color = Color(0, 0.75, 1, 1)
+shader_parameter/second_accent_color = Color(0.45, 0.1, 1, 1)
+shader_parameter/pattern_color = Color(0.25, 0.75, 1, 1)
+shader_parameter/vignette_color = Color(0, 0, 0.08, 1)
+shader_parameter/accent_strength = 0.32
+shader_parameter/second_accent_strength = 0.22
+shader_parameter/accent_radius = 0.75
+shader_parameter/second_accent_radius = 0.85
+shader_parameter/accent_position = Vector2(0.82, 0.18)
+shader_parameter/second_accent_position = Vector2(0.18, 0.88)
+shader_parameter/pattern_shape = 5
+shader_parameter/pattern_scale = 15.109
+shader_parameter/pattern_size = 0.28900000000000003
+shader_parameter/pattern_softness = 0.072
+shader_parameter/pattern_alpha = 0.086
+shader_parameter/pattern_direction_degrees = 25.0
+shader_parameter/pattern_move_speed = 0.014
+shader_parameter/wave_strength = 0.015
+shader_parameter/shape_noise_strength = 0.496
+shader_parameter/shape_noise_scale = 13.078
+shader_parameter/shape_noise_speed = 0.492
+shader_parameter/vignette_strength = 0.55
+shader_parameter/aspect_ratio = 1.7777777777777777
+
+[sub_resource type="LabelSettings" id="LabelSettings_trj04"]
+font = ExtResource("4_0hah0")
+font_size = 80
+font_color = Color(0.9607843, 0.92156863, 0.8666667, 1)
+outline_size = 5
+outline_color = Color(0.078431375, 0.18039216, 0.32156864, 1)
+shadow_size = 4
+shadow_color = Color(0.048000004, 0.11840003, 0.4, 0.25490198)
+stacked_shadow_count = 1
+stacked_shadow_0/offset = Vector2(0, 1)
+stacked_shadow_0/outline_size = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_16hvj"]
+bg_color = Color(0.18431373, 0.29803923, 0.42352942, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vr1f0"]
+bg_color = Color(0.06666667, 0.19215687, 0.3372549, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font = ExtResource("9_ihdq7")
+font_size = 32
+font_color = Color(0.9607843, 0.92156863, 0.8666667, 1)
+outline_size = 2
+outline_color = Color(0.078431375, 0.18039216, 0.32156864, 1)
+shadow_size = 4
+shadow_color = Color(0.048000004, 0.11840003, 0.4, 0.25490198)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
+font_size = 48
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m3bi6"]
+bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.9019608, 0.3137255, 0.3254902, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wyh8j"]
+bg_color = Color(0.9019608, 0.8627451, 0.79607844, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7176471, 0.62352943, 0.5176471, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 14
+shadow_color = Color(0, 0, 0, 0.3882353)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mmvkj"]
+font_size = 30
+font_color = Color(0.11764706, 0.23137255, 0.3647059, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_tt8ml"]
+font_size = 17
+font_color = Color(0.11764706, 0.23137255, 0.3647059, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jw7lb"]
+bg_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+draw_center = false
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 1
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fsy6u"]
+bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(0.98, 0.3136, 0.3247065, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+bg_color = Color(0.039215688, 0.14117648, 0.26666668, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3019608, 0.40784314, 0.5372549, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t1dhk"]
+bg_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_5egv6"]
+font_size = 32
+font_color = Color(0.9098039, 0.8666667, 0.79607844, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujyyl"]
+bg_color = Color(0.33333334, 0.36078432, 0.7372549, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mkpwh"]
+bg_color = Color(0.24120001, 0.26978666, 0.67, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dnnj"]
+bg_color = Color(0.44080004, 0.46207997, 0.76, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
+font_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guliv"]
+bg_color = Color(0.8039216, 0.1254902, 0.12156863, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtepg"]
+bg_color = Color(0.68, 0.06119998, 0.06119998, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4nkqq"]
+bg_color = Color(0.88, 0.36080003, 0.36080003, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ehtkc"]
+bg_color = Color(0.09019608, 0.101960786, 0.12941177, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6dk6o"]
+bg_color = Color(0.035, 0.039499998, 0.05, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jr6u5"]
+bg_color = Color(0.18900001, 0.2133, 0.27, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="MainMenu" type="CanvasLayer" unique_id=1673159782]
+
+[node name="Animated Background" type="ColorRect" parent="." unique_id=1067201804]
+z_index = -10
+material = SubResource("ShaderMaterial_8o36d")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_1x6tw")
+pattern_scale = 15.109
+pattern_size = 0.28900000000000003
+pattern_softness = 0.072
+pattern_alpha = 0.086
+shape_noise_strength = 0.496
+shape_noise_scale = 13.078
+
+[node name="Content Vbox" type="VBoxContainer" parent="." unique_id=1823690054]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox" unique_id=1258726081]
+layout_mode = 2
+theme_override_constants/margin_top = 128
+
+[node name="Hex Container" parent="Content Vbox/MarginContainer" unique_id=1926777874 instance=ExtResource("3_e4fy6")]
+custom_minimum_size = Vector2(960, 192)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Title" type="Label" parent="Content Vbox/MarginContainer/Hex Container" unique_id=1025325189]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -86.5
+offset_top = -10.0
+offset_right = 86.5
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Advanced Four in a Row"
+label_settings = SubResource("LabelSettings_trj04")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Token Overlay" type="Control" parent="Content Vbox/MarginContainer/Hex Container" unique_id=1457867361]
+z_index = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_top = -28.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay" unique_id=836003404]
+unique_name_in_owner = true
+z_index = 1
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.09
+offset_left = -109.5
+offset_top = -109.5
+offset_right = 110.5
+offset_bottom = 57.219997
+grow_horizontal = 2
+script = ExtResource("5_vv0ui")
+visual_scale = 0.48
+overridden_by_inspector = true
+token_palette = ExtResource("6_rssyj")
+override_icon = ExtResource("7_itai0")
+override_icon_scale = 1.6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay" unique_id=452806215]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -52.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay/HBoxContainer" unique_id=913581271]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay/HBoxContainer/Left Divider" unique_id=434418171]
+custom_minimum_size = Vector2(300, 4)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.9254902, 0.7764706, 0.4627451, 1)
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay/HBoxContainer/Left Divider" unique_id=216143334]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_7blx1")
+
+[node name="Control" type="Control" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay/HBoxContainer" unique_id=1577283547]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Right Divider" type="HBoxContainer" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay/HBoxContainer" unique_id=192412933]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay/HBoxContainer/Right Divider" unique_id=1454345596]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_7blx1")
+
+[node name="Line" type="ColorRect" parent="Content Vbox/MarginContainer/Hex Container/Token Overlay/HBoxContainer/Right Divider" unique_id=1056616019]
+custom_minimum_size = Vector2(300, 4)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.9254902, 0.7764706, 0.4627451, 1)
+
+[node name="Main menu tag" type="HBoxContainer" parent="Content Vbox/MarginContainer/Hex Container" unique_id=951370534]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -804.0
+offset_top = -96.0
+offset_right = 804.0
+offset_bottom = 308.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag" unique_id=2134513808]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Left Divider" unique_id=1008684111]
+custom_minimum_size = Vector2(150, 4)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.9254902, 0.7764706, 0.4627451, 1)
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Left Divider" unique_id=351092700]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_7blx1")
+
+[node name="Hex Container2" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag" unique_id=1464586141 instance=ExtResource("3_e4fy6")]
+custom_minimum_size = Vector2(256, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Border" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Hex Container2" index="0" unique_id=1921745755]
+theme_override_styles/panel = SubResource("StyleBoxFlat_16hvj")
+
+[node name="MarginContainer" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Hex Container2/Border" index="0" unique_id=136211999]
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Main Panel" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Hex Container2/Border/MarginContainer" index="0" unique_id=1789954312]
+theme_override_styles/panel = SubResource("StyleBoxFlat_vr1f0")
+
+[node name="Label" type="Label" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Hex Container2" unique_id=900910143]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -86.5
+offset_top = -10.0
+offset_right = 86.5
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Main Menu"
+label_settings = SubResource("LabelSettings_lueid")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Right Divider" type="HBoxContainer" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag" unique_id=1143014903]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Right Divider" unique_id=89896380]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_7blx1")
+
+[node name="Line" type="ColorRect" parent="Content Vbox/MarginContainer/Hex Container/Main menu tag/Right Divider" unique_id=320637711]
+custom_minimum_size = Vector2(150, 4)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.9254902, 0.7764706, 0.4627451, 1)
+
+[node name="Bottom Margin" type="MarginContainer" parent="Content Vbox" unique_id=325511438]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 256
+theme_override_constants/margin_right = 256
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin" unique_id=78800500]
+layout_mode = 2
+
+[node name="Buttons Margin" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer" unique_id=38432878]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 96
+theme_override_constants/margin_right = 64
+
+[node name="Buttons" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin" unique_id=1808487939]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Host Game Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=1833177837]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = ExtResource("10_x1fj0")
+theme_override_styles/pressed = ExtResource("11_jt12c")
+theme_override_styles/hover = ExtResource("12_5s01e")
+theme_override_styles/focus = ExtResource("10_x1fj0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Host Game Button" unique_id=489039363]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Host Game Button/HBoxContainer" unique_id=433673586]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Host Game Button/HBoxContainer/MarginContainer" unique_id=1360648321]
+z_index = 1
+custom_minimum_size = Vector2(96, 72)
+layout_mode = 2
+script = ExtResource("5_vv0ui")
+visual_scale = 0.25
+overridden_by_inspector = true
+token_palette = ExtResource("6_rssyj")
+override_icon = ExtResource("13_xuacy")
+override_icon_white = true
+override_icon_scale = 1.6
+
+[node name="Spacer" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Host Game Button/HBoxContainer" unique_id=91237113]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Host Game Button/HBoxContainer" unique_id=1369812196]
+layout_mode = 2
+text = "Host Game"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Join Game Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=26466726]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = ExtResource("10_x1fj0")
+theme_override_styles/pressed = ExtResource("11_jt12c")
+theme_override_styles/hover = ExtResource("12_5s01e")
+theme_override_styles/focus = ExtResource("10_x1fj0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Join Game Button" unique_id=123399811]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Join Game Button/HBoxContainer" unique_id=656701805]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Join Game Button/HBoxContainer/MarginContainer" unique_id=1515613820]
+z_index = 1
+custom_minimum_size = Vector2(96, 72)
+layout_mode = 2
+script = ExtResource("5_vv0ui")
+visual_scale = 0.25
+overridden_by_inspector = true
+token_palette = ExtResource("14_c5ink")
+override_icon = ExtResource("15_sy38x")
+override_icon_white = true
+override_icon_scale = 1.6
+
+[node name="Spacer" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Join Game Button/HBoxContainer" unique_id=200650332]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Join Game Button/HBoxContainer" unique_id=262720299]
+layout_mode = 2
+text = "Join Game"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Replays Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=1012000920]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = ExtResource("10_x1fj0")
+theme_override_styles/pressed = ExtResource("11_jt12c")
+theme_override_styles/hover = ExtResource("12_5s01e")
+theme_override_styles/focus = ExtResource("10_x1fj0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Replays Button" unique_id=33434987]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Replays Button/HBoxContainer" unique_id=1790192663]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Replays Button/HBoxContainer/MarginContainer" unique_id=1787703222]
+z_index = 1
+custom_minimum_size = Vector2(96, 72)
+layout_mode = 2
+script = ExtResource("5_vv0ui")
+visual_scale = 0.25
+overridden_by_inspector = true
+token_palette = ExtResource("16_03tqy")
+override_icon = ExtResource("17_qmiki")
+override_icon_white = true
+override_icon_scale = 1.2
+
+[node name="Spacer" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Replays Button/HBoxContainer" unique_id=1983491324]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Replays Button/HBoxContainer" unique_id=518200431]
+layout_mode = 2
+text = "Replays"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Token Codex Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=719777035]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = ExtResource("10_x1fj0")
+theme_override_styles/pressed = ExtResource("11_jt12c")
+theme_override_styles/hover = ExtResource("12_5s01e")
+theme_override_styles/focus = ExtResource("10_x1fj0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Token Codex Button" unique_id=1281945751]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Token Codex Button/HBoxContainer" unique_id=639533154]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Token Codex Button/HBoxContainer/MarginContainer" unique_id=125230279]
+z_index = 1
+custom_minimum_size = Vector2(96, 72)
+layout_mode = 2
+script = ExtResource("5_vv0ui")
+visual_scale = 0.25
+overridden_by_inspector = true
+token_palette = ExtResource("18_0cyyw")
+override_icon = ExtResource("19_5imtb")
+override_icon_white = true
+override_icon_scale = 1.6
+
+[node name="Spacer" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Token Codex Button/HBoxContainer" unique_id=2100193047]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Token Codex Button/HBoxContainer" unique_id=629710068]
+layout_mode = 2
+text = "Token Codex"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Settings Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=65290115]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = ExtResource("10_x1fj0")
+theme_override_styles/pressed = ExtResource("11_jt12c")
+theme_override_styles/hover = ExtResource("12_5s01e")
+theme_override_styles/focus = ExtResource("10_x1fj0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Settings Button" unique_id=402047683]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Settings Button/HBoxContainer" unique_id=1319830968]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Settings Button/HBoxContainer/MarginContainer" unique_id=1410632633]
+z_index = 1
+custom_minimum_size = Vector2(96, 72)
+layout_mode = 2
+script = ExtResource("5_vv0ui")
+visual_scale = 0.25
+overridden_by_inspector = true
+token_palette = ExtResource("20_lkqlo")
+override_icon = ExtResource("21_x0b68")
+override_icon_white = true
+override_icon_scale = 1.6
+
+[node name="Spacer" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Settings Button/HBoxContainer" unique_id=502076568]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Settings Button/HBoxContainer" unique_id=720799885]
+layout_mode = 2
+text = "Settings"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Quit Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=1826404045]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = ExtResource("10_x1fj0")
+theme_override_styles/pressed = ExtResource("11_jt12c")
+theme_override_styles/hover = ExtResource("12_5s01e")
+theme_override_styles/focus = ExtResource("10_x1fj0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Quit Button" unique_id=797707443]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Quit Button/HBoxContainer" unique_id=158505487]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Quit Button/HBoxContainer/MarginContainer" unique_id=1832681503]
+z_index = 1
+custom_minimum_size = Vector2(96, 72)
+layout_mode = 2
+script = ExtResource("5_vv0ui")
+visual_scale = 0.25
+overridden_by_inspector = true
+token_palette = ExtResource("22_re8ye")
+override_icon = ExtResource("23_tladx")
+override_icon_white = true
+override_icon_scale = 1.2
+
+[node name="Spacer" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Quit Button/HBoxContainer" unique_id=331558514]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Quit Button/HBoxContainer" unique_id=2020496152]
+layout_mode = 2
+text = "Quit Game"
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Patch Notes Anouncements Community" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer" unique_id=465079287]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Patch Notes & Announcements Margin" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community" unique_id=1335547842]
+layout_mode = 2
+theme_override_constants/margin_top = 72
+
+[node name="Patch Notes & Announcements" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin" unique_id=286879378]
+propagate_maximum_size = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m3bi6")
+
+[node name="OuterMargin" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements" unique_id=602769258]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Inner Panel" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin" unique_id=1868775369]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_wyh8j")
+
+[node name="ContentMargin" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel" unique_id=1655349629]
+custom_minimum_size = Vector2(640, 480.35)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 30
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin" unique_id=1494132910]
+layout_mode = 2
+
+[node name="Notes Vbox" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer" unique_id=434870883]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Note" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox" unique_id=1131141643]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Note" unique_id=459709417]
+z_index = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("5_vv0ui")
+visual_scale = 0.16
+overridden_by_inspector = true
+token_palette = ExtResource("24_wawba")
+override_icon = ExtResource("25_mrsb4")
+override_icon_white = true
+override_icon_scale = 1.2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Note" unique_id=428680745]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Note Title" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Note/VBoxContainer" unique_id=1379178578]
+layout_mode = 2
+text = "Version 0.8 - Out Now!"
+label_settings = SubResource("LabelSettings_mmvkj")
+
+[node name="Note Title2" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Note/VBoxContainer" unique_id=704209685]
+layout_mode = 2
+text = "- New match settings available
+- New main menu added
+- Anvil cost rebalanced"
+label_settings = SubResource("LabelSettings_tt8ml")
+
+[node name="Seperator" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox" unique_id=386744237]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_right = 2
+
+[node name="Seperator" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator" unique_id=1836789579]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator/Seperator" unique_id=577700997]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jw7lb")
+
+[node name="Line" type="ColorRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator/Seperator" unique_id=293548223]
+custom_minimum_size = Vector2(150, 4)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+
+[node name="Diamond2" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator/Seperator" unique_id=212462973]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jw7lb")
+
+[node name="Line2" type="ColorRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator/Seperator" unique_id=972598514]
+custom_minimum_size = Vector2(150, 4)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+
+[node name="Diamond3" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator/Seperator" unique_id=1856103601]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jw7lb")
+
+[node name="Upcoming Features Note" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox" unique_id=954979338]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Upcoming Features Note" unique_id=1183979248]
+z_index = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("5_vv0ui")
+visual_scale = 0.16
+overridden_by_inspector = true
+token_palette = ExtResource("24_wawba")
+override_icon = ExtResource("26_bi8m1")
+override_icon_white = true
+override_icon_scale = 1.2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Upcoming Features Note" unique_id=1286696041]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Note Title" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Upcoming Features Note/VBoxContainer" unique_id=1479270960]
+layout_mode = 2
+text = "Upcoming Features"
+label_settings = SubResource("LabelSettings_mmvkj")
+
+[node name="Note Title2" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Upcoming Features Note/VBoxContainer" unique_id=102687346]
+layout_mode = 2
+text = "- Actual Settings Menu!
+- Audio (Music and SFX)
+- Replay System"
+label_settings = SubResource("LabelSettings_tt8ml")
+
+[node name="Seperator2" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox" unique_id=1952792218]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_right = 2
+
+[node name="Seperator" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator2" unique_id=1576187978]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator2/Seperator" unique_id=1738144970]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jw7lb")
+
+[node name="Line" type="ColorRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator2/Seperator" unique_id=2066233814]
+custom_minimum_size = Vector2(150, 4)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+
+[node name="Diamond2" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator2/Seperator" unique_id=152515617]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jw7lb")
+
+[node name="Line2" type="ColorRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator2/Seperator" unique_id=767839101]
+custom_minimum_size = Vector2(150, 4)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+
+[node name="Diamond3" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Seperator2/Seperator" unique_id=274626185]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jw7lb")
+
+[node name="Announcement" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox" unique_id=1503422435]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TokenVisualDisplay" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Announcement" unique_id=1487448141]
+z_index = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("5_vv0ui")
+visual_scale = 0.16
+overridden_by_inspector = true
+token_palette = ExtResource("24_wawba")
+override_icon = ExtResource("27_g34j7")
+override_icon_white = true
+override_icon_scale = 1.2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Announcement" unique_id=1976836885]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Note Title" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Announcement/VBoxContainer" unique_id=1323896359]
+layout_mode = 2
+text = "Announcement"
+label_settings = SubResource("LabelSettings_mmvkj")
+
+[node name="Note Title2" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/OuterMargin/Inner Panel/ContentMargin/ScrollContainer/Notes Vbox/Announcement/VBoxContainer" unique_id=954675549]
+layout_mode = 2
+text = "Join our Discord community to share strategies, report bugs and get a sneak peek on future updates!"
+label_settings = SubResource("LabelSettings_tt8ml")
+autowrap_mode = 2
+
+[node name="Top of menu" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements" unique_id=904608651]
+z_index = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Patch Notes & Announcements Header" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/Top of menu" unique_id=677658769]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fsy6u")
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/Top of menu/Patch Notes & Announcements Header" unique_id=792641745]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Patch Notes & Announcements Margin/Patch Notes & Announcements/Top of menu/Patch Notes & Announcements Header/MarginContainer" unique_id=1420066670]
+layout_mode = 2
+text = "Patch Notes & Announcements"
+label_settings = SubResource("LabelSettings_lueid")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Community Panel" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community" unique_id=1442653152]
+custom_minimum_size = Vector2(96, 128)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel" unique_id=1658947220]
+layout_mode = 2
+
+[node name="TitleLabelHbox" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer" unique_id=1061410326]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox" unique_id=1824893224]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox/Left Divider" unique_id=2127103561]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox/Left Divider" unique_id=290640343]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox/Left Divider/Diamond Holder" unique_id=427821479]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_t1dhk")
+
+[node name="TitleLabel" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox" unique_id=1241095728]
+layout_mode = 2
+text = "Community"
+label_settings = SubResource("LabelSettings_5egv6")
+horizontal_alignment = 1
+
+[node name="Right Divider" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox" unique_id=444075960]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox/Right Divider" unique_id=737775935]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox/Right Divider/Diamond Holder" unique_id=1809647056]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_t1dhk")
+
+[node name="Line" type="ColorRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/TitleLabelHbox/Right Divider" unique_id=558614476]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer" unique_id=159218971]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer" unique_id=2120139020]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Discord Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer" unique_id=317516344]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ujyyl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_mkpwh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8dnnj")
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Discord Button" unique_id=1813621308]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Discord Button/MarginContainer" unique_id=1186976908]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Discord Button/MarginContainer/HBoxContainer" unique_id=693882774]
+layout_mode = 2
+texture = ExtResource("28_273js")
+expand_mode = 3
+
+[node name="Control" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Discord Button/MarginContainer/HBoxContainer" unique_id=2035865550]
+custom_minimum_size = Vector2(4, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Discord Button/MarginContainer/HBoxContainer" unique_id=270524219]
+layout_mode = 2
+text = "Discord"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="YouTube Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1767053088]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_guliv")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vtepg")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4nkqq")
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/YouTube Button" unique_id=1240676564]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/YouTube Button/MarginContainer" unique_id=1780176915]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/YouTube Button/MarginContainer/HBoxContainer" unique_id=54399733]
+layout_mode = 2
+texture = ExtResource("29_l6af6")
+expand_mode = 3
+
+[node name="Control" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/YouTube Button/MarginContainer/HBoxContainer" unique_id=846147893]
+custom_minimum_size = Vector2(4, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/YouTube Button/MarginContainer/HBoxContainer" unique_id=959976510]
+layout_mode = 2
+text = "YouTube"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Steam Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer" unique_id=957607177]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_ehtkc")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_6dk6o")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jr6u5")
+
+[node name="MarginContainer" type="MarginContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Steam Button" unique_id=1589458074]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Steam Button/MarginContainer" unique_id=760775088]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Steam Button/MarginContainer/HBoxContainer" unique_id=1828984418]
+layout_mode = 2
+texture = ExtResource("30_pbm1d")
+expand_mode = 3
+
+[node name="Control" type="Control" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Steam Button/MarginContainer/HBoxContainer" unique_id=515694171]
+custom_minimum_size = Vector2(4, 0)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Content Vbox/Bottom Margin/HBoxContainer/Patch Notes Anouncements Community/Community Panel/VBoxContainer/MarginContainer/HBoxContainer/Steam Button/MarginContainer/HBoxContainer" unique_id=1710803455]
+layout_mode = 2
+text = "Steam"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=685917014]
+z_index = -1
+anchors_preset = -1
+anchor_right = 1.0
+offset_top = 83.0
+offset_bottom = 338.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 56
+theme_override_constants/margin_right = 56
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=2094109341]
+visible = false
+custom_minimum_size = Vector2(0, 256)
+layout_mode = 2
+alignment = 1
+
+[node name="TokenVisualDisplay" type="Control" parent="MarginContainer/HBoxContainer" unique_id=1786470716]
+custom_minimum_size = Vector2(337.92, 337.92)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("5_vv0ui")
+visual_scale = 1.0
+overridden_by_inspector = true
+token_palette = ExtResource("20_lkqlo")
+override_icon = ExtResource("7_itai0")
+override_icon_scale = 1.6
+
+[node name="Spacer" type="Control" parent="MarginContainer/HBoxContainer" unique_id=439876125]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TokenVisualDisplay2" type="Control" parent="MarginContainer/HBoxContainer" unique_id=1950457206]
+custom_minimum_size = Vector2(337.92, 337.92)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("5_vv0ui")
+visual_scale = 1.0
+overridden_by_inspector = true
+token_palette = ExtResource("20_lkqlo")
+override_icon = ExtResource("7_itai0")
+override_icon_scale = 1.6
+
+[editable path="Content Vbox/MarginContainer/Hex Container/Main menu tag/Hex Container2"]
