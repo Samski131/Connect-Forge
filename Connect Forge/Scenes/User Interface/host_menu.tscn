@@ -1,0 +1,827 @@
+[gd_scene format=3 uid="uid://chwcxxg730kxl"]
+
+[ext_resource type="PackedScene" uid="uid://dsdwgt8o11k35" path="res://Scenes/User Interface/backdrop.tscn" id="2_x2j12"]
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="3_0bnhc"]
+[ext_resource type="Resource" uid="uid://dcj5mm65cf8k6" path="res://Assets/User Interface/Resources/Transitions/popup_enter_soft.tres" id="4_dpdoa"]
+[ext_resource type="Resource" uid="uid://clvcbhjq8f4w3" path="res://Assets/User Interface/Resources/Transitions/popup_exit_soft.tres" id="5_we0xf"]
+[ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="6_knbi3"]
+[ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="7_vghdg"]
+[ext_resource type="Texture2D" uid="uid://ddvsrot3gghuf" path="res://Assets/User Interface/icons/globe.png" id="10_ierxv"]
+[ext_resource type="ColorPalette" uid="uid://cyq2equ0sidon" path="res://Scenes/Tokens/token colour resources/yellow_v3.tres" id="10_unrum"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="11_bc4bk"]
+[ext_resource type="ColorPalette" uid="uid://dq123hkj3anu7" path="res://Scenes/Tokens/token colour resources/blue_v3.tres" id="12_7238f"]
+[ext_resource type="ColorPalette" uid="uid://b4u7sst75bwto" path="res://Scenes/Tokens/token colour resources/red_v3.tres" id="12_qxh17"]
+[ext_resource type="Texture2D" uid="uid://cn0bu4f6rwreo" path="res://Assets/User Interface/icons/Locked.png" id="13_0pjp7"]
+[ext_resource type="Texture2D" uid="uid://swcxn7pj5ghi" path="res://Assets/User Interface/icons/Host.png" id="13_1vdst"]
+[ext_resource type="Texture2D" uid="uid://bb2n3hd71p7c0" path="res://Assets/User Interface/icons/eye open.png" id="14_ka510"]
+[ext_resource type="Texture2D" uid="uid://bf58oi5i7o86v" path="res://Assets/User Interface/icons/eye closed.png" id="15_ew6j4"]
+[ext_resource type="StyleBox" uid="uid://bpga6rji02ymx" path="res://Assets/User Interface/Resources/Theme Presets/Game Over Menu/red button.stylebox" id="16_ew6j4"]
+[ext_resource type="StyleBox" uid="uid://buwpa3b31eccc" path="res://Assets/User Interface/Resources/Buttons/green_normal.stylebox" id="17_txhi0"]
+[ext_resource type="StyleBox" uid="uid://cp3c1isr71xkd" path="res://Assets/User Interface/Resources/Buttons/green_pressed.stylebox" id="18_7g7hp"]
+[ext_resource type="StyleBox" uid="uid://bb3tlxb03hh8n" path="res://Assets/User Interface/Resources/Buttons/green_hover.stylebox" id="19_c55aw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
+bg_color = Color(0.17254902, 0.3254902, 0.52156866, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.9019608, 0.3137255, 0.3254902, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rolqa"]
+bg_color = Color(0.9019608, 0.8627451, 0.79607844, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7176471, 0.62352943, 0.5176471, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 14
+shadow_color = Color(0, 0, 0, 0.3882353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+bg_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font_size = 64
+font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_81y4a"]
+font_size = 24
+font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7238f"]
+font_size = 28
+font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1vdst"]
+bg_color = Color(0.9764706, 0.95686275, 0.92941177, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_unrum"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qxh17"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0pjp7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ka510"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.09803922, 0.25882354, 0.47058824, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2628, 0.46525338, 0.73, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0.511, 0.60955006, 0.73, 1)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txhi0"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.057199996, 0.22308004, 0.44, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2628, 0.46525338, 0.73, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0.511, 0.60955006, 0.73, 1)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7g7hp"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.15959997, 0.33744, 0.57, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2628, 0.46525338, 0.73, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0.511, 0.60955006, 0.73, 1)
+shadow_size = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_c55aw"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_tnf5q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fgh5"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.9098039, 0.8666667, 0.79607844, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_bncue"]
+font_size = 24
+font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_m7s26"]
+font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rf37q"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.9098039, 0.8666667, 0.79607844, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
+font_size = 24
+font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_m4e2p"]
+font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3o57w"]
+font_size = 24
+font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bncue"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.79, 0.023699978, 0.049243297, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(1, 0.53, 0.53, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m7s26"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.94594723, 0.3268647, 0.32010517, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(1, 0.53, 0.53, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.61960787)
+shadow_size = 4
+
+[node name="HostMenuPopupUI" type="Control" unique_id=356466557]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Backdrop" parent="." unique_id=1823797956 instance=ExtResource("2_x2j12")]
+layout_mode = 1
+
+[node name="PopupCenter" type="CenterContainer" parent="." unique_id=25291938]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PopupRoot" type="Control" parent="PopupCenter" unique_id=588263096]
+layout_mode = 2
+
+[node name="UIJuicePlayer" type="Node" parent="PopupCenter/PopupRoot" unique_id=837932620]
+unique_name_in_owner = true
+script = ExtResource("3_0bnhc")
+start_mode = 1
+enter_preset = ExtResource("4_dpdoa")
+exit_preset = ExtResource("5_we0xf")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
+[node name="UIJuicePlayerBackdrop" type="Node" parent="PopupCenter/PopupRoot" unique_id=323035621]
+unique_name_in_owner = true
+script = ExtResource("3_0bnhc")
+start_mode = 1
+enter_preset = ExtResource("6_knbi3")
+exit_preset = ExtResource("7_vghdg")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
+[node name="OuterFrame" type="PanelContainer" parent="PopupCenter/PopupRoot" unique_id=55612880]
+propagate_maximum_size = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -106.5
+offset_right = 106.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8v3xt")
+
+[node name="OuterMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=107440784]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Inner Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin" unique_id=438187732]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_rolqa")
+
+[node name="ContentMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel" unique_id=473582246]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentVbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin" unique_id=2120904535]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 18
+
+[node name="TopSpacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1695223297]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+
+[node name="TitleLabelHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1377486983]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox" unique_id=1538383554]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Left Divider" unique_id=411443778]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Left Divider" unique_id=1845412082]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Left Divider/Diamond Holder" unique_id=212539744]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="TitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox" unique_id=89453216]
+layout_mode = 2
+text = "Host Game"
+label_settings = SubResource("LabelSettings_lueid")
+horizontal_alignment = 1
+
+[node name="Right Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox" unique_id=413603736]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Right Divider" unique_id=996201669]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Right Divider/Diamond Holder" unique_id=440861944]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Right Divider" unique_id=2123981903]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="SubtitleLabelHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1838541234]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox" unique_id=1370353877]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox/Left Divider" unique_id=341397523]
+custom_minimum_size = Vector2(40, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox/Left Divider" unique_id=1864313702]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox/Left Divider/Diamond Holder" unique_id=2007356724]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox" unique_id=1026592631]
+layout_mode = 2
+text = "Set up your lobby and start your game."
+label_settings = SubResource("LabelSettings_81y4a")
+horizontal_alignment = 1
+
+[node name="Right Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox" unique_id=1460584366]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox/Right Divider" unique_id=1162766494]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox/Right Divider/Diamond Holder" unique_id=1373341265]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/SubtitleLabelHbox/Right Divider" unique_id=907287777]
+custom_minimum_size = Vector2(40, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="MainBody" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1815692670]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Lobby Name" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=208718113]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+
+[node name="Lobby Name Vbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Name" unique_id=2010038459]
+layout_mode = 2
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Name/Lobby Name Vbox" unique_id=1169766988]
+layout_mode = 2
+text = "  Lobby Name"
+label_settings = SubResource("LabelSettings_7238f")
+
+[node name="Lobby Name Edit Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Name/Lobby Name Vbox" unique_id=2039365963]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_1vdst")
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Name/Lobby Name Vbox/Lobby Name Edit Panel" unique_id=1869454016]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+
+[node name="Lobby Name Edit Field" type="LineEdit" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Name/Lobby Name Vbox/Lobby Name Edit Panel/MarginContainer" unique_id=579153894]
+custom_minimum_size = Vector2(420, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
+theme_override_colors/font_placeholder_color = Color(0.62, 0.57815003, 0.527, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_unrum")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_qxh17")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_0pjp7")
+placeholder_text = "Enter a lobby name..."
+max_length = 32
+clear_button_enabled = true
+icon_expand_mode = 1
+
+[node name="Lobby Description" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=5476316]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+
+[node name="Lobby Description Vbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Description" unique_id=153510214]
+layout_mode = 2
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Description/Lobby Description Vbox" unique_id=545136321]
+layout_mode = 2
+text = "  Description (Optional)"
+label_settings = SubResource("LabelSettings_7238f")
+
+[node name="Lobby Description Edit Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Description/Lobby Description Vbox" unique_id=65477710]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_1vdst")
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Description/Lobby Description Vbox/Lobby Description Edit Panel" unique_id=1025381521]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+
+[node name="Lobby Description Edit Field" type="LineEdit" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Description/Lobby Description Vbox/Lobby Description Edit Panel/MarginContainer" unique_id=777817523]
+custom_minimum_size = Vector2(420, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
+theme_override_colors/font_placeholder_color = Color(0.62, 0.57815003, 0.527, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_unrum")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_qxh17")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_0pjp7")
+placeholder_text = "Enter a description for your lobby..."
+max_length = 128
+clear_button_enabled = true
+icon_expand_mode = 1
+
+[node name="Lobby Visibility" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=1061873547]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+
+[node name="Lobby Visibility Vbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility" unique_id=588473871]
+layout_mode = 2
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox" unique_id=1472997025]
+layout_mode = 2
+text = "  Lobby Visibility"
+label_settings = SubResource("LabelSettings_7238f")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox" unique_id=564783315]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Public Button" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer" unique_id=2011379577]
+custom_minimum_size = Vector2(192, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_ka510")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7g7hp")
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Public Button" unique_id=1190293272]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Public Button/MarginContainer" unique_id=1586522245]
+layout_mode = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Public Button/MarginContainer/HBoxContainer" unique_id=987697521]
+z_index = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("11_bc4bk")
+visual_scale = 0.54
+overridden_by_inspector = true
+token_palette = ExtResource("12_7238f")
+override_icon = ExtResource("10_ierxv")
+override_icon_white = true
+override_icon_scale = 0.6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Public Button/MarginContainer/HBoxContainer" unique_id=1187189351]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Visibility Type Label" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Public Button/MarginContainer/HBoxContainer/VBoxContainer" unique_id=73212478]
+layout_mode = 2
+text = "Public"
+label_settings = SubResource("LabelSettings_c55aw")
+
+[node name="Visibility Type Label2" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Public Button/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1146020820]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Ayone can find and join"
+label_settings = SubResource("LabelSettings_tnf5q")
+autowrap_mode = 2
+
+[node name="Friends Button" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer" unique_id=1739936479]
+custom_minimum_size = Vector2(192, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_6fgh5")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7g7hp")
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button" unique_id=1287799198]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button/MarginContainer" unique_id=1826347466]
+layout_mode = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button/MarginContainer/HBoxContainer" unique_id=468159302]
+z_index = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("11_bc4bk")
+visual_scale = 0.54
+overridden_by_inspector = true
+token_palette = ExtResource("10_unrum")
+override_icon = ExtResource("13_1vdst")
+override_icon_white = true
+override_icon_scale = 0.6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button/MarginContainer/HBoxContainer" unique_id=1867395697]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Visibility Type Label" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button/MarginContainer/HBoxContainer/VBoxContainer" unique_id=272807773]
+layout_mode = 2
+text = "Friends"
+label_settings = SubResource("LabelSettings_bncue")
+
+[node name="Visibility Type Label2" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button/MarginContainer/HBoxContainer/VBoxContainer" unique_id=2129040788]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Friends can find and join"
+label_settings = SubResource("LabelSettings_m7s26")
+autowrap_mode = 2
+
+[node name="Private Button" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer" unique_id=114513887]
+custom_minimum_size = Vector2(192, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_rf37q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7g7hp")
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button" unique_id=536044891]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button/MarginContainer" unique_id=1404313207]
+layout_mode = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button/MarginContainer/HBoxContainer" unique_id=1805037132]
+z_index = 1
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("11_bc4bk")
+visual_scale = 0.54
+overridden_by_inspector = true
+token_palette = ExtResource("12_qxh17")
+override_icon = ExtResource("13_0pjp7")
+override_icon_white = true
+override_icon_scale = 0.6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button/MarginContainer/HBoxContainer" unique_id=1069162113]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Visibility Type Label" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1084175089]
+layout_mode = 2
+text = "Private"
+label_settings = SubResource("LabelSettings_fsy6u")
+
+[node name="Visibility Type Label2" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button/MarginContainer/HBoxContainer/VBoxContainer" unique_id=1489266993]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Only those with a password can join"
+label_settings = SubResource("LabelSettings_m4e2p")
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Password" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=1185108777]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+
+[node name="Lobby Password Vbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password" unique_id=902513413]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=1368883845]
+layout_mode = 2
+
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/HBoxContainer" unique_id=1447972714]
+layout_mode = 2
+text = "  Password"
+label_settings = SubResource("LabelSettings_7238f")
+
+[node name="SubtitleLabel2" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/HBoxContainer" unique_id=1804447900]
+layout_mode = 2
+text = "(Required for Private)"
+label_settings = SubResource("LabelSettings_3o57w")
+vertical_alignment = 1
+
+[node name="Lobby Description Edit Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=1534791862]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_1vdst")
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel" unique_id=1242879307]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer" unique_id=561769642]
+layout_mode = 2
+
+[node name="Lobby Description Edit Field" type="LineEdit" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer/HBoxContainer" unique_id=1255791639]
+custom_minimum_size = Vector2(420, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
+theme_override_colors/font_placeholder_color = Color(0.62, 0.57815003, 0.527, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_unrum")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_qxh17")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_0pjp7")
+placeholder_text = "Enter a password..."
+max_length = 128
+clear_button_enabled = true
+icon_expand_mode = 1
+
+[node name="TextureButton" type="TextureButton" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer/HBoxContainer" unique_id=523310531]
+modulate = Color(0.7764706, 0.7137255, 0.6392157, 1)
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+toggle_mode = true
+button_pressed = true
+texture_normal = ExtResource("14_ka510")
+texture_pressed = ExtResource("15_ew6j4")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Button Hbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=1216376556]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Cancel Button" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Button Hbox" unique_id=1084619273]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("16_ew6j4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bncue")
+theme_override_styles/hover = SubResource("StyleBoxFlat_m7s26")
+text = "Cancel"
+
+[node name="Create Lobby Button" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Button Hbox" unique_id=443062053]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("17_txhi0")
+theme_override_styles/pressed = ExtResource("18_7g7hp")
+theme_override_styles/hover = ExtResource("19_c55aw")
+text = "Create Lobby"
+
+[node name="Token Overlay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=213115429]
+z_index = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/Token Overlay" unique_id=1865169177]
+z_index = 1
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.09
+offset_left = -109.5
+offset_top = -109.5
+offset_right = 110.5
+offset_bottom = 57.219997
+grow_horizontal = 2
+script = ExtResource("11_bc4bk")
+visual_scale = 0.54
+overridden_by_inspector = true
+token_palette = ExtResource("12_7238f")
+override_icon = ExtResource("13_1vdst")
