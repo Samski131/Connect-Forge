@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dprp1rx4mroru"]
 
 [ext_resource type="Shader" uid="uid://bnbioicp1sqn7" path="res://Shaders/background.gdshader" id="1_n45e2"]
+[ext_resource type="Script" uid="uid://b3205ami6eknk" path="res://Scripts/User Interface/main_menu.gd" id="1_xcoo4"]
 [ext_resource type="Script" uid="uid://djfb4d2f5wocp" path="res://Scripts/User Interface/animated_background.gd" id="2_opfnp"]
 [ext_resource type="PackedScene" uid="uid://drb2o57qvwwuu" path="res://Scenes/User Interface/hex_container.tscn" id="3_cp0ys"]
 [ext_resource type="FontFile" uid="uid://dyfgahjk6a5lc" path="res://fonts/Fredoka-SemiBold.ttf" id="4_cp0ys"]
@@ -254,6 +255,7 @@ corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
 [node name="MainMenu" type="CanvasLayer" unique_id=1673159782]
+script = ExtResource("1_xcoo4")
 
 [node name="Animated Background" type="ColorRect" parent="." unique_id=1067201804]
 z_index = -10

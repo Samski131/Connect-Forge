@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://chwcxxg730kxl"]
 
+[ext_resource type="Script" uid="uid://bp5ubnpfe7g7n" path="res://Scripts/User Interface/host_menu.gd" id="1_ka510"]
 [ext_resource type="PackedScene" uid="uid://dsdwgt8o11k35" path="res://Scenes/User Interface/backdrop.tscn" id="2_x2j12"]
 [ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="3_0bnhc"]
 [ext_resource type="Resource" uid="uid://dcj5mm65cf8k6" path="res://Assets/User Interface/Resources/Transitions/popup_enter_soft.tres" id="4_dpdoa"]
 [ext_resource type="Resource" uid="uid://clvcbhjq8f4w3" path="res://Assets/User Interface/Resources/Transitions/popup_exit_soft.tres" id="5_we0xf"]
-[ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="6_knbi3"]
-[ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="7_vghdg"]
 [ext_resource type="Texture2D" uid="uid://ddvsrot3gghuf" path="res://Assets/User Interface/icons/globe.png" id="10_ierxv"]
 [ext_resource type="ColorPalette" uid="uid://cyq2equ0sidon" path="res://Scenes/Tokens/token colour resources/yellow_v3.tres" id="10_unrum"]
 [ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="11_bc4bk"]
@@ -24,7 +23,7 @@
 bg_color = Color(0.17254902, 0.3254902, 0.52156866, 1)
 border_width_left = 1
 border_width_top = 1
-border_color = Color(0.9019608, 0.3137255, 0.3254902, 1)
+border_color = Color(0.28399998, 0.4686, 0.71, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -86,22 +85,20 @@ corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0pjp7"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ka510"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fgh5"]
 content_margin_top = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.09803922, 0.25882354, 0.47058824, 1)
+bg_color = Color(0.9098039, 0.8666667, 0.79607844, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.2628, 0.46525338, 0.73, 1)
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 corner_detail = 12
-shadow_color = Color(0.511, 0.60955006, 0.73, 1)
-shadow_size = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txhi0"]
 content_margin_top = 8.0
@@ -120,10 +117,25 @@ corner_detail = 12
 shadow_color = Color(0.511, 0.60955006, 0.73, 1)
 shadow_size = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7g7hp"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c55aw"]
 content_margin_top = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.15959997, 0.33744, 0.57, 1)
+bg_color = Color(0.98, 0.93492, 0.8624, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m4e2p"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.11549999, 0.30378336, 0.55, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -137,25 +149,12 @@ corner_detail = 12
 shadow_color = Color(0.511, 0.60955006, 0.73, 1)
 shadow_size = 4
 
+[sub_resource type="ButtonGroup" id="ButtonGroup_ka510"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_c55aw"]
 font_size = 24
 
 [sub_resource type="LabelSettings" id="LabelSettings_tnf5q"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6fgh5"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.9098039, 0.8666667, 0.79607844, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
 
 [sub_resource type="LabelSettings" id="LabelSettings_bncue"]
 font_size = 24
@@ -163,21 +162,6 @@ font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_m7s26"]
 font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rf37q"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.9098039, 0.8666667, 0.79607844, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
 
 [sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
 font_size = 24
@@ -229,6 +213,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("1_ka510")
 
 [node name="Backdrop" parent="." unique_id=1823797956 instance=ExtResource("2_x2j12")]
 layout_mode = 1
@@ -251,14 +236,6 @@ script = ExtResource("3_0bnhc")
 start_mode = 1
 enter_preset = ExtResource("4_dpdoa")
 exit_preset = ExtResource("5_we0xf")
-metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
-
-[node name="UIJuicePlayerBackdrop" type="Node" parent="PopupCenter/PopupRoot" unique_id=323035621]
-unique_name_in_owner = true
-script = ExtResource("3_0bnhc")
-start_mode = 1
-enter_preset = ExtResource("6_knbi3")
-exit_preset = ExtResource("7_vghdg")
 metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
 
 [node name="OuterFrame" type="PanelContainer" parent="PopupCenter/PopupRoot" unique_id=55612880]
@@ -499,7 +476,6 @@ theme_override_styles/read_only = SubResource("StyleBoxEmpty_qxh17")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_0pjp7")
 placeholder_text = "Enter a lobby name..."
 max_length = 32
-clear_button_enabled = true
 icon_expand_mode = 1
 
 [node name="Lobby Description" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=5476316]
@@ -538,7 +514,6 @@ theme_override_styles/read_only = SubResource("StyleBoxEmpty_qxh17")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_0pjp7")
 placeholder_text = "Enter a description for your lobby..."
 max_length = 128
-clear_button_enabled = true
 icon_expand_mode = 1
 
 [node name="Lobby Visibility" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=1061873547]
@@ -563,9 +538,13 @@ alignment = 1
 custom_minimum_size = Vector2(192, 128)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxFlat_ka510")
+theme_override_styles/normal = SubResource("StyleBoxFlat_6fgh5")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
-theme_override_styles/hover = SubResource("StyleBoxFlat_7g7hp")
+theme_override_styles/hover = SubResource("StyleBoxFlat_c55aw")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_m4e2p")
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_ka510")
 
 [node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Public Button" unique_id=1190293272]
 layout_mode = 1
@@ -588,7 +567,7 @@ custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
 script = ExtResource("11_bc4bk")
-visual_scale = 0.54
+visual_scale = 0.15
 overridden_by_inspector = true
 token_palette = ExtResource("12_7238f")
 override_icon = ExtResource("10_ierxv")
@@ -617,7 +596,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxFlat_6fgh5")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
-theme_override_styles/hover = SubResource("StyleBoxFlat_7g7hp")
+theme_override_styles/hover = SubResource("StyleBoxFlat_c55aw")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_m4e2p")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ka510")
 
 [node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button" unique_id=1287799198]
 layout_mode = 1
@@ -640,12 +622,12 @@ custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
 script = ExtResource("11_bc4bk")
-visual_scale = 0.54
+visual_scale = 0.15
 overridden_by_inspector = true
 token_palette = ExtResource("10_unrum")
 override_icon = ExtResource("13_1vdst")
 override_icon_white = true
-override_icon_scale = 0.6
+override_icon_scale = 1.5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Friends Button/MarginContainer/HBoxContainer" unique_id=1867395697]
 layout_mode = 2
@@ -667,9 +649,12 @@ autowrap_mode = 2
 custom_minimum_size = Vector2(192, 128)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxFlat_rf37q")
+theme_override_styles/normal = SubResource("StyleBoxFlat_6fgh5")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
-theme_override_styles/hover = SubResource("StyleBoxFlat_7g7hp")
+theme_override_styles/hover = SubResource("StyleBoxFlat_c55aw")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_m4e2p")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ka510")
 
 [node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button" unique_id=536044891]
 layout_mode = 1
@@ -692,12 +677,11 @@ custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
 script = ExtResource("11_bc4bk")
-visual_scale = 0.54
+visual_scale = 0.15
 overridden_by_inspector = true
 token_palette = ExtResource("12_qxh17")
 override_icon = ExtResource("13_0pjp7")
 override_icon_white = true
-override_icon_scale = 0.6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Lobby Visibility/Lobby Visibility Vbox/HBoxContainer/Private Button/MarginContainer/HBoxContainer" unique_id=1069162113]
 layout_mode = 2
@@ -738,26 +722,30 @@ text = "(Required for Private)"
 label_settings = SubResource("LabelSettings_3o57w")
 vertical_alignment = 1
 
-[node name="Lobby Description Edit Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=1534791862]
+[node name="Lobby Password Edit Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=1534791862]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_1vdst")
 
-[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel" unique_id=1242879307]
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel" unique_id=1242879307]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer" unique_id=561769642]
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel/MarginContainer" unique_id=561769642]
 layout_mode = 2
 
-[node name="Lobby Description Edit Field" type="LineEdit" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer/HBoxContainer" unique_id=1255791639]
+[node name="Password Edit Lineedit" type="LineEdit" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel/MarginContainer/HBoxContainer" unique_id=1255791639]
 custom_minimum_size = Vector2(420, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
 theme_override_colors/font_placeholder_color = Color(0.62, 0.57815003, 0.527, 1)
+theme_override_colors/caret_color = Color(0.61960787, 0.5764706, 0.5254902, 1)
+theme_override_colors/clear_button_color = Color(0.61960787, 0.5764706, 0.5254902, 1)
+theme_override_colors/clear_button_color_pressed = Color(0.61960787, 0.5764706, 0.5254902, 1)
+theme_override_constants/caret_width = 3
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxEmpty_unrum")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_qxh17")
@@ -765,9 +753,12 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_0pjp7")
 placeholder_text = "Enter a password..."
 max_length = 128
 clear_button_enabled = true
+caret_blink = true
+secret = true
+secret_character = "●"
 icon_expand_mode = 1
 
-[node name="TextureButton" type="TextureButton" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer/HBoxContainer" unique_id=523310531]
+[node name="Secret Password Visibility" type="TextureButton" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel/MarginContainer/HBoxContainer" unique_id=523310531]
 modulate = Color(0.7764706, 0.7137255, 0.6392157, 1)
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
@@ -825,3 +816,4 @@ visual_scale = 0.54
 overridden_by_inspector = true
 token_palette = ExtResource("12_7238f")
 override_icon = ExtResource("13_1vdst")
+override_icon_scale = 1.5

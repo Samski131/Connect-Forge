@@ -78,9 +78,31 @@ corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0pjp7"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_3o57w"]
+[sub_resource type="LabelSettings" id="LabelSettings_24u74"]
+font_size = 28
+font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_txqgq"]
 font_size = 24
 font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5eml7"]
+bg_color = Color(0.9764706, 0.95686275, 0.92941177, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.7764706, 0.7137255, 0.6392157, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lgxfb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sity7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i3voj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bncue"]
 content_margin_top = 8.0
@@ -316,58 +338,65 @@ max_length = 128
 clear_button_enabled = true
 icon_expand_mode = 1
 
-[node name="Password" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=1185108777]
+[node name="Password" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=1949246744]
 layout_mode = 2
 theme_override_constants/margin_left = 32
 theme_override_constants/margin_right = 32
 
-[node name="Lobby Password Vbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password" unique_id=902513413]
+[node name="Lobby Password Vbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password" unique_id=739492187]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=1368883845]
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=75645750]
 layout_mode = 2
 
-[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/HBoxContainer" unique_id=1447972714]
+[node name="SubtitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/HBoxContainer" unique_id=535962204]
 layout_mode = 2
 text = "  Password"
-label_settings = SubResource("LabelSettings_7238f")
+label_settings = SubResource("LabelSettings_24u74")
 
-[node name="SubtitleLabel2" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/HBoxContainer" unique_id=1804447900]
+[node name="SubtitleLabel2" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/HBoxContainer" unique_id=965531830]
 layout_mode = 2
 text = "(Required for Private)"
-label_settings = SubResource("LabelSettings_3o57w")
+label_settings = SubResource("LabelSettings_txqgq")
 vertical_alignment = 1
 
-[node name="Lobby Description Edit Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=1534791862]
+[node name="Lobby Password Edit Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox" unique_id=560563405]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_1vdst")
+theme_override_styles/panel = SubResource("StyleBoxFlat_5eml7")
 
-[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel" unique_id=1242879307]
+[node name="MarginContainer" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel" unique_id=1697467467]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer" unique_id=561769642]
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel/MarginContainer" unique_id=1226717120]
 layout_mode = 2
 
-[node name="Lobby Description Edit Field" type="LineEdit" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer/HBoxContainer" unique_id=1255791639]
+[node name="Password Edit Lineedit" type="LineEdit" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel/MarginContainer/HBoxContainer" unique_id=1204799747]
 custom_minimum_size = Vector2(420, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
 theme_override_colors/font_placeholder_color = Color(0.62, 0.57815003, 0.527, 1)
+theme_override_colors/caret_color = Color(0.61960787, 0.5764706, 0.5254902, 1)
+theme_override_colors/clear_button_color = Color(0.61960787, 0.5764706, 0.5254902, 1)
+theme_override_colors/clear_button_color_pressed = Color(0.61960787, 0.5764706, 0.5254902, 1)
+theme_override_constants/caret_width = 3
 theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxEmpty_unrum")
-theme_override_styles/read_only = SubResource("StyleBoxEmpty_qxh17")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_0pjp7")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_lgxfb")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_sity7")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_i3voj")
 placeholder_text = "Enter a password..."
 max_length = 128
 clear_button_enabled = true
+caret_blink = true
+secret = true
+secret_character = "●"
 icon_expand_mode = 1
 
-[node name="TextureButton" type="TextureButton" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Description Edit Panel/MarginContainer/HBoxContainer" unique_id=523310531]
+[node name="Secret Password Visibility" type="TextureButton" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Password/Lobby Password Vbox/Lobby Password Edit Panel/MarginContainer/HBoxContainer" unique_id=1581724568]
 modulate = Color(0.7764706, 0.7137255, 0.6392157, 1)
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
