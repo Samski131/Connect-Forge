@@ -1,6 +1,9 @@
 class_name LobbyPlayerTray
 extends PanelContainer
 
+signal multiplayer_purchase_requested(player_id:int, token_type:int)
+signal multiplayer_refund_requested(player_id:int, token_type:int)
+
 @export_group("Player")
 @export var player_id:int = 0
 
@@ -14,9 +17,16 @@ extends PanelContainer
 @export_range(0, 6) var interior_colour_index:int = 5
 
 var player_data:MatchPlayerData = null
+var lobby_member_data:LobbyMemberData = null
 var purchased_item_uis:Dictionary = {}
 
+var interaction_enabled:bool = true
+var local_player_controls_enabled:bool = true
+var name_editing_enabled:bool = true
+var multiplayer_request_mode:bool = false
+
 @onready var player_name_edit:LineEdit = %PlayerNameEdit
+@onready var points_left_label:Label = $"TrayHbox/Content/Content/Margin/Header Content/PointsLeftLabel"
 @onready var points_label:Label = %PointsLabel
 @onready var header_token_visual_display:TokenVisualDisplay = %TokenVisualDisplay
 @onready var purchased_tokens:GridContainer = %PurchaseTokens
@@ -28,20 +38,111 @@ var purchased_item_uis:Dictionary = {}
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	connect_player_name_signals()
+	update_interaction_state()
 
 
 func setup(new_player_id:int, new_player_data:MatchPlayerData) -> void:
 	player_id = new_player_id
 	player_data = new_player_data
+	lobby_member_data = null
+	interaction_enabled = true
+	local_player_controls_enabled = true
+	name_editing_enabled = true
+	multiplayer_request_mode = false
 	
 	if is_node_ready() == false:
 		await ready
 	
 	connect_player_name_signals()
+	update_interaction_state()
 	refresh_player_details()
 	refresh_points()
+	refresh_ready_state()
 	rebuild_purchased_tokens()
 
+
+func setup_multiplayer(new_player_id:int, new_player_data:MatchPlayerData, new_lobby_member_data:LobbyMemberData, allow_interaction:bool) -> void:
+	player_id = new_player_id
+	player_data = new_player_data
+	lobby_member_data = new_lobby_member_data
+	local_player_controls_enabled = allow_interaction
+	interaction_enabled = allow_interaction and new_lobby_member_data.is_ready == false
+	name_editing_enabled = false
+	multiplayer_request_mode = true
+	
+	if is_node_ready() == false:
+		await ready
+	
+	connect_player_name_signals()
+	update_interaction_state()
+	refresh_player_details()
+	refresh_points()
+	refresh_ready_state()
+	rebuild_purchased_tokens()
+
+
+func refresh_from_player_data(new_player_data:MatchPlayerData, new_lobby_member_data:LobbyMemberData = null) -> void:
+	player_data = new_player_data
+	
+	if new_lobby_member_data != null:
+		lobby_member_data = new_lobby_member_data
+	
+	refresh_player_details()
+	refresh_points()
+	refresh_ready_state()
+	rebuild_purchased_tokens()
+	update_interaction_state()
+
+
+func refresh_ready_state() -> void:
+	if points_left_label == null:
+		return
+	
+	if points_label == null:
+		return
+	
+	if multiplayer_request_mode == false:
+		points_left_label.text = "Points Left: "
+		points_label.visible = true
+		return
+	
+	if lobby_member_data == null:
+		points_left_label.text = "Not Ready"
+		points_label.visible = false
+		return
+	
+	if lobby_member_data.is_ready:
+		points_left_label.text = "READY ✓"
+		points_label.visible = false
+	else:
+		points_left_label.text = "Points Left: "
+		points_label.visible = true
+
+
+func update_interaction_state() -> void:
+	if multiplayer_request_mode:
+		interaction_enabled = local_player_controls_enabled
+		
+		if lobby_member_data != null:
+			if lobby_member_data.is_ready:
+				interaction_enabled = false
+	
+	if player_name_edit != null:
+		player_name_edit.editable = name_editing_enabled
+		player_name_edit.select_all_on_focus = name_editing_enabled
+		
+		if name_editing_enabled:
+			player_name_edit.focus_mode = Control.FOCUS_ALL
+		else:
+			player_name_edit.focus_mode = Control.FOCUS_NONE
+	
+	for item_value in purchased_item_uis.values():
+		var item:LobbyPurchasedTokenItem = item_value as LobbyPurchasedTokenItem
+		
+		if item == null:
+			continue
+		
+		item.set_refund_enabled(interaction_enabled)
 
 func connect_player_name_signals() -> void:
 	if player_name_edit == null:
@@ -77,6 +178,16 @@ func refresh_player_name() -> void:
 	if player_name_edit == null:
 		return
 	
+	if lobby_member_data != null:
+		player_name_edit.text = lobby_member_data.display_name
+		
+		if lobby_member_data.is_host:
+			player_name_edit.tooltip_text = lobby_member_data.display_name + "\nSteam player • Lobby host"
+		else:
+			player_name_edit.tooltip_text = lobby_member_data.display_name + "\nSteam player"
+		
+		return
+	
 	if MatchData.config != null:
 		player_name_edit.text = MatchData.config.get_player_name(player_id)
 		return
@@ -96,6 +207,10 @@ func get_default_player_name() -> String:
 
 
 func commit_player_name() -> void:
+	if name_editing_enabled == false:
+		refresh_player_name()
+		return
+	
 	if player_name_edit == null:
 		return
 	
@@ -138,6 +253,9 @@ func refresh_points() -> void:
 
 
 func _can_drop_data(_at_position:Vector2, data:Variant) -> bool:
+	if interaction_enabled == false:
+		return false
+	
 	if data is Dictionary == false:
 		return false
 	
@@ -160,6 +278,10 @@ func _can_drop_data(_at_position:Vector2, data:Variant) -> bool:
 
 
 func _drop_data(_at_position:Vector2, data:Variant) -> void:
+	if interaction_enabled == false:
+		play_invalid_feedback()
+		return
+	
 	if data is Dictionary == false:
 		return
 	
@@ -170,6 +292,10 @@ func _drop_data(_at_position:Vector2, data:Variant) -> void:
 	
 	var token_type:int = int(drag_data["token_type"])
 	
+	if multiplayer_request_mode:
+		multiplayer_purchase_requested.emit(player_id, token_type)
+		return
+	
 	if try_purchase_token(token_type) == false:
 		play_invalid_feedback()
 		return
@@ -178,6 +304,9 @@ func _drop_data(_at_position:Vector2, data:Variant) -> void:
 
 
 func try_purchase_token(token_type:int) -> bool:
+	if interaction_enabled == false:
+		return false
+	
 	if player_data == null:
 		return false
 	
@@ -237,6 +366,7 @@ func ensure_purchased_item_exists(token_type:int) -> void:
 	
 	purchased_tokens.add_child(item)
 	item.setup(player_id, token_type, token_count, player_data.colour_palette)
+	item.set_refund_enabled(interaction_enabled)
 	
 	if item.refund_requested.is_connected(_on_refund_requested) == false:
 		item.refund_requested.connect(_on_refund_requested)
@@ -394,7 +524,14 @@ func _on_player_name_focus_exited() -> void:
 
 
 func _on_refund_requested(changed_player_id:int, token_type:int) -> void:
+	if interaction_enabled == false:
+		return
+	
 	if changed_player_id != player_id:
+		return
+	
+	if multiplayer_request_mode:
+		multiplayer_refund_requested.emit(player_id, token_type)
 		return
 	
 	if player_data == null:

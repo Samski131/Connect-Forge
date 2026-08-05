@@ -7,6 +7,7 @@ var player_id:int = -1
 var token_type:int = -1
 var token_count:int = 0
 var player_palette:ColorPalette = null
+var refund_enabled:bool = true
 
 @onready var token_visual_display:TokenVisualDisplay = %TokenVisualDisplay
 @onready var count_label:Label = %CountLabel
@@ -31,6 +32,20 @@ func setup(new_player_id:int, new_token_type:int, new_count:int, new_player_pale
 	setup_token_visual()
 	tooltip_text = TokenLibrary.get_display_name(token_type) + "\n" + TokenLibrary.get_description(token_type)
 	set_count(new_count)
+	set_refund_enabled(refund_enabled)
+
+
+func set_refund_enabled(is_enabled:bool) -> void:
+	refund_enabled = is_enabled
+	
+	if remove_button != null:
+		remove_button.disabled = refund_enabled == false
+		
+		if refund_enabled:
+			remove_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		else:
+			remove_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
 
 func setup_token_visual() -> void:
 	if token_visual_display == null:
@@ -41,6 +56,7 @@ func setup_token_visual() -> void:
 		return
 	
 	token_visual_display.setup_with_palette(token_type, player_id, player_palette)
+
 
 func set_count(new_count:int) -> void:
 	token_count = max(new_count, 0)
@@ -57,4 +73,7 @@ func play_added_feedback() -> void:
 
 
 func _on_remove_button_pressed() -> void:
+	if refund_enabled == false:
+		return
+	
 	refund_requested.emit(player_id, token_type)

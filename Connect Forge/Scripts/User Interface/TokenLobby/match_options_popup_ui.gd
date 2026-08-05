@@ -5,6 +5,7 @@ signal options_applied
 
 enum DisplayMode {
 	EDIT_CONFIG,
+	VIEW_CONFIG,
 	VIEW_SESSION
 }
 
@@ -66,8 +67,8 @@ var draft_board_columns:int = DEFAULT_BOARD_COLUMNS
 var draft_board_rows:int = DEFAULT_BOARD_ROWS
 var draft_turn_timer_seconds:int = DEFAULT_TURN_TIMER_SECONDS
 var draft_starting_player_id:int = DEFAULT_STARTING_PLAYER_ID
-var hidden_arrow_texture:ImageTexture = null
 
+var hidden_arrow_texture:ImageTexture = null
 var is_refreshing_ui:bool = false
 
 
@@ -107,6 +108,17 @@ func setup_read_only(new_hamburger_button:BaseButton, new_match_session:MatchSes
 		load_values_for_display_mode()
 
 
+func setup_config_read_only(new_hamburger_button:BaseButton) -> void:
+	display_mode = DisplayMode.VIEW_CONFIG
+	match_session = null
+	
+	bind_hamburger_button(new_hamburger_button)
+	
+	if is_node_ready():
+		apply_display_mode()
+		load_values_for_display_mode()
+
+
 func bind_hamburger_button(new_hamburger_button:BaseButton) -> void:
 	if hamburger_button != null:
 		if is_instance_valid(hamburger_button):
@@ -123,7 +135,7 @@ func bind_hamburger_button(new_hamburger_button:BaseButton) -> void:
 
 
 func is_read_only() -> bool:
-	return display_mode == DisplayMode.VIEW_SESSION
+	return display_mode != DisplayMode.EDIT_CONFIG
 
 
 func setup_button_groups() -> void:
@@ -208,6 +220,7 @@ func apply_display_mode() -> void:
 	else:
 		apply_options_button.text = "Close"
 
+
 func open_popup() -> void:
 	if popup_juice_player == null:
 		return
@@ -260,7 +273,7 @@ func force_close_menu() -> void:
 
 
 func load_values_for_display_mode() -> void:
-	if is_read_only():
+	if display_mode == DisplayMode.VIEW_SESSION:
 		load_values_from_session()
 		return
 	
@@ -414,7 +427,7 @@ func rebuild_starting_player_options() -> void:
 
 
 func get_display_player_name(player_id:int) -> String:
-	if is_read_only():
+	if display_mode == DisplayMode.VIEW_SESSION:
 		if match_session != null:
 			return match_session.get_player_name(player_id)
 		
@@ -622,6 +635,7 @@ func setup_header_token() -> void:
 		return
 	
 	header_token_display.setup(TokenLibrary.TokenType.BASIC, 0)
+
 
 func set_starting_player_arrow_visible(arrow_visible:bool) -> void:
 	if starting_player_option == null:

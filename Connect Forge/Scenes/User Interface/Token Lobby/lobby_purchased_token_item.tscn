@@ -35,6 +35,8 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_waw0y"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iua0u"]
 bg_color = Color(0.12156863, 0.29411766, 0.49803922, 1)
 border_width_left = 1
@@ -69,6 +71,7 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_jn2rt")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_jn2rt")
 theme_override_styles/hover = SubResource("StyleBoxFlat_6u2n2")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_waw0y")
 
 [node name="Control" type="Control" parent="." unique_id=35741089]
 layout_mode = 2

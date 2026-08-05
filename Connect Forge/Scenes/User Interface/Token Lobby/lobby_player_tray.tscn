@@ -84,21 +84,25 @@ visual_scale = 0.12
 
 [node name="PlayerNameEdit" type="LineEdit" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=1983471913]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
+theme_override_colors/font_uneditable_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
 theme_override_colors/caret_color = Color(0.09411765, 0.20784314, 0.34509805, 1)
 theme_override_colors/selection_color = Color(0.32156864, 0.49019608, 0.6666667, 1)
 theme_override_font_sizes/font_size = 24
 text = "Name"
 placeholder_text = "Player Name"
-max_length = 20
+max_length = 40
 flat = true
 select_all_on_focus = true
 
 [node name="HeaderSpacer" type="Control" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=2044448835]
+custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 2
 mouse_filter = 2
 
 [node name="PointsLeftLabel" type="Label" parent="TrayHbox/Content/Content/Margin/Header Content" unique_id=924779835]

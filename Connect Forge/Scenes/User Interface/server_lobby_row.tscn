@@ -95,6 +95,7 @@ label_settings = SubResource("LabelSettings_if36p")
 
 [node name="Right Side Hbox" type="HBoxContainer" parent="MarginContainer" unique_id=1359572776]
 layout_mode = 2
+size_flags_horizontal = 8
 alignment = 2
 
 [node name="Players and host name" type="VBoxContainer" parent="MarginContainer/Right Side Hbox" unique_id=2147217982]
@@ -120,8 +121,9 @@ label_settings = SubResource("LabelSettings_guliv")
 layout_mode = 2
 text = "Hosted by Sam"
 label_settings = SubResource("LabelSettings_if36p")
+autowrap_mode = 2
 
 [node name="Spacer" type="Control" parent="MarginContainer/Right Side Hbox" unique_id=127958461]
-custom_minimum_size = Vector2(384, 0)
+custom_minimum_size = Vector2(192, 0)
 layout_mode = 2
 size_flags_horizontal = 8
