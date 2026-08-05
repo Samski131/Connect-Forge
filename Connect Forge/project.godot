@@ -21,7 +21,11 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+DebugOverlay="*uid://c5uvxojtpkutx"
 Global="*res://Scripts/global.gd"
+LobbyData="*uid://dhdaul1fyq3ot"
+SteamNetwork="*uid://dphl3t4y142jx"
+LobbyAdmission="*uid://r02ommj8fso8"
 MatchData="*uid://dgxgv8ki3q1d2"
 
 [display]

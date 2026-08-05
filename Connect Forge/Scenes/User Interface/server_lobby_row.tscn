@@ -1,0 +1,127 @@
+[gd_scene format=3 uid="uid://v0d0cnudg6tm"]
+
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="1_lqu75"]
+[ext_resource type="Script" uid="uid://jtjj140p60dj" path="res://Scripts/User Interface/server_lobby_row.gd" id="1_mxlor"]
+[ext_resource type="ColorPalette" uid="uid://dpt8f5rnrn11b" path="res://Scenes/Tokens/token colour resources/green_v3.tres" id="2_mxlor"]
+[ext_resource type="Texture2D" uid="uid://ddvsrot3gghuf" path="res://Assets/User Interface/icons/globe.png" id="3_i4p4f"]
+[ext_resource type="PackedScene" uid="uid://q2xp28c6g8f1" path="res://Scenes/User Interface/diamond seperator.tscn" id="4_ico0f"]
+[ext_resource type="Texture2D" uid="uid://swcxn7pj5ghi" path="res://Assets/User Interface/icons/Host.png" id="5_q6pmh"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fsy6u"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_so8ye"]
+font_size = 30
+font_color = Color(0.11764706, 0.23137255, 0.3647059, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_if36p"]
+font_size = 20
+font_color = Color(0.11764706, 0.23137255, 0.3647059, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_guliv"]
+font_size = 30
+font_color = Color(0.007843138, 0.14509805, 0.28627452, 1)
+
+[node name="ServerLobbyRow" type="PanelContainer" unique_id=1055157345]
+custom_minimum_size = Vector2(0, 82)
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fsy6u")
+script = ExtResource("1_mxlor")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=937877462]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Lobby Row HBox" type="HBoxContainer" parent="MarginContainer" unique_id=1748791053]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Access Type Token" type="Control" parent="MarginContainer/Lobby Row HBox" unique_id=968839933]
+z_index = 1
+custom_minimum_size = Vector2(58, 58)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_lqu75")
+visual_scale = 0.16
+overridden_by_inspector = true
+token_palette = ExtResource("2_mxlor")
+override_icon = ExtResource("3_i4p4f")
+override_icon_white = true
+override_icon_scale = 0.6
+
+[node name="Lobby Name and Details" type="VBoxContainer" parent="MarginContainer/Lobby Row HBox" unique_id=826585268]
+layout_mode = 2
+
+[node name="Lobby Name Label" type="Label" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details" unique_id=1872313815]
+layout_mode = 2
+text = "Sam's Test Lobby"
+label_settings = SubResource("LabelSettings_so8ye")
+
+[node name="Match Settings Hbox" type="HBoxContainer" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details" unique_id=1688628814]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Board Size Label" type="Label" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details/Match Settings Hbox" unique_id=1065876612]
+layout_mode = 2
+text = "7x6 Board"
+label_settings = SubResource("LabelSettings_if36p")
+
+[node name="Diamond" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details/Match Settings Hbox" unique_id=1046465350 instance=ExtResource("4_ico0f")]
+layout_mode = 2
+
+[node name="Starting Points Label" type="Label" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details/Match Settings Hbox" unique_id=1526731694]
+layout_mode = 2
+text = "10 Points"
+label_settings = SubResource("LabelSettings_if36p")
+
+[node name="Diamond2" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details/Match Settings Hbox" unique_id=1257615532 instance=ExtResource("4_ico0f")]
+layout_mode = 2
+
+[node name="Tokens to win Label" type="Label" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details/Match Settings Hbox" unique_id=123366399]
+layout_mode = 2
+text = "4 in a Row"
+label_settings = SubResource("LabelSettings_if36p")
+
+[node name="Diamond3" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details/Match Settings Hbox" unique_id=2052809734 instance=ExtResource("4_ico0f")]
+layout_mode = 2
+
+[node name="Timer Label" type="Label" parent="MarginContainer/Lobby Row HBox/Lobby Name and Details/Match Settings Hbox" unique_id=1462655275]
+layout_mode = 2
+text = "No Timer"
+label_settings = SubResource("LabelSettings_if36p")
+
+[node name="Right Side Hbox" type="HBoxContainer" parent="MarginContainer" unique_id=1359572776]
+layout_mode = 2
+alignment = 2
+
+[node name="Players and host name" type="VBoxContainer" parent="MarginContainer/Right Side Hbox" unique_id=2147217982]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Number of Players Hbox" type="HBoxContainer" parent="MarginContainer/Right Side Hbox/Players and host name" unique_id=811039688]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Players Icon" type="TextureRect" parent="MarginContainer/Right Side Hbox/Players and host name/Number of Players Hbox" unique_id=948204272]
+modulate = Color(0.007843138, 0.14509805, 0.28627452, 1)
+layout_mode = 2
+texture = ExtResource("5_q6pmh")
+expand_mode = 3
+
+[node name="Players Label" type="Label" parent="MarginContainer/Right Side Hbox/Players and host name/Number of Players Hbox" unique_id=2018384161]
+layout_mode = 2
+text = "2 / 4"
+label_settings = SubResource("LabelSettings_guliv")
+
+[node name="Host Name Label" type="Label" parent="MarginContainer/Right Side Hbox/Players and host name" unique_id=64175192]
+layout_mode = 2
+text = "Hosted by Sam"
+label_settings = SubResource("LabelSettings_if36p")
+
+[node name="Spacer" type="Control" parent="MarginContainer/Right Side Hbox" unique_id=127958461]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 2
+size_flags_horizontal = 8
