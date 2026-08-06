@@ -100,7 +100,26 @@ func get_token_count(token_type:int) -> int:
 func get_token_counts() -> Dictionary:
 	return token_counts.duplicate(true)
 
-
+func replace_token_counts(new_counts:Dictionary) -> bool:
+	var validated_counts:Dictionary = {}
+	
+	for token_type_value in new_counts.keys():
+		var token_type:int = int(token_type_value)
+		var token_count:int = int(new_counts[token_type_value])
+		
+		if TokenLibrary.get_token_data(token_type).is_empty():
+			return false
+		
+		if token_count < 0:
+			return false
+		
+		validated_counts[token_type] = token_count
+	
+	token_counts = validated_counts
+	tokens_reset.emit(player_id)
+	return true
+	
+	
 func get_token_types() -> Array[int]:
 	var result:Array[int] = []
 	

@@ -17,6 +17,8 @@ var move_in_progress:bool = false
 var authoritative_revision:int = 0
 var last_applied_revision:int = 0
 var pending_turn_state:Dictionary = {}
+var pending_state_checkpoint:Dictionary = {}
+var last_verified_revision:int = 0
 
 var applied_game_over_revision:int = -1
 var applied_round_revision:int = -1
@@ -40,6 +42,8 @@ func setup(new_game_manager:GameManager) -> void:
 	authoritative_revision = 0
 	last_applied_revision = 0
 	pending_turn_state.clear()
+	pending_state_checkpoint.clear()
+	last_verified_revision = 0
 	applied_game_over_revision = -1
 	applied_round_revision = -1
 	waiting_for_authoritative_game_over = false
@@ -81,6 +85,7 @@ func setup(new_game_manager:GameManager) -> void:
 			str(get_path())
 		]
 	)
+
 
 func is_active() -> bool:
 	return network_active
@@ -333,6 +338,7 @@ func apply_authoritative_token_placement(move_revision:int, player_id:int, token
 	move_request_pending = false
 	move_in_progress = true
 	pending_turn_state.clear()
+	pending_state_checkpoint.clear()
 	game_manager.stop_turn_timer()
 	
 	var placed:bool = game_manager.reproduce_authoritative_token_placement(player_id, token_type, slot_pos, start_flipped, placement_data)
@@ -343,6 +349,88 @@ func apply_authoritative_token_placement(move_revision:int, player_id:int, token
 		return
 	
 	DebugOverlay.log_message("NetworkMatch", "Applied move %d: %s for player slot %d." % [move_revision, TokenLibrary.get_display_name(token_type), player_id])
+
+
+func create_network_snapshot_checksum(snapshot:Dictionary) -> String:
+	var canonical_snapshot:Variant = canonicalize_network_snapshot_value(snapshot)
+	var snapshot_json:String = JSON.stringify(canonical_snapshot)
+	return snapshot_json.sha256_text()
+
+
+func canonicalize_network_snapshot_value(value:Variant) -> Variant:
+	var value_type:int = typeof(value)
+	
+	if value_type == TYPE_DICTIONARY:
+		var dictionary_value:Dictionary = value
+		var keys:Array = dictionary_value.keys()
+		var canonical_entries:Array = []
+		
+		keys.sort_custom(sort_network_snapshot_keys)
+		
+		for key in keys:
+			canonical_entries.append([
+				str(key),
+				canonicalize_network_snapshot_value(dictionary_value[key])
+			])
+		
+		return ["dictionary", canonical_entries]
+	
+	if value_type == TYPE_ARRAY:
+		var array_value:Array = value
+		var canonical_array:Array = []
+		
+		for array_item in array_value:
+			canonical_array.append(canonicalize_network_snapshot_value(array_item))
+		
+		return canonical_array
+	
+	return value
+
+
+func sort_network_snapshot_keys(first_key:Variant, second_key:Variant) -> bool:
+	return str(first_key) < str(second_key)
+
+
+func verify_or_recover_authoritative_snapshot(authoritative_snapshot:Dictionary, expected_checksum:String, context_name:String) -> bool:
+	if game_manager == null:
+		return false
+	
+	if authoritative_snapshot.is_empty():
+		DebugOverlay.log_error("NetworkMatch", "Received an empty authoritative snapshot for %s." % context_name)
+		return false
+	
+	if expected_checksum == "":
+		DebugOverlay.log_error("NetworkMatch", "Received an empty authoritative checksum for %s." % context_name)
+		return false
+	
+	var received_checksum:String = create_network_snapshot_checksum(authoritative_snapshot)
+	
+	if received_checksum != expected_checksum:
+		DebugOverlay.log_error("NetworkMatch", "The received %s snapshot did not match its transmitted checksum." % context_name)
+		return false
+	
+	var local_snapshot:Dictionary = game_manager.create_network_match_snapshot()
+	var local_checksum:String = create_network_snapshot_checksum(local_snapshot)
+	
+	if local_checksum == expected_checksum:
+		DebugOverlay.log_message("NetworkMatch", "State verified for %s. Checksum %s." % [context_name, expected_checksum.left(12)])
+		return true
+	
+	DebugOverlay.log_warning("NetworkMatch", "State mismatch detected for %s. Local %s, host %s. Applying host snapshot." % [context_name, local_checksum.left(12), expected_checksum.left(12)])
+	
+	if game_manager.apply_authoritative_network_match_snapshot(authoritative_snapshot) == false:
+		DebugOverlay.log_error("NetworkMatch", "The host snapshot for %s could not be applied." % context_name)
+		return false
+	
+	var recovered_snapshot:Dictionary = game_manager.create_network_match_snapshot()
+	var recovered_checksum:String = create_network_snapshot_checksum(recovered_snapshot)
+	
+	if recovered_checksum != expected_checksum:
+		DebugOverlay.log_error("NetworkMatch", "Recovery failed for %s. Rebuilt checksum %s, host checksum %s." % [context_name, recovered_checksum.left(12), expected_checksum.left(12)])
+		return false
+	
+	DebugOverlay.log_message("NetworkMatch", "Recovered %s from the host snapshot. Checksum %s." % [context_name, expected_checksum.left(12)])
+	return true
 
 
 func handle_local_turn_finished() -> bool:
@@ -361,7 +449,9 @@ func handle_local_turn_finished() -> bool:
 	
 	game_manager.set_current_turn_phase(Global.TURN_PHASE.NONE)
 	game_manager.stop_turn_timer()
+	
 	apply_pending_turn_state()
+	apply_pending_state_checkpoint()
 	return true
 
 
@@ -372,8 +462,22 @@ func broadcast_authoritative_turn_state() -> void:
 	if game_manager == null:
 		return
 	
-	rpc("receive_authoritative_turn_state", authoritative_revision, game_manager.get_current_player_id(), game_manager.get_current_turn_number())
-	DebugOverlay.log_message("NetworkMatch", "Broadcast turn %d for player slot %d after revision %d." % [game_manager.get_current_turn_number(), game_manager.get_current_player_id(), authoritative_revision])
+	var turn_revision:int = authoritative_revision
+	var current_player_id:int = game_manager.get_current_player_id()
+	var current_turn_number:int = game_manager.get_current_turn_number()
+	
+	rpc("receive_authoritative_turn_state", turn_revision, current_player_id, current_turn_number)
+	
+	DebugOverlay.log_message(
+		"NetworkMatch",
+		"Broadcast turn %d for player slot %d after revision %d." % [
+			current_turn_number,
+			current_player_id,
+			turn_revision
+		]
+	)
+	
+	broadcast_authoritative_state_checkpoint(turn_revision)
 
 
 @rpc("authority", "call_remote", "reliable")
@@ -424,10 +528,117 @@ func apply_turn_state(turn_state:Dictionary) -> void:
 	authoritative_revision = max(authoritative_revision, move_revision)
 	move_request_pending = false
 	move_in_progress = false
+	
 	game_manager.set_current_turn_number(turn_number)
 	game_manager.start_turn(player_id)
 	
-	DebugOverlay.log_message("NetworkMatch", "Applied authoritative turn %d for player slot %d." % [turn_number, player_id])
+	DebugOverlay.log_message(
+		"NetworkMatch",
+		"Applied authoritative turn %d for player slot %d." % [
+			turn_number,
+			player_id
+		]
+	)
+	
+	apply_pending_state_checkpoint()
+
+
+func broadcast_authoritative_state_checkpoint(move_revision:int) -> void:
+	if local_is_host == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	var authoritative_snapshot:Dictionary = game_manager.create_network_match_snapshot()
+	
+	if authoritative_snapshot.is_empty():
+		DebugOverlay.log_error(
+			"NetworkMatch",
+			"Could not create the authoritative state checkpoint for revision %d." % move_revision
+		)
+		return
+	
+	var snapshot_checksum:String = create_network_snapshot_checksum(authoritative_snapshot)
+	
+	rpc("receive_authoritative_state_checkpoint", move_revision, authoritative_snapshot, snapshot_checksum)
+	
+	DebugOverlay.log_message(
+		"NetworkMatch",
+		"Broadcast state checkpoint for revision %d. Checksum %s." % [
+			move_revision,
+			snapshot_checksum.left(12)
+		]
+	)
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_authoritative_state_checkpoint(move_revision:int, authoritative_snapshot:Dictionary, snapshot_checksum:String) -> void:
+	if network_active == false:
+		return
+	
+	var checkpoint:Dictionary = {
+		"move_revision": move_revision,
+		"snapshot": authoritative_snapshot,
+		"checksum": snapshot_checksum
+	}
+	
+	if move_in_progress:
+		pending_state_checkpoint = checkpoint
+		return
+	
+	if move_revision > last_applied_revision:
+		pending_state_checkpoint = checkpoint
+		return
+	
+	apply_authoritative_state_checkpoint(checkpoint)
+
+
+func apply_pending_state_checkpoint() -> void:
+	if pending_state_checkpoint.is_empty():
+		return
+	
+	var checkpoint:Dictionary = pending_state_checkpoint.duplicate(true)
+	var move_revision:int = int(checkpoint.get("move_revision", 0))
+	
+	if move_in_progress:
+		return
+	
+	if move_revision > last_applied_revision:
+		return
+	
+	pending_state_checkpoint.clear()
+	apply_authoritative_state_checkpoint(checkpoint)
+
+
+func apply_authoritative_state_checkpoint(checkpoint:Dictionary) -> void:
+	if game_manager == null:
+		return
+	
+	var move_revision:int = int(checkpoint.get("move_revision", 0))
+	var authoritative_snapshot:Dictionary = checkpoint.get("snapshot", {})
+	var snapshot_checksum:String = str(checkpoint.get("checksum", ""))
+	
+	if move_revision < last_verified_revision:
+		return
+	
+	var context_name:String = "revision %d" % move_revision
+	var checkpoint_verified:bool = verify_or_recover_authoritative_snapshot(authoritative_snapshot, snapshot_checksum, context_name)
+	
+	if checkpoint_verified == false:
+		move_request_pending = false
+		move_in_progress = true
+		
+		game_manager.set_current_turn_phase(Global.TURN_PHASE.NONE)
+		game_manager.stop_turn_timer()
+		
+		DebugOverlay.log_error(
+			"NetworkMatch",
+			"Further placement has been locked because checkpoint recovery failed for revision %d." % move_revision
+		)
+		return
+	
+	last_verified_revision = move_revision
 
 
 func handle_local_winner_found(winner_id:int, winning_slots:Array[Vector2i]) -> bool:
@@ -440,6 +651,7 @@ func handle_local_winner_found(winner_id:int, winning_slots:Array[Vector2i]) -> 
 	move_request_pending = false
 	move_in_progress = false
 	pending_turn_state.clear()
+	pending_state_checkpoint.clear()
 	
 	game_manager.set_current_turn_phase(Global.TURN_PHASE.NONE)
 	game_manager.stop_turn_timer()
@@ -464,12 +676,28 @@ func handle_local_winner_found(winner_id:int, winning_slots:Array[Vector2i]) -> 
 		safe_winning_slots.append(slot_position)
 	
 	DebugOverlay.log_message("NetworkMatch", "Confirmed player slot %d as the winner at revision %d." % [winner_id, authoritative_revision])
-	rpc("apply_authoritative_game_over", authoritative_revision, winner_id, safe_winning_slots)
+	
+	var authoritative_snapshot:Dictionary = game_manager.create_network_match_snapshot()
+	
+	if authoritative_snapshot.is_empty():
+		DebugOverlay.log_error("NetworkMatch", "Could not create the authoritative game-over snapshot.")
+		return true
+	
+	var snapshot_checksum:String = create_network_snapshot_checksum(authoritative_snapshot)
+	
+	rpc(
+		"apply_authoritative_game_over",
+		authoritative_revision,
+		winner_id,
+		safe_winning_slots,
+		authoritative_snapshot,
+		snapshot_checksum
+	)
 	return true
 
 
 @rpc("authority", "call_local", "reliable")
-func apply_authoritative_game_over(result_revision:int, winner_id:int, winning_slots:Array[Vector2i]) -> void:
+func apply_authoritative_game_over(result_revision:int, winner_id:int, winning_slots:Array[Vector2i], authoritative_snapshot:Dictionary, snapshot_checksum:String) -> void:
 	if network_active == false:
 		return
 	
@@ -483,14 +711,24 @@ func apply_authoritative_game_over(result_revision:int, winner_id:int, winning_s
 		DebugOverlay.log_error("NetworkMatch", "Received an invalid authoritative winner: %d." % winner_id)
 		return
 	
+	var context_name:String = "game over revision %d" % result_revision
+	
+	if verify_or_recover_authoritative_snapshot(authoritative_snapshot, snapshot_checksum, context_name) == false:
+		move_request_pending = false
+		move_in_progress = true
+		DebugOverlay.log_error("NetworkMatch", "Game-over processing was stopped because state recovery failed.")
+		return
+	
 	applied_game_over_revision = result_revision
 	last_applied_revision = max(last_applied_revision, result_revision)
 	authoritative_revision = max(authoritative_revision, result_revision)
+	last_verified_revision = max(last_verified_revision, result_revision)
 	
 	move_request_pending = false
 	move_in_progress = false
 	waiting_for_authoritative_game_over = false
 	pending_turn_state.clear()
+	pending_state_checkpoint.clear()
 	
 	var applied:bool = game_manager.apply_authoritative_match_result(winner_id, winning_slots)
 	
@@ -530,6 +768,7 @@ func request_next_round() -> bool:
 	rpc("apply_authoritative_next_round", authoritative_revision, starting_player_id)
 	return true
 
+
 @rpc("authority", "call_local", "reliable")
 func apply_authoritative_next_round(round_revision:int, starting_player_id:int) -> void:
 	if network_active == false:
@@ -554,6 +793,8 @@ func apply_authoritative_next_round(round_revision:int, starting_player_id:int) 
 	waiting_for_authoritative_game_over = false
 	round_transition_in_progress = true
 	pending_turn_state.clear()
+	pending_state_checkpoint.clear()
+	last_verified_revision = round_revision
 	
 	await game_manager.start_next_round_with_player(starting_player_id)
 	

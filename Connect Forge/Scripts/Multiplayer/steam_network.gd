@@ -59,7 +59,7 @@ const DEFAULT_MAXIMUM_MEMBERS:int = 16
 const STEAM_LOBBY_JOIN_SUCCESS:int = 1
 
 const GAME_KEY:String = "connectforge_dev"
-const PROTOCOL_VERSION:int = 7
+const PROTOCOL_VERSION:int = 10
 const DEVELOPMENT_BUILD_VERSION:String = "development"
 
 const MAXIMUM_LOBBY_NAME_LENGTH:int = 64

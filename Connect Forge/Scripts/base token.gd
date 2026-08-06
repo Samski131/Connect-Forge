@@ -68,6 +68,14 @@ func get_network_placement_data() -> Dictionary:
 func _on_network_placement_data_applied() -> void:
 	pass
 	
+	
+func create_network_state_data() -> Dictionary:
+	return {}
+
+
+func apply_network_state_data(_new_state_data:Dictionary) -> void:
+	pass
+	
 func _try_to_use_ability()->bool:
 	return false
 

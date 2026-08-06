@@ -461,6 +461,107 @@ func get_token_types_for_player(player_id:int) -> Array[int]:
 	
 	return player.get_token_types_in_tray_order()
 
+func create_network_token_count_snapshot() -> Array:
+	var snapshot:Array = []
+	
+	for player_id in range(players.size()):
+		var player:MatchSessionPlayerData = players[player_id]
+		var token_entries:Array = []
+		
+		if player != null:
+			var current_counts:Dictionary = player.get_token_counts()
+			var token_types:Array = current_counts.keys()
+			token_types.sort()
+			
+			for token_type_value in token_types:
+				var token_type:int = int(token_type_value)
+				var token_count:int = int(current_counts[token_type_value])
+				token_entries.append([token_type, token_count])
+		
+		snapshot.append([player_id, token_entries])
+	
+	return snapshot
+
+
+func is_network_token_count_snapshot_valid(snapshot:Array) -> bool:
+	if snapshot.size() != players.size():
+		return false
+	
+	for expected_player_id in range(players.size()):
+		var player_entry_value = snapshot[expected_player_id]
+		
+		if typeof(player_entry_value) != TYPE_ARRAY:
+			return false
+		
+		var player_entry:Array = player_entry_value
+		
+		if player_entry.size() != 2:
+			return false
+		
+		var player_id:int = int(player_entry[0])
+		
+		if player_id != expected_player_id:
+			return false
+		
+		if typeof(player_entry[1]) != TYPE_ARRAY:
+			return false
+		
+		var token_entries:Array = player_entry[1]
+		var found_token_types:Dictionary = {}
+		
+		for token_entry_value in token_entries:
+			if typeof(token_entry_value) != TYPE_ARRAY:
+				return false
+			
+			var token_entry:Array = token_entry_value
+			
+			if token_entry.size() != 2:
+				return false
+			
+			var token_type:int = int(token_entry[0])
+			var token_count:int = int(token_entry[1])
+			
+			if TokenLibrary.get_token_data(token_type).is_empty():
+				return false
+			
+			if token_count < 0:
+				return false
+			
+			if found_token_types.has(token_type):
+				return false
+			
+			found_token_types[token_type] = true
+	
+	return true
+
+
+func apply_network_token_count_snapshot(snapshot:Array) -> bool:
+	if is_network_token_count_snapshot_valid(snapshot) == false:
+		return false
+	
+	for player_entry_value in snapshot:
+		var player_entry:Array = player_entry_value
+		var player_id:int = int(player_entry[0])
+		var token_entries:Array = player_entry[1]
+		var new_counts:Dictionary = {}
+		
+		for token_entry_value in token_entries:
+			var token_entry:Array = token_entry_value
+			var token_type:int = int(token_entry[0])
+			var token_count:int = int(token_entry[1])
+			new_counts[token_type] = token_count
+		
+		var player:MatchSessionPlayerData = get_player(player_id)
+		
+		if player == null:
+			return false
+		
+		if player.replace_token_counts(new_counts) == false:
+			return false
+	
+	all_tokens_reset.emit()
+	return true
+
 
 func player_has_token(player_id:int, token_type:int) -> bool:
 	var player:MatchSessionPlayerData = get_player(player_id)

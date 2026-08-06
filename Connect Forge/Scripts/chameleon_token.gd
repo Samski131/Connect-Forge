@@ -1,6 +1,9 @@
 extends Token
 
 const NETWORK_KEY_FAKE_PLAYER_ID:String = "fake_player_id"
+const NETWORK_STATE_HAS_TRANSFORMED:String = "has_transformed"
+const NETWORK_STATE_HAS_REVEALED:String = "has_revealed"
+
 var fake_player_id:int = -1
 var transform_duration:float = 1.0
 var reveal_duration:float = 0.55
@@ -30,7 +33,33 @@ func create_network_placement_data(context:Dictionary) -> Dictionary:
 		NETWORK_KEY_FAKE_PLAYER_ID: chosen_player_id
 	}
 	
+
+func create_network_state_data() -> Dictionary:
+	return {
+		NETWORK_KEY_FAKE_PLAYER_ID: fake_player_id,
+		NETWORK_STATE_HAS_TRANSFORMED: has_transformed,
+		NETWORK_STATE_HAS_REVEALED: has_revealed
+	}
+
+
+func apply_network_state_data(new_state_data:Dictionary) -> void:
+	fake_player_id = int(new_state_data.get(NETWORK_KEY_FAKE_PLAYER_ID, -1))
+	has_transformed = bool(new_state_data.get(NETWORK_STATE_HAS_TRANSFORMED, false))
+	has_revealed = bool(new_state_data.get(NETWORK_STATE_HAS_REVEALED, false))
 	
+	if sprites == null:
+		return
+	
+	if has_transformed and has_revealed == false and fake_player_id >= 0:
+		prepare_chameleon_transform(fake_player_id)
+		set_chameleon_dissolve_progress(1.0)
+		finish_chameleon_transform()
+		return
+	
+	if sprites.has_method("hide_fake_layer"):
+		sprites.hide_fake_layer()
+
+
 func _try_to_use_ability() -> bool:
 	return false
 

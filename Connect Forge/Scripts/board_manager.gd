@@ -1,6 +1,16 @@
 class_name BoardManager
 extends Node2D
 
+const NETWORK_TOKEN_ENTRY_SIZE:int = 8
+const NETWORK_TOKEN_X:int = 0
+const NETWORK_TOKEN_Y:int = 1
+const NETWORK_TOKEN_TYPE:int = 2
+const NETWORK_TOKEN_PLAYER_ID:int = 3
+const NETWORK_TOKEN_IS_FLIPPED:int = 4
+const NETWORK_TOKEN_CHARGES:int = 5
+const NETWORK_TOKEN_PLACEMENT_DATA:int = 6
+const NETWORK_TOKEN_STATE_DATA:int = 7
+
 var token_pool:Node2D = null
 var visuals:BoardVisualManager = null
 var match_session:MatchSession = null
@@ -14,6 +24,7 @@ var gravity_order:BoardGravityOrder = null
 
 var hovered_slot:Slot = null
 var slot_size:Vector2 = Vector2.ZERO
+
 
 
 func _ready() -> void:
@@ -348,6 +359,143 @@ func get_all_tokens_on_board() -> Array[Token]:
 	
 	return found_tokens
 
+func create_network_board_snapshot() -> Array:
+	var snapshot:Array = []
+	
+	for y in range(settings.rows):
+		for x in range(settings.columns):
+			var slot_pos:Vector2i = Vector2i(x, y)
+			var token:Token = get_token(slot_pos)
+			
+			if token == null:
+				continue
+			
+			if is_instance_valid(token) == false:
+				continue
+			
+			if token.being_destroyed:
+				continue
+			
+			var token_entry:Array = [
+				x,
+				y,
+				int(token.token_type),
+				token.player_id,
+				token.is_flipped,
+				token.charges,
+				token.get_network_placement_data(),
+				token.create_network_state_data()
+			]
+			
+			snapshot.append(token_entry)
+	
+	return snapshot
+
+
+func is_network_board_snapshot_valid(snapshot:Array) -> bool:
+	var occupied_positions:Dictionary = {}
+	
+	for token_entry_value in snapshot:
+		if typeof(token_entry_value) != TYPE_ARRAY:
+			return false
+		
+		var token_entry:Array = token_entry_value
+		
+		if token_entry.size() != NETWORK_TOKEN_ENTRY_SIZE:
+			return false
+		
+		var slot_pos:Vector2i = Vector2i(
+			int(token_entry[NETWORK_TOKEN_X]),
+			int(token_entry[NETWORK_TOKEN_Y])
+		)
+		
+		var token_type:int = int(token_entry[NETWORK_TOKEN_TYPE])
+		var player_id:int = int(token_entry[NETWORK_TOKEN_PLAYER_ID])
+		var charges:int = int(token_entry[NETWORK_TOKEN_CHARGES])
+		
+		if is_position_in_bounds(slot_pos) == false:
+			return false
+		
+		if is_valid_player_id(player_id) == false:
+			return false
+		
+		if TokenLibrary.get_token_data(token_type).is_empty():
+			return false
+		
+		if TokenLibrary.get_token_scene(token_type) == null:
+			return false
+		
+		if charges < 0:
+			return false
+		
+		if typeof(token_entry[NETWORK_TOKEN_PLACEMENT_DATA]) != TYPE_DICTIONARY:
+			return false
+		
+		if typeof(token_entry[NETWORK_TOKEN_STATE_DATA]) != TYPE_DICTIONARY:
+			return false
+		
+		var position_key:String = "%d:%d" % [slot_pos.x, slot_pos.y]
+		
+		if occupied_positions.has(position_key):
+			return false
+		
+		occupied_positions[position_key] = true
+	
+	return true
+
+
+func apply_network_board_snapshot(snapshot:Array) -> bool:
+	if is_network_board_snapshot_valid(snapshot) == false:
+		return false
+	
+	clear_tokens_for_network_snapshot()
+	
+	for token_entry_value in snapshot:
+		var token_entry:Array = token_entry_value
+		var slot_pos:Vector2i = Vector2i(
+			int(token_entry[NETWORK_TOKEN_X]),
+			int(token_entry[NETWORK_TOKEN_Y])
+		)
+		
+		var token_type:int = int(token_entry[NETWORK_TOKEN_TYPE])
+		var player_id:int = int(token_entry[NETWORK_TOKEN_PLAYER_ID])
+		var is_flipped:bool = bool(token_entry[NETWORK_TOKEN_IS_FLIPPED])
+		var charges:int = int(token_entry[NETWORK_TOKEN_CHARGES])
+		var placement_data:Dictionary = token_entry[NETWORK_TOKEN_PLACEMENT_DATA]
+		var state_data:Dictionary = token_entry[NETWORK_TOKEN_STATE_DATA]
+		var token_scene:PackedScene = TokenLibrary.get_token_scene(token_type)
+		
+		var new_token:Token = create_new_token(token_scene, slot_pos, player_id, is_flipped)
+		
+		if new_token == null:
+			return false
+		
+		new_token.charges = charges
+		new_token.apply_network_placement_data(placement_data)
+		new_token.apply_network_state_data(state_data)
+		new_token.reset_resolved()
+	
+	return true
+
+
+func clear_tokens_for_network_snapshot() -> void:
+	if token_pool != null:
+		for child in token_pool.get_children():
+			var token:Token = child as Token
+			
+			if token == null:
+				continue
+			
+			token_pool.remove_child(token)
+			token.free()
+	
+	setup_empty_board_state()
+	
+	if trigger_resolver != null:
+		trigger_resolver.clear_pending_pass_triggers()
+	
+	hovered_slot = null
+	
 
 func remove_all_tokens_from_board_state() -> void:
 	if state == null:

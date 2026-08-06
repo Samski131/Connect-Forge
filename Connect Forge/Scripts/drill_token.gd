@@ -1,7 +1,7 @@
 extends Token
 # Drill Token
 # Destroys the token below it when it lands, then keeps falling.
-
+const NETWORK_STATE_HAS_ACTIVATED:String = "has_activated"
 var drill_wiggle_strength:float = 14.0
 var drill_wiggles:int = 5
 var drill_wiggle_duration:float = 0.28
@@ -11,7 +11,14 @@ func setup_special_token():
 	token_type = TokenLibrary.TokenType.DRILL
 	keywords = [Global.KEYWORD.ON_LAND]
 
+func create_network_state_data() -> Dictionary:
+	return {
+		NETWORK_STATE_HAS_ACTIVATED: has_activated
+	}
 
+
+func apply_network_state_data(new_state_data:Dictionary) -> void:
+	has_activated = bool(new_state_data.get(NETWORK_STATE_HAS_ACTIVATED, false))
 func _try_to_use_ability() -> bool:
 	return false
 
