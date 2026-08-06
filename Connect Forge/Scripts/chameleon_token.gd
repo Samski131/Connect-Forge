@@ -1,5 +1,6 @@
 extends Token
 
+const NETWORK_KEY_FAKE_PLAYER_ID:String = "fake_player_id"
 var fake_player_id:int = -1
 var transform_duration:float = 1.0
 var reveal_duration:float = 0.55
@@ -13,10 +14,25 @@ func setup_special_token() -> void:
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_LAND]
 
+func requires_network_placement_data() -> bool:
+	return true
 
+
+func create_network_placement_data(context:Dictionary) -> Dictionary:
+	var placement_player_id:int = int(context.get("player_id", -1))
+	var player_count:int = int(context.get("player_count", 0))
+	var chosen_player_id:int = choose_fake_player_id(placement_player_id, player_count)
+	
+	if chosen_player_id == -1:
+		return {}
+	
+	return {
+		NETWORK_KEY_FAKE_PLAYER_ID: chosen_player_id
+	}
+	
+	
 func _try_to_use_ability() -> bool:
 	return false
-
 
 func _on_land(_context:Dictionary) -> bool:
 	if has_transformed:
@@ -25,7 +41,10 @@ func _on_land(_context:Dictionary) -> bool:
 	if check_enough_charges(ability_cost) == false:
 		return false
 	
-	var chosen_player_id:int = pick_fake_player_id()
+	var chosen_player_id:int = get_network_fake_player_id()
+	
+	if chosen_player_id == -1:
+		chosen_player_id = pick_fake_player_id()
 	
 	if chosen_player_id == -1:
 		return false
@@ -35,7 +54,7 @@ func _on_land(_context:Dictionary) -> bool:
 	has_revealed = false
 	charges -= ability_cost
 	
-	if board != null and board.visuals != null:
+	if board.visuals != null:
 		queue_visual_effect(ChameleonTransformVisualEffect.new(self, fake_player_id, transform_duration))
 	else:
 		prepare_chameleon_transform(fake_player_id)
@@ -44,26 +63,45 @@ func _on_land(_context:Dictionary) -> bool:
 	
 	return true
 
+func get_network_fake_player_id() -> int:
+	var placement_data:Dictionary = get_network_placement_data()
+	
+	if placement_data.has(NETWORK_KEY_FAKE_PLAYER_ID) == false:
+		return -1
+	
+	var chosen_player_id:int = int(placement_data[NETWORK_KEY_FAKE_PLAYER_ID])
+	
+	if chosen_player_id < 0:
+		return -1
+	
+	if chosen_player_id == player_id:
+		return -1
+	
+	return chosen_player_id
+
 
 func pick_fake_player_id() -> int:
-	if board == null:
+	var game_manager:Node = get_tree().get_first_node_in_group("game manager")
+	
+	if game_manager == null:
 		return -1
 	
-	var player_count:int = board.get_player_count()
-	
-	if player_count <= 1:
+	if game_manager.has_method("get_player_count") == false:
 		return -1
 	
+	var player_count:int = int(game_manager.call("get_player_count"))
+	return choose_fake_player_id(player_id, player_count)
+
+
+func choose_fake_player_id(used_player_id:int, player_count:int) -> int:
 	var valid_player_ids:Array[int] = []
+	var used_player_count:int = max(player_count, 0)
 	
-	for possible_player_id in range(player_count):
-		if possible_player_id == player_id:
+	for candidate_player_id in range(used_player_count):
+		if candidate_player_id == used_player_id:
 			continue
 		
-		if board.is_valid_player_id(possible_player_id) == false:
-			continue
-		
-		valid_player_ids.append(possible_player_id)
+		valid_player_ids.append(candidate_player_id)
 	
 	if valid_player_ids.is_empty():
 		return -1

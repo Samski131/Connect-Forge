@@ -13,6 +13,7 @@ var board:BoardManager
 var being_destroyed:bool = false
 var is_flipped:bool = false
 var gravity_visual_rotation_degrees:float = 0.0
+var network_placement_data:Dictionary = {}
 
 @onready var sprites:Node2D = $Sprites
 
@@ -30,6 +31,7 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	player_id = new_player_id
 	being_destroyed = false
 	is_flipped = false
+	network_placement_data.clear()
 	scale = Vector2.ONE
 	modulate = Color.WHITE
 	setup_special_token()
@@ -46,7 +48,26 @@ func setup_special_token():
 	token_type = TokenLibrary.TokenType.BASIC
 	keywords = []
 
+func requires_network_placement_data() -> bool:
+	return false
 
+
+func create_network_placement_data(_context:Dictionary) -> Dictionary:
+	return {}
+
+
+func apply_network_placement_data(new_data:Dictionary) -> void:
+	network_placement_data = new_data.duplicate(true)
+	_on_network_placement_data_applied()
+
+
+func get_network_placement_data() -> Dictionary:
+	return network_placement_data.duplicate(true)
+
+
+func _on_network_placement_data_applied() -> void:
+	pass
+	
 func _try_to_use_ability()->bool:
 	return false
 

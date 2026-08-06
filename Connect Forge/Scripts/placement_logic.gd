@@ -19,7 +19,7 @@ func exit_state() -> void:
 	game_manager.enter_action_phase()
 
 
-func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bool) -> bool:
+func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bool, placement_data:Dictionary = {}) -> bool:
 	if game_manager == null:
 		return false
 	
@@ -46,6 +46,8 @@ func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bo
 	
 	if new_token == null:
 		return false
+	
+	new_token.apply_network_placement_data(placement_data)
 	
 	exit_state()
 	return true

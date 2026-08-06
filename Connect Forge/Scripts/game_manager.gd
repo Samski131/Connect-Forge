@@ -24,7 +24,7 @@ var game_over_menu:GameOverMenu = null
 
 var connected_session:MatchSession = null
 var is_initialized:bool = false
-
+var network_match_controller:NetworkMatchController = null
 
 func setup(new_board_builder:BoardBuilder, new_board:BoardManager, new_turn_timer:MatchTurnTimer, new_token_drag_controller:TokenDragController, new_game_over_menu:GameOverMenu) -> void:
 	board_builder = new_board_builder
@@ -48,7 +48,8 @@ func initialize_game() -> void:
 	board_builder.rebuild_board(false)
 	
 	setup_states()
-	
+	setup_network_match_controller()
+
 	is_initialized = true
 	
 	players_changed.emit()
@@ -109,6 +110,39 @@ func setup_states() -> void:
 	if resolution_state != null:
 		resolution_state.setup(self, board)
 
+func setup_network_match_controller() -> void:
+	if network_match_controller != null:
+		return
+	
+	network_match_controller = NetworkMatchController.new()
+	network_match_controller.name = "Network Match Controller"
+	add_child(network_match_controller)
+	network_match_controller.set_multiplayer_authority(1)
+	network_match_controller.setup(self)
+	
+	if game_over_menu != null:
+		game_over_menu.refresh_network_controls()
+
+
+func is_network_match_active() -> bool:
+	if network_match_controller == null:
+		return false
+	
+	return network_match_controller.is_active()
+
+func is_network_match_host() -> bool:
+	if network_match_controller == null:
+		return false
+	
+	if network_match_controller.is_active() == false:
+		return false
+	
+	return network_match_controller.is_host()
+	
+	
+func should_spend_token_when_drag_begins() -> bool:
+	return is_network_match_active() == false
+
 func enter_placement_phase() -> bool:
 	if placement_state == null:
 		return false
@@ -121,8 +155,48 @@ func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bo
 	if placement_state == null:
 		return false
 	
+	if is_network_match_active():
+		return network_match_controller.request_local_token_placement(token_type, slot_pos, start_flipped)
+	
 	return placement_state.try_place_dragged_token(token_type, slot_pos, start_flipped)
+	
+	
+func reproduce_authoritative_token_placement(player_id:int, token_type:int, slot_pos:Vector2i, start_flipped:bool, placement_data:Dictionary) -> bool:
+	if placement_state == null:
+		return false
+	
+	if is_valid_player_id(player_id) == false:
+		return false
+	
+	if TokenLibrary.get_token_data(token_type).is_empty():
+		return false
+	
+	if TokenLibrary.get_token_scene(token_type) == null:
+		return false
+	
+	if get_current_player_id() != player_id:
+		set_current_player_id(player_id)
+	
+	if get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
+		set_current_turn_phase(Global.TURN_PHASE.PLACEMENT)
+	
+	if spend_token(player_id, token_type) == false:
+		return false
+	
+	var placed:bool = placement_state.try_place_dragged_token(token_type, slot_pos, start_flipped, placement_data)
+	
+	if placed == false:
+		refund_token(player_id, token_type)
+		return false
+	
+	return true
 
+
+func is_valid_starting_slot(slot_pos:Vector2i) -> bool:
+	if placement_state == null:
+		return false
+	
+	return placement_state.is_valid_starting_slot(slot_pos)
 
 func enter_action_phase() -> bool:
 	if action_state == null:
@@ -141,7 +215,27 @@ func enter_resolution_phase() -> bool:
 	resolution_state.enter_state()
 	return true
 
-func finish_match_with_winner(winner_id:int) -> bool:
+func finish_match_with_winner(winner_id:int, winning_slots:Array[Vector2i] = []) -> bool:
+	if is_valid_player_id(winner_id) == false:
+		return false
+	
+	if is_network_match_active():
+		return network_match_controller.handle_local_winner_found(winner_id, winning_slots)
+	
+	return apply_match_result_locally(winner_id)
+
+
+func apply_authoritative_match_result(winner_id:int, winning_slots:Array[Vector2i]) -> bool:
+	if is_valid_player_id(winner_id) == false:
+		return false
+	
+	if resolution_state != null:
+		resolution_state.ensure_authoritative_winning_line(winner_id, winning_slots)
+	
+	return apply_match_result_locally(winner_id)
+
+
+func apply_match_result_locally(winner_id:int) -> bool:
 	if is_valid_player_id(winner_id) == false:
 		return false
 	
@@ -273,7 +367,20 @@ func get_current_turn_number() -> int:
 	
 	return session.current_turn_number
 
+func get_current_round_number() -> int:
+	if session == null:
+		return 1
+	
+	return session.current_round_number
 
+
+func get_resolved_round_starting_player_id() -> int:
+	if session == null:
+		return -1
+	
+	return session.get_resolved_starting_player_id()
+	
+	
 func set_current_turn_number(new_turn_number:int) -> void:
 	if session == null:
 		return
@@ -335,6 +442,16 @@ func can_player_drag_token(player_id:int, token_type:int) -> bool:
 	if session == null:
 		return false
 	
+	if LobbyData.has_active_lobby():
+		if network_match_controller == null:
+			return false
+		
+		if network_match_controller.is_active() == false:
+			return false
+		
+		if network_match_controller.can_local_player_drag_token(player_id, token_type) == false:
+			return false
+	
 	if player_id != get_current_player_id():
 		return false
 	
@@ -348,7 +465,6 @@ func can_player_drag_token(player_id:int, token_type:int) -> bool:
 		return false
 	
 	return true
-
 
 func spend_token(player_id:int, token_type:int) -> bool:
 	if session == null:
@@ -439,6 +555,14 @@ func end_turn() -> void:
 	if get_player_count() <= 0:
 		return
 	
+	if is_network_match_active():
+		if network_match_controller.handle_local_turn_finished():
+			return
+	
+	advance_to_next_turn()
+
+
+func advance_to_next_turn() -> void:
 	var next_player_id:int = get_next_player_id()
 	
 	if has_completed_full_turn(next_player_id):
@@ -452,6 +576,10 @@ func handle_turn_timeout() -> void:
 	
 	if get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
 		return
+	
+	if is_network_match_active():
+		if network_match_controller.handle_turn_timeout():
+			return
 	
 	set_current_turn_phase(Global.TURN_PHASE.NONE)
 	
@@ -494,6 +622,9 @@ func _process(delta:float) -> void:
 
 
 func debug_gravity_changes() -> void:
+	if is_network_match_active():
+		return
+	
 	if board == null:
 		return
 	
@@ -546,9 +677,38 @@ func get_player_wins(player_id:int) -> int:
 	return session.get_player_wins(player_id)
 
 
+func request_next_round() -> bool:
+	if session == null:
+		return false
+	
+	if is_network_match_active():
+		return network_match_controller.request_next_round()
+	
+	start_next_round()
+	return true
+
+
 func start_next_round() -> void:
 	if session == null:
 		return
+	
+	var starting_player_id:int = session.get_resolved_starting_player_id()
+	
+	if is_valid_player_id(starting_player_id) == false:
+		starting_player_id = 0
+	
+	await start_next_round_with_player(starting_player_id)
+
+
+func start_next_round_with_player(starting_player_id:int) -> void:
+	if session == null:
+		return
+	
+	if is_valid_player_id(starting_player_id) == false:
+		return
+	
+	if game_over_menu != null:
+		game_over_menu.hide_menu_instant()
 	
 	get_tree().call_group("winning_line_visual", "queue_free")
 	set_current_turn_phase(Global.TURN_PHASE.NONE)
@@ -565,11 +725,6 @@ func start_next_round() -> void:
 	
 	if board_builder != null:
 		board_builder.rebuild_board(false)
-	
-	var starting_player_id:int = session.get_resolved_starting_player_id()
-	
-	if is_valid_player_id(starting_player_id) == false:
-		starting_player_id = 0
 	
 	session.prepare_next_round(starting_player_id)
 	session.start_game_timer()

@@ -9,6 +9,7 @@ var is_dragging:bool = false
 var dragged_player_id:int = -1
 var dragged_token_type:int = -1
 var dragged_is_flipped:bool = false
+var dragged_token_was_spent:bool = false
 var preview_token:Token = null
 
 
@@ -39,15 +40,20 @@ func begin_drag(player_id:int, token_type:int) -> void:
 	if game_manager.can_player_drag_token(player_id, token_type) == false:
 		return
 	
-	if game_manager.spend_token(player_id, token_type) == false:
-		return
-	
 	dragged_player_id = player_id
 	dragged_token_type = token_type
 	dragged_is_flipped = false
+	dragged_token_was_spent = false
+	
+	if game_manager.should_spend_token_when_drag_begins():
+		if game_manager.spend_token(player_id, token_type) == false:
+			clear_drag_state()
+			return
+		
+		dragged_token_was_spent = true
 	
 	if create_preview_token() == false:
-		game_manager.refund_token(dragged_player_id, dragged_token_type)
+		refund_dragged_token_if_needed()
 		clear_drag_state()
 		return
 	
@@ -171,16 +177,31 @@ func try_drop_dragged_token() -> void:
 	var placed:bool = game_manager.try_place_dragged_token(dragged_token_type, slot_pos, dragged_is_flipped)
 	
 	if placed == false:
-		game_manager.refund_token(dragged_player_id, dragged_token_type)
+		refund_dragged_token_if_needed()
 	
 	clear_drag_state()
 
 
 func cancel_drag() -> void:
-	if game_manager != null and dragged_player_id != -1 and dragged_token_type != -1:
-		game_manager.refund_token(dragged_player_id, dragged_token_type)
-	
+	refund_dragged_token_if_needed()
 	clear_drag_state()
+
+
+func refund_dragged_token_if_needed() -> void:
+	if dragged_token_was_spent == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	if dragged_player_id == -1:
+		return
+	
+	if dragged_token_type == -1:
+		return
+	
+	game_manager.refund_token(dragged_player_id, dragged_token_type)
+	dragged_token_was_spent = false
 
 
 func clear_drag_state() -> void:
@@ -191,4 +212,5 @@ func clear_drag_state() -> void:
 	dragged_player_id = -1
 	dragged_token_type = -1
 	dragged_is_flipped = false
+	dragged_token_was_spent = false
 	preview_token = null

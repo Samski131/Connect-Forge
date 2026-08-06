@@ -258,9 +258,22 @@ func finish_game_with_winner(winner_id:int) -> void:
 	if game_manager == null:
 		return
 	
-	game_manager.finish_match_with_winner(winner_id)
+	game_manager.finish_match_with_winner(winner_id, stored_winning_slots)
 
-
+func ensure_authoritative_winning_line(winner_id:int, winning_slots:Array[Vector2i]) -> void:
+	if board == null:
+		return
+	
+	if winning_slots.size() < 2:
+		return
+	
+	var existing_lines:Array[Node] = get_tree().get_nodes_in_group("winning_line_visual")
+	
+	if existing_lines.is_empty() == false:
+		return
+	
+	queue_winning_line(winner_id, winning_slots)
+	
 func clear_stored_win() -> void:
 	win_sequence_started = false
 	stored_winner_id = -1

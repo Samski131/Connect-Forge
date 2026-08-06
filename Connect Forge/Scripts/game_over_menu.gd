@@ -48,14 +48,48 @@ func _ready() -> void:
 
 func setup(new_game_manager:GameManager) -> void:
 	game_manager = new_game_manager
+	refresh_network_controls()
 
-
+func refresh_network_controls() -> void:
+	if next_round_button == null:
+		return
+	
+	if return_to_lobby_button == null:
+		return
+	
+	if game_manager == null:
+		next_round_button.text = "Next Round"
+		next_round_button.disabled = false
+		return_to_lobby_button.text = "Return to Lobby"
+		return_to_lobby_button.disabled = false
+		return
+	
+	if game_manager.is_network_match_active() == false:
+		next_round_button.text = "Next Round"
+		next_round_button.disabled = false
+		return_to_lobby_button.text = "Return to Lobby"
+		return_to_lobby_button.disabled = false
+		return
+	
+	if game_manager.is_network_match_host():
+		next_round_button.text = "Next Round"
+		next_round_button.disabled = false
+	else:
+		next_round_button.text = "Waiting for Host"
+		next_round_button.disabled = true
+	
+	return_to_lobby_button.text = "Return to Lobby"
+	return_to_lobby_button.disabled = true
+	return_to_lobby_button.tooltip_text = "Network return-to-lobby synchronisation will be added in a later stage."
+	
 func show_game_over(new_winner_id:int) -> void:
 	if game_manager == null:
 		return
 	
 	if is_valid_player_id(new_winner_id) == false:
 		return
+	
+	refresh_network_controls()
 	
 	winner_id = new_winner_id
 	show_request_id += 1
@@ -325,6 +359,13 @@ func is_valid_player_id(player_id:int) -> bool:
 
 
 func _on_next_round_pressed() -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.is_network_match_active():
+		if game_manager.is_network_match_host() == false:
+			return
+	
 	if next_round_button != null:
 		next_round_button.disabled = true
 	
@@ -342,18 +383,28 @@ func _on_next_round_pressed() -> void:
 
 func finish_next_round_transition() -> void:
 	visible = false
-	winner_id = -1
-	
-	if next_round_button != null:
-		next_round_button.disabled = false
 	
 	if game_manager == null:
 		return
 	
-	game_manager.start_next_round()
+	var round_started:bool = game_manager.request_next_round()
+	
+	if round_started:
+		winner_id = -1
+		return
+	
+	refresh_network_controls()
+	
+	if winner_id >= 0:
+		show_game_over(winner_id)
 
 
 func _on_return_to_lobby_pressed() -> void:
+	if game_manager != null:
+		if game_manager.is_network_match_active():
+			DebugOverlay.log_warning("GameOverMenu", "Network return to lobby is not connected yet.")
+			return
+		
 	if return_to_lobby_button != null:
 		return_to_lobby_button.disabled = true
 	

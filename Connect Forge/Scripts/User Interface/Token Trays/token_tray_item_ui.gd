@@ -119,10 +119,7 @@ func is_wrong_player_turn() -> bool:
 	if game_manager == null:
 		return false
 	
-	if player_id != game_manager.get_current_player_id():
-		return true
-	
-	return false
+	return game_manager.can_player_drag_token(player_id, token_type) == false
 
 
 func player_has_no_tokens() -> bool:
