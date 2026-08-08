@@ -7,10 +7,20 @@
 [ext_resource type="Resource" uid="uid://clvcbhjq8f4w3" path="res://Assets/User Interface/Resources/Transitions/popup_exit_soft.tres" id="4_ajm2y"]
 [ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="5_jmixl"]
 [ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="6_48cvk"]
+[ext_resource type="Theme" uid="uid://b78l8uqkka1c8" path="res://Assets/User Interface/Styles/Buttons.tres" id="8_edrd7"]
 [ext_resource type="StyleBox" uid="uid://b5ssrbend1pgg" path="res://Assets/User Interface/Resources/Buttons/blue/blue_normal.stylebox" id="8_msgrf"]
+[ext_resource type="StyleBox" uid="uid://cl5m2yxgrhfas" path="res://Assets/User Interface/Resources/Buttons/green/green_normal.tres" id="9_4flte"]
 [ext_resource type="StyleBox" uid="uid://bkl0pq7ws0lkx" path="res://Assets/User Interface/Resources/Buttons/blue/blue_pressed.stylebox" id="9_d6in7"]
 [ext_resource type="StyleBox" uid="uid://de5jbcaqgvy0t" path="res://Assets/User Interface/Resources/Buttons/blue/blue_hovered.stylebox" id="10_4flte"]
+[ext_resource type="StyleBox" uid="uid://b1xf1w4dml1pg" path="res://Assets/User Interface/Resources/Buttons/green/green_pressed.tres" id="10_n724j"]
+[ext_resource type="StyleBox" uid="uid://cve3dg86hp3hg" path="res://Assets/User Interface/Resources/Buttons/green/green_hover.tres" id="11_3ay7h"]
+[ext_resource type="StyleBox" uid="uid://cusegvg56iy1r" path="res://Assets/User Interface/Resources/Buttons/green/green_disabled.tres" id="12_uylv0"]
+[ext_resource type="StyleBox" uid="uid://ykk36bnfh2a6" path="res://Assets/User Interface/Resources/Buttons/disabled.stylebox" id="16_jb54h"]
+[ext_resource type="StyleBox" uid="uid://cot44u8x8t2ig" path="res://Assets/User Interface/Resources/Buttons/red/red_normal.tres" id="17_5hvjd"]
 [ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="17_6nkpp"]
+[ext_resource type="StyleBox" uid="uid://bo8gbwwcx5cl2" path="res://Assets/User Interface/Resources/Buttons/red/red_pressed.tres" id="18_3w12p"]
+[ext_resource type="StyleBox" uid="uid://brgmi28i3e2cm" path="res://Assets/User Interface/Resources/Buttons/red/red_hover.tres" id="19_3po7g"]
+[ext_resource type="StyleBox" uid="uid://bq0ry32qlyc1f" path="res://Assets/User Interface/Resources/Buttons/red/red_disabled.tres" id="20_fp365"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
 bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
@@ -230,55 +240,72 @@ theme_override_constants/separation = 32
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("8_edrd7")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = ExtResource("8_msgrf")
-theme_override_styles/pressed = ExtResource("9_d6in7")
-theme_override_styles/hover = ExtResource("10_4flte")
-theme_override_styles/focus = ExtResource("8_msgrf")
+theme_override_styles/normal = ExtResource("9_4flte")
+theme_override_styles/pressed = ExtResource("10_n724j")
+theme_override_styles/hover = ExtResource("11_3ay7h")
+theme_override_styles/disabled = ExtResource("12_uylv0")
 text = "Resume"
 
 [node name="BackToLobbyButton" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer/Button Hbox" unique_id=775867780]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("8_edrd7")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("8_msgrf")
 theme_override_styles/pressed = ExtResource("9_d6in7")
 theme_override_styles/hover = ExtResource("10_4flte")
-theme_override_styles/focus = ExtResource("8_msgrf")
+theme_override_styles/disabled = ExtResource("16_jb54h")
 text = "Back to Lobby"
 
 [node name="TokenCodex" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer/Button Hbox" unique_id=938246455]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("8_edrd7")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("8_msgrf")
 theme_override_styles/pressed = ExtResource("9_d6in7")
 theme_override_styles/hover = ExtResource("10_4flte")
-theme_override_styles/focus = ExtResource("8_msgrf")
+theme_override_styles/disabled = ExtResource("16_jb54h")
 text = "Token Codex"
 
 [node name="OptionsButton" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer/Button Hbox" unique_id=1893915070]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("8_edrd7")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("8_msgrf")
 theme_override_styles/pressed = ExtResource("9_d6in7")
 theme_override_styles/hover = ExtResource("10_4flte")
-theme_override_styles/focus = ExtResource("8_msgrf")
+theme_override_styles/disabled = ExtResource("16_jb54h")
 text = "Options"
+
+[node name="MainMenuButton" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer/Button Hbox" unique_id=863846979]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("8_edrd7")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("8_msgrf")
+theme_override_styles/pressed = ExtResource("9_d6in7")
+theme_override_styles/hover = ExtResource("10_4flte")
+theme_override_styles/disabled = ExtResource("16_jb54h")
+text = "Back to Main Menu"
 
 [node name="QuitButton" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/ButtonsHbox/MarginContainer/Button Hbox" unique_id=739290148]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("8_edrd7")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = ExtResource("8_msgrf")
-theme_override_styles/pressed = ExtResource("9_d6in7")
-theme_override_styles/hover = ExtResource("10_4flte")
-theme_override_styles/focus = ExtResource("8_msgrf")
+theme_override_styles/normal = ExtResource("17_5hvjd")
+theme_override_styles/pressed = ExtResource("18_3w12p")
+theme_override_styles/hover = ExtResource("19_3po7g")
+theme_override_styles/disabled = ExtResource("20_fp365")
 text = "Quit"
 
 [node name="Token Overlay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=213115429]

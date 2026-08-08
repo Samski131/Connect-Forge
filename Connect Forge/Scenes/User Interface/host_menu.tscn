@@ -13,11 +13,15 @@
 [ext_resource type="Texture2D" uid="uid://cn0bu4f6rwreo" path="res://Assets/User Interface/icons/Locked.png" id="13_0pjp7"]
 [ext_resource type="Texture2D" uid="uid://swcxn7pj5ghi" path="res://Assets/User Interface/icons/Host.png" id="13_1vdst"]
 [ext_resource type="Texture2D" uid="uid://bb2n3hd71p7c0" path="res://Assets/User Interface/icons/eye open.png" id="14_ka510"]
+[ext_resource type="StyleBox" uid="uid://cot44u8x8t2ig" path="res://Assets/User Interface/Resources/Buttons/red/red_normal.tres" id="15_c55aw"]
 [ext_resource type="Texture2D" uid="uid://bf58oi5i7o86v" path="res://Assets/User Interface/icons/eye closed.png" id="15_ew6j4"]
-[ext_resource type="StyleBox" uid="uid://bpga6rji02ymx" path="res://Assets/User Interface/Resources/Theme Presets/Game Over Menu/red button.stylebox" id="16_ew6j4"]
-[ext_resource type="StyleBox" uid="uid://buwpa3b31eccc" path="res://Assets/User Interface/Resources/Buttons/green_normal.stylebox" id="17_txhi0"]
-[ext_resource type="StyleBox" uid="uid://cp3c1isr71xkd" path="res://Assets/User Interface/Resources/Buttons/green_pressed.stylebox" id="18_7g7hp"]
-[ext_resource type="StyleBox" uid="uid://bb3tlxb03hh8n" path="res://Assets/User Interface/Resources/Buttons/green_hover.stylebox" id="19_c55aw"]
+[ext_resource type="StyleBox" uid="uid://bo8gbwwcx5cl2" path="res://Assets/User Interface/Resources/Buttons/red/red_pressed.tres" id="16_6fgh5"]
+[ext_resource type="StyleBox" uid="uid://brgmi28i3e2cm" path="res://Assets/User Interface/Resources/Buttons/red/red_hover.tres" id="17_bncue"]
+[ext_resource type="StyleBox" uid="uid://bq0ry32qlyc1f" path="res://Assets/User Interface/Resources/Buttons/red/red_disabled.tres" id="18_m7s26"]
+[ext_resource type="StyleBox" uid="uid://cl5m2yxgrhfas" path="res://Assets/User Interface/Resources/Buttons/green/green_normal.tres" id="19_rf37q"]
+[ext_resource type="StyleBox" uid="uid://b1xf1w4dml1pg" path="res://Assets/User Interface/Resources/Buttons/green/green_pressed.tres" id="20_m4e2p"]
+[ext_resource type="StyleBox" uid="uid://cve3dg86hp3hg" path="res://Assets/User Interface/Resources/Buttons/green/green_hover.tres" id="21_3o57w"]
+[ext_resource type="StyleBox" uid="uid://cusegvg56iy1r" path="res://Assets/User Interface/Resources/Buttons/green/green_disabled.tres" id="22_nk641"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
 bg_color = Color(0.17254902, 0.3254902, 0.52156866, 1)
@@ -177,36 +181,6 @@ font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_guliv"]
 font_size = 20
 font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bncue"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.79, 0.023699978, 0.049243297, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(1, 0.53, 0.53, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_color = Color(0, 0, 0, 0.61960787)
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m7s26"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.94594723, 0.3268647, 0.32010517, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(1, 0.53, 0.53, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_color = Color(0, 0, 0, 0.61960787)
-shadow_size = 4
 
 [node name="HostMenuPopupUI" type="Control" unique_id=356466557]
 z_index = 1
@@ -546,6 +520,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_6fgh5")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
 theme_override_styles/hover = SubResource("StyleBoxFlat_c55aw")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_m4e2p")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_6fgh5")
 toggle_mode = true
 button_pressed = true
 button_group = SubResource("ButtonGroup_ka510")
@@ -602,6 +577,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_6fgh5")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
 theme_override_styles/hover = SubResource("StyleBoxFlat_c55aw")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_m4e2p")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_6fgh5")
 toggle_mode = true
 button_group = SubResource("ButtonGroup_ka510")
 
@@ -657,6 +633,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_6fgh5")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_txhi0")
 theme_override_styles/hover = SubResource("StyleBoxFlat_c55aw")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_m4e2p")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_6fgh5")
 toggle_mode = true
 button_group = SubResource("ButtonGroup_ka510")
 
@@ -793,18 +770,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = ExtResource("16_ew6j4")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_bncue")
-theme_override_styles/hover = SubResource("StyleBoxFlat_m7s26")
+theme_override_styles/normal = ExtResource("15_c55aw")
+theme_override_styles/pressed = ExtResource("16_6fgh5")
+theme_override_styles/hover = ExtResource("17_bncue")
+theme_override_styles/disabled = ExtResource("18_m7s26")
 text = "Cancel"
 
 [node name="Create Lobby Button" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Button Hbox" unique_id=443062053]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = ExtResource("17_txhi0")
-theme_override_styles/pressed = ExtResource("18_7g7hp")
-theme_override_styles/hover = ExtResource("19_c55aw")
+theme_override_styles/normal = ExtResource("19_rf37q")
+theme_override_styles/pressed = ExtResource("20_m4e2p")
+theme_override_styles/hover = ExtResource("21_3o57w")
+theme_override_styles/disabled = ExtResource("22_nk641")
 text = "Create Lobby"
 
 [node name="Token Overlay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=213115429]

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UIJuiceStep" format=3 uid="uid://b5sb8fasq7bvx"]
+
+[ext_resource type="Script" uid="uid://0so8li03yq6o" path="res://Scripts/User Interface/Juice/ui_juice_step.gd" id="1_dhcmv"]
+
+[resource]
+script = ExtResource("1_dhcmv")
+step_type = 4
+duration = 0.1
+scale_to = Vector2(1.05, 1.05)
+metadata/_custom_type_script = "uid://0so8li03yq6o"

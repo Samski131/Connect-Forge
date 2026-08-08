@@ -11,6 +11,8 @@ enum MenuContext {
 }
 
 const TOKEN_LOBBY_SCENE_PATH:String = "res://Scenes/User Interface/Token Lobby/token_lobby.tscn"
+const MAIN_MENU_SCENE_PATH:String = "res://Scenes/User Interface/main_menu.tscn"
+
 const RED_TOKEN_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
 
 @export_group("Context")
@@ -24,6 +26,7 @@ const RED_TOKEN_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour
 @onready var token_codex_button:Button = %TokenCodex
 @onready var options_button:Button = %OptionsButton
 @onready var back_to_lobby_button:Button = %BackToLobbyButton
+@onready var main_menu_button:Button = %MainMenuButton
 @onready var quit_button:Button = %QuitButton
 @onready var token_visual_display:TokenVisualDisplay = %TokenVisualDisplay
 
@@ -47,6 +50,7 @@ func _ready() -> void:
 	connect_button(resume_button, _on_resume_button_pressed)
 	connect_button(token_codex_button, _on_token_codex_button_pressed)
 	connect_button(options_button, _on_options_button_pressed)
+	connect_button(main_menu_button, _on_main_menu_button_pressed)
 	connect_button(back_to_lobby_button, _on_back_to_lobby_button_pressed)
 	connect_button(quit_button, _on_quit_button_pressed)
 	
@@ -99,6 +103,10 @@ func apply_menu_context() -> void:
 			resume_button.focus_mode = Control.FOCUS_ALL
 		else:
 			resume_button.focus_mode = Control.FOCUS_NONE
+	
+	if main_menu_button != null:
+		main_menu_button.visible = true
+		main_menu_button.focus_mode = Control.FOCUS_ALL
 	
 	if back_to_lobby_button != null:
 		back_to_lobby_button.visible = true
@@ -296,7 +304,35 @@ func _on_back_to_lobby_button_pressed() -> void:
 	
 	change_to_token_lobby()
 
+func _on_main_menu_button_pressed() -> void:
+	change_to_main_menu()
 
+
+func change_to_main_menu() -> void:
+	var previous_tree_pause:bool = tree_was_paused
+	
+	controls_tree_pause = false
+	get_tree().paused = false
+	
+	if SteamNetwork.is_in_lobby():
+		SteamNetwork.leave_lobby("Returned to the main menu.")
+	
+	MatchData.clear_session()
+	
+	var scene_change_error:Error = get_tree().change_scene_to_file(MAIN_MENU_SCENE_PATH)
+	
+	if scene_change_error == OK:
+		return
+	
+	push_error("PauseMenu: Could not return to the main menu. Error code: " + str(scene_change_error))
+	
+	tree_was_paused = previous_tree_pause
+	
+	if menu_context == MenuContext.GAME_BOARD:
+		controls_tree_pause = true
+		get_tree().paused = true
+		
+		
 func change_to_token_lobby() -> void:
 	var previous_tree_pause:bool = tree_was_paused
 	

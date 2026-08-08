@@ -14,6 +14,7 @@ const DISABLED_FIELD_MODULATE:Color = Color(1.0, 1.0, 1.0, 0.55)
 const CREATE_BUTTON_TEXT:String = "Create Lobby"
 const CREATING_BUTTON_TEXT:String = "Creating..."
 
+
 @onready var cancel_button:Button = find_child("Cancel Button", true, false) as Button
 @onready var create_lobby_button:Button = find_child("Create Lobby Button", true, false) as Button
 
@@ -323,6 +324,8 @@ func set_form_enabled(is_enabled:bool) -> void:
 	if password_protected_button != null:
 		password_protected_button.disabled = is_enabled == false
 	
+	update_visibility_button_disabled_styles()
+	update_visibility_button_text_colours()
 	update_password_field_state()
 	
 	if backdrop != null:
@@ -450,3 +453,23 @@ func _on_exit_animation_finished() -> void:
 		return
 	
 	queue_free()
+
+func update_visibility_button_disabled_styles() -> void:
+	var visibility_buttons:Array[Button] = [
+		public_button,
+		friends_button,
+		password_protected_button
+	]
+	
+	for button in visibility_buttons:
+		if button == null:
+			continue
+		
+		if form_is_enabled:
+			button.remove_theme_stylebox_override("disabled")
+			continue
+		
+		if button.button_pressed:
+			button.add_theme_stylebox_override("disabled", button.get_theme_stylebox("pressed"))
+		else:
+			button.add_theme_stylebox_override("disabled", button.get_theme_stylebox("normal"))

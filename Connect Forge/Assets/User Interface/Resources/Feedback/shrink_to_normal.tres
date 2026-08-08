@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UIJuiceStep" format=3 uid="uid://dc3menbbbeexm"]
+
+[ext_resource type="Script" uid="uid://0so8li03yq6o" path="res://Scripts/User Interface/Juice/ui_juice_step.gd" id="1_7x2vp"]
+
+[resource]
+script = ExtResource("1_7x2vp")
+step_type = 4
+trans_type = 9
+use_from_value = false
+metadata/_custom_type_script = "uid://0so8li03yq6o"

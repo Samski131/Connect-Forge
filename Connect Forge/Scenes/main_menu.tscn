@@ -12,11 +12,14 @@
 [ext_resource type="FontFile" uid="uid://dehtpv13sux26" path="res://fonts/Fredoka-Regular.ttf" id="8_yhxw7"]
 [ext_resource type="StyleBox" uid="uid://b5ssrbend1pgg" path="res://Assets/User Interface/Resources/Buttons/blue/blue_normal.stylebox" id="9_t1dhk"]
 [ext_resource type="StyleBox" uid="uid://bkl0pq7ws0lkx" path="res://Assets/User Interface/Resources/Buttons/blue/blue_pressed.stylebox" id="10_5egv6"]
+[ext_resource type="Theme" uid="uid://b78l8uqkka1c8" path="res://Assets/User Interface/Styles/Buttons.tres" id="11_jw7lb"]
 [ext_resource type="StyleBox" uid="uid://de5jbcaqgvy0t" path="res://Assets/User Interface/Resources/Buttons/blue/blue_hovered.stylebox" id="11_vtepg"]
 [ext_resource type="Texture2D" uid="uid://b56mcl4wll4gs" path="res://Assets/User Interface/logos/Discord-Symbol-White.png" id="13_5egv6"]
 [ext_resource type="Texture2D" uid="uid://swcxn7pj5ghi" path="res://Assets/User Interface/icons/Host.png" id="13_m3bi6"]
+[ext_resource type="PackedScene" uid="uid://ddra06qt1euxa" path="res://Scenes/User Interface/Reusable UI Juice Players/button_ui_juice_player.tscn" id="14_hkdq0"]
 [ext_resource type="ColorPalette" uid="uid://dq123hkj3anu7" path="res://Scenes/Tokens/token colour resources/blue_v3.tres" id="14_ujyyl"]
 [ext_resource type="Texture2D" uid="uid://cyrfg7nj3aer6" path="res://Assets/User Interface/logos/youtube.png" id="14_vtepg"]
+[ext_resource type="StyleBox" uid="uid://ykk36bnfh2a6" path="res://Assets/User Interface/Resources/Buttons/disabled.stylebox" id="15_1xund"]
 [ext_resource type="Texture2D" uid="uid://qnnxsckmxlgb" path="res://Assets/User Interface/logos/steam logo.png" id="15_8dnnj"]
 [ext_resource type="Texture2D" uid="uid://c36fidv633fa6" path="res://Assets/User Interface/icons/Join.png" id="15_mkpwh"]
 [ext_resource type="ColorPalette" uid="uid://dpt8f5rnrn11b" path="res://Scenes/Tokens/token colour resources/green_v3.tres" id="16_6dk6o"]
@@ -498,11 +501,12 @@ custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 48
+theme = ExtResource("11_jw7lb")
+theme_type_variation = &"LargeMenuButton"
 theme_override_styles/normal = ExtResource("9_t1dhk")
 theme_override_styles/pressed = ExtResource("10_5egv6")
 theme_override_styles/hover = ExtResource("11_vtepg")
-theme_override_styles/focus = ExtResource("9_t1dhk")
+theme_override_styles/disabled = ExtResource("15_1xund")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Host Game Button" unique_id=489039363]
 layout_mode = 1
@@ -540,16 +544,19 @@ text = "Host Game"
 label_settings = SubResource("LabelSettings_fsy6u")
 horizontal_alignment = 1
 
+[node name="ButtonUIJuicePlayer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Host Game Button" unique_id=1889510532 instance=ExtResource("14_hkdq0")]
+
 [node name="Join Game Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=26466726]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 48
+theme = ExtResource("11_jw7lb")
+theme_type_variation = &"LargeMenuButton"
 theme_override_styles/normal = ExtResource("9_t1dhk")
 theme_override_styles/pressed = ExtResource("10_5egv6")
 theme_override_styles/hover = ExtResource("11_vtepg")
-theme_override_styles/focus = ExtResource("9_t1dhk")
+theme_override_styles/disabled = ExtResource("15_1xund")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Join Game Button" unique_id=123399811]
 layout_mode = 1
@@ -587,16 +594,20 @@ text = "Join Game"
 label_settings = SubResource("LabelSettings_fsy6u")
 horizontal_alignment = 1
 
+[node name="ButtonUIJuicePlayer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Join Game Button" unique_id=1078654156 instance=ExtResource("14_hkdq0")]
+
 [node name="Replays Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=1012000920]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 48
+theme = ExtResource("11_jw7lb")
+theme_type_variation = &"LargeMenuButton"
 theme_override_styles/normal = ExtResource("9_t1dhk")
 theme_override_styles/pressed = ExtResource("10_5egv6")
 theme_override_styles/hover = ExtResource("11_vtepg")
-theme_override_styles/focus = ExtResource("9_t1dhk")
+theme_override_styles/disabled = ExtResource("15_1xund")
+disabled = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Replays Button" unique_id=33434987]
 layout_mode = 1
@@ -634,16 +645,20 @@ text = "Replays"
 label_settings = SubResource("LabelSettings_fsy6u")
 horizontal_alignment = 1
 
+[node name="ButtonUIJuicePlayer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Replays Button" unique_id=1187382420 instance=ExtResource("14_hkdq0")]
+
 [node name="Token Codex Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=719777035]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 48
+theme = ExtResource("11_jw7lb")
+theme_type_variation = &"LargeMenuButton"
 theme_override_styles/normal = ExtResource("9_t1dhk")
 theme_override_styles/pressed = ExtResource("10_5egv6")
 theme_override_styles/hover = ExtResource("11_vtepg")
-theme_override_styles/focus = ExtResource("9_t1dhk")
+theme_override_styles/disabled = ExtResource("15_1xund")
+disabled = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Token Codex Button" unique_id=1281945751]
 layout_mode = 1
@@ -681,16 +696,20 @@ text = "Token Codex"
 label_settings = SubResource("LabelSettings_fsy6u")
 horizontal_alignment = 1
 
+[node name="ButtonUIJuicePlayer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Token Codex Button" unique_id=1661377045 instance=ExtResource("14_hkdq0")]
+
 [node name="Settings Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=65290115]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 48
+theme = ExtResource("11_jw7lb")
+theme_type_variation = &"LargeMenuButton"
 theme_override_styles/normal = ExtResource("9_t1dhk")
 theme_override_styles/pressed = ExtResource("10_5egv6")
 theme_override_styles/hover = ExtResource("11_vtepg")
-theme_override_styles/focus = ExtResource("9_t1dhk")
+theme_override_styles/disabled = ExtResource("15_1xund")
+disabled = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Settings Button" unique_id=402047683]
 layout_mode = 1
@@ -728,16 +747,19 @@ text = "Settings"
 label_settings = SubResource("LabelSettings_fsy6u")
 horizontal_alignment = 1
 
+[node name="ButtonUIJuicePlayer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Settings Button" unique_id=17958470 instance=ExtResource("14_hkdq0")]
+
 [node name="Quit Button" type="Button" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons" unique_id=1826404045]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 48
+theme = ExtResource("11_jw7lb")
+theme_type_variation = &"LargeMenuButton"
 theme_override_styles/normal = ExtResource("9_t1dhk")
 theme_override_styles/pressed = ExtResource("10_5egv6")
 theme_override_styles/hover = ExtResource("11_vtepg")
-theme_override_styles/focus = ExtResource("9_t1dhk")
+theme_override_styles/disabled = ExtResource("15_1xund")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Quit Button" unique_id=797707443]
 layout_mode = 1
@@ -774,6 +796,8 @@ layout_mode = 2
 text = "Quit Game"
 label_settings = SubResource("LabelSettings_fsy6u")
 horizontal_alignment = 1
+
+[node name="ButtonUIJuicePlayer" parent="Content Vbox/Bottom Margin/HBoxContainer/Buttons Margin/Buttons/Quit Button" unique_id=403565422 instance=ExtResource("14_hkdq0")]
 
 [node name="Patch Notes Anouncements Community" type="VBoxContainer" parent="Content Vbox/Bottom Margin/HBoxContainer" unique_id=465079287]
 layout_mode = 2

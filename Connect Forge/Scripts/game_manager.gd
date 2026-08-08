@@ -250,6 +250,86 @@ func apply_match_result_locally(winner_id:int) -> bool:
 		game_over_menu.show_game_over(winner_id)
 	
 	return true
+
+func create_network_match_snapshot() -> Dictionary:
+	if session == null:
+		return {}
+	
+	if board == null:
+		return {}
+	
+	if board.settings == null:
+		return {}
+	
+	return {
+		"gravity_direction": int(board.settings.gravity_direction),
+		"board_tokens": board.create_network_board_snapshot(),
+		"token_counts": session.create_network_token_count_snapshot()
+	}
+
+
+func apply_authoritative_network_match_snapshot(snapshot:Dictionary) -> bool:
+	if session == null:
+		return false
+	
+	if board == null:
+		return false
+	
+	if snapshot.has("gravity_direction") == false:
+		return false
+	
+	if snapshot.has("board_tokens") == false:
+		return false
+	
+	if snapshot.has("token_counts") == false:
+		return false
+	
+	if typeof(snapshot["board_tokens"]) != TYPE_ARRAY:
+		return false
+	
+	if typeof(snapshot["token_counts"]) != TYPE_ARRAY:
+		return false
+	
+	var gravity_direction_value:int = int(snapshot["gravity_direction"])
+	
+	if is_valid_network_gravity_direction(gravity_direction_value) == false:
+		return false
+	
+	var board_snapshot:Array = snapshot["board_tokens"]
+	var token_count_snapshot:Array = snapshot["token_counts"]
+	
+	if board.is_network_board_snapshot_valid(board_snapshot) == false:
+		return false
+	
+	if session.is_network_token_count_snapshot_valid(token_count_snapshot) == false:
+		return false
+	
+	var gravity_direction:BoardSetting.GRID_DIRECTION = gravity_direction_value
+	board.set_gravity_direction(gravity_direction, false)
+	
+	if board.apply_network_board_snapshot(board_snapshot) == false:
+		return false
+	
+	if session.apply_network_token_count_snapshot(token_count_snapshot) == false:
+		return false
+	
+	return true
+
+
+func is_valid_network_gravity_direction(gravity_direction_value:int) -> bool:
+	if gravity_direction_value == int(BoardSetting.GRID_DIRECTION.UP):
+		return true
+	
+	if gravity_direction_value == int(BoardSetting.GRID_DIRECTION.RIGHT):
+		return true
+	
+	if gravity_direction_value == int(BoardSetting.GRID_DIRECTION.DOWN):
+		return true
+	
+	if gravity_direction_value == int(BoardSetting.GRID_DIRECTION.LEFT):
+		return true
+	
+	return false
 	
 func connect_session_signals() -> void:
 	if connected_session == null:

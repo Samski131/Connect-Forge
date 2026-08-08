@@ -2,7 +2,7 @@ extends Token
 # Fan Token
 # Pushes tokens sideways relative to gravity.
 
-@export var fan_range:int = 2
+@export var fan_range:int = 999
 
 
 func setup_special_token():

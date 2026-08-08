@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://ddra06qt1euxa"]
+
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="1_ifk6f"]
+[ext_resource type="Script" uid="uid://xwhddg75nyps" path="res://Scripts/User Interface/Juice/ui_juice_preset.gd" id="2_68t0i"]
+[ext_resource type="Script" uid="uid://0so8li03yq6o" path="res://Scripts/User Interface/Juice/ui_juice_step.gd" id="3_o6tiw"]
+[ext_resource type="Resource" uid="uid://b5sb8fasq7bvx" path="res://Assets/User Interface/Resources/Feedback/slight_grow.tres" id="4_6rklq"]
+[ext_resource type="Resource" uid="uid://dc3menbbbeexm" path="res://Assets/User Interface/Resources/Feedback/shrink_to_normal.tres" id="5_kx4gk"]
+
+[sub_resource type="Resource" id="Resource_6vfk8"]
+script = ExtResource("2_68t0i")
+steps = Array[ExtResource("3_o6tiw")]([ExtResource("4_6rklq")])
+reset_offset_scale = true
+metadata/_custom_type_script = "uid://xwhddg75nyps"
+
+[sub_resource type="Resource" id="Resource_t4ah6"]
+script = ExtResource("2_68t0i")
+steps = Array[ExtResource("3_o6tiw")]([ExtResource("5_kx4gk")])
+metadata/_custom_type_script = "uid://xwhddg75nyps"
+
+[node name="ButtonUIJuicePlayer" type="Node" unique_id=1889510532]
+script = ExtResource("1_ifk6f")
+hover_enter_preset = SubResource("Resource_6vfk8")
+hover_exit_preset = SubResource("Resource_t4ah6")
+use_auto_hover = true
+enter_button_paths = Array[NodePath]([NodePath("..")])
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"

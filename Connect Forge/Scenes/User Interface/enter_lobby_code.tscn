@@ -7,14 +7,18 @@
 [ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="5_kvci4"]
 [ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="6_7dxos"]
 [ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="7_d4aot"]
+[ext_resource type="StyleBox" uid="uid://cot44u8x8t2ig" path="res://Assets/User Interface/Resources/Buttons/red/red_normal.tres" id="9_sity7"]
+[ext_resource type="StyleBox" uid="uid://bo8gbwwcx5cl2" path="res://Assets/User Interface/Resources/Buttons/red/red_pressed.tres" id="10_i3voj"]
+[ext_resource type="StyleBox" uid="uid://brgmi28i3e2cm" path="res://Assets/User Interface/Resources/Buttons/red/red_hover.tres" id="11_b8hqc"]
+[ext_resource type="StyleBox" uid="uid://bq0ry32qlyc1f" path="res://Assets/User Interface/Resources/Buttons/red/red_disabled.tres" id="12_snhgm"]
+[ext_resource type="StyleBox" uid="uid://cl5m2yxgrhfas" path="res://Assets/User Interface/Resources/Buttons/green/green_normal.tres" id="13_kvci4"]
 [ext_resource type="Texture2D" uid="uid://cn0bu4f6rwreo" path="res://Assets/User Interface/icons/Locked.png" id="13_od0s3"]
+[ext_resource type="StyleBox" uid="uid://b1xf1w4dml1pg" path="res://Assets/User Interface/Resources/Buttons/green/green_pressed.tres" id="14_7dxos"]
 [ext_resource type="ColorPalette" uid="uid://c5ns1i26eemb8" path="res://Scenes/Tokens/token colour resources/violet_v3.tres" id="14_24u74"]
 [ext_resource type="Texture2D" uid="uid://bb2n3hd71p7c0" path="res://Assets/User Interface/icons/eye open.png" id="14_q1acc"]
+[ext_resource type="StyleBox" uid="uid://cve3dg86hp3hg" path="res://Assets/User Interface/Resources/Buttons/green/green_hover.tres" id="15_d4aot"]
 [ext_resource type="Texture2D" uid="uid://bf58oi5i7o86v" path="res://Assets/User Interface/icons/eye closed.png" id="15_kfkv0"]
-[ext_resource type="StyleBox" uid="uid://bpga6rji02ymx" path="res://Assets/User Interface/Resources/Theme Presets/Game Over Menu/red button.stylebox" id="16_son0x"]
-[ext_resource type="StyleBox" uid="uid://buwpa3b31eccc" path="res://Assets/User Interface/Resources/Buttons/green_normal.stylebox" id="17_lgl8d"]
-[ext_resource type="StyleBox" uid="uid://cp3c1isr71xkd" path="res://Assets/User Interface/Resources/Buttons/green_pressed.stylebox" id="18_d3d71"]
-[ext_resource type="StyleBox" uid="uid://bb3tlxb03hh8n" path="res://Assets/User Interface/Resources/Buttons/green_hover.stylebox" id="19_rr8vy"]
+[ext_resource type="StyleBox" uid="uid://cusegvg56iy1r" path="res://Assets/User Interface/Resources/Buttons/green/green_disabled.tres" id="16_tk0x2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
 bg_color = Color(0.46666667, 0.2901961, 0.7294118, 1)
@@ -103,36 +107,6 @@ corner_radius_bottom_left = 12
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sity7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i3voj"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bncue"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.79, 0.023699978, 0.049243297, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(1, 0.53, 0.53, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_color = Color(0, 0, 0, 0.61960787)
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m7s26"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.94594723, 0.3268647, 0.32010517, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(1, 0.53, 0.53, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_color = Color(0, 0, 0, 0.61960787)
-shadow_size = 4
 
 [node name="HostMenuPopupUI" type="Control" unique_id=356466557]
 z_index = 1
@@ -418,18 +392,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = ExtResource("16_son0x")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_bncue")
-theme_override_styles/hover = SubResource("StyleBoxFlat_m7s26")
+theme_override_styles/normal = ExtResource("9_sity7")
+theme_override_styles/pressed = ExtResource("10_i3voj")
+theme_override_styles/hover = ExtResource("11_b8hqc")
+theme_override_styles/disabled = ExtResource("12_snhgm")
 text = "Cancel"
 
 [node name="Create Lobby Button" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Button Hbox" unique_id=443062053]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = ExtResource("17_lgl8d")
-theme_override_styles/pressed = ExtResource("18_d3d71")
-theme_override_styles/hover = ExtResource("19_rr8vy")
+theme_override_styles/normal = ExtResource("13_kvci4")
+theme_override_styles/pressed = ExtResource("14_7dxos")
+theme_override_styles/hover = ExtResource("15_d4aot")
+theme_override_styles/disabled = ExtResource("16_tk0x2")
 text = "Join Game"
 
 [node name="Token Overlay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=213115429]

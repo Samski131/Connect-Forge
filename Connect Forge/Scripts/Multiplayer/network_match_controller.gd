@@ -711,18 +711,9 @@ func apply_authoritative_game_over(result_revision:int, winner_id:int, winning_s
 		DebugOverlay.log_error("NetworkMatch", "Received an invalid authoritative winner: %d." % winner_id)
 		return
 	
-	var context_name:String = "game over revision %d" % result_revision
-	
-	if verify_or_recover_authoritative_snapshot(authoritative_snapshot, snapshot_checksum, context_name) == false:
-		move_request_pending = false
-		move_in_progress = true
-		DebugOverlay.log_error("NetworkMatch", "Game-over processing was stopped because state recovery failed.")
-		return
-	
 	applied_game_over_revision = result_revision
 	last_applied_revision = max(last_applied_revision, result_revision)
 	authoritative_revision = max(authoritative_revision, result_revision)
-	last_verified_revision = max(last_verified_revision, result_revision)
 	
 	move_request_pending = false
 	move_in_progress = false
@@ -730,14 +721,42 @@ func apply_authoritative_game_over(result_revision:int, winner_id:int, winning_s
 	pending_turn_state.clear()
 	pending_state_checkpoint.clear()
 	
+	DebugOverlay.log_message(
+		"NetworkMatch",
+		"Applying authoritative winner player slot %d at revision %d." % [
+			winner_id,
+			result_revision
+		]
+	)
+	
 	var applied:bool = game_manager.apply_authoritative_match_result(winner_id, winning_slots)
 	
 	if applied == false:
-		DebugOverlay.log_error("NetworkMatch", "The authoritative game-over result could not be applied.")
+		DebugOverlay.log_error(
+			"NetworkMatch",
+			"The authoritative game-over result could not be applied."
+		)
 		return
 	
-	DebugOverlay.log_message("NetworkMatch", "Applied authoritative winner player slot %d at revision %d." % [winner_id, result_revision])
-
+	DebugOverlay.log_message(
+		"NetworkMatch",
+		"Applied authoritative winner player slot %d at revision %d." % [
+			winner_id,
+			result_revision
+		]
+	)
+	
+	var context_name:String = "game over revision %d" % result_revision
+	var checkpoint_verified:bool = verify_or_recover_authoritative_snapshot(authoritative_snapshot, snapshot_checksum, context_name)
+	
+	if checkpoint_verified:
+		last_verified_revision = max(last_verified_revision, result_revision)
+		return
+	
+	DebugOverlay.log_warning(
+		"NetworkMatch",
+		"The game-over state was applied, but state verification failed for revision %d." % result_revision
+	)
 
 func request_next_round() -> bool:
 	if network_active == false:

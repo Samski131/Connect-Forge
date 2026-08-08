@@ -1,0 +1,34 @@
+[gd_resource type="Theme" format=3 uid="uid://b78l8uqkka1c8"]
+
+[ext_resource type="StyleBox" uid="uid://cusegvg56iy1r" path="res://Assets/User Interface/Resources/Buttons/green/green_disabled.tres" id="1_780a5"]
+[ext_resource type="StyleBox" uid="uid://de5jbcaqgvy0t" path="res://Assets/User Interface/Resources/Buttons/blue/blue_hovered.stylebox" id="1_xu8by"]
+[ext_resource type="StyleBox" uid="uid://cl5m2yxgrhfas" path="res://Assets/User Interface/Resources/Buttons/green/green_normal.tres" id="3_3g3da"]
+[ext_resource type="StyleBox" uid="uid://bkl0pq7ws0lkx" path="res://Assets/User Interface/Resources/Buttons/blue/blue_pressed.stylebox" id="3_ubg57"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_87n1i"]
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[resource]
+LargeMenuButton/base_type = &"Button"
+LargeMenuButton/styles/disabled = ExtResource("1_780a5")
+LargeMenuButton/styles/focus = SubResource("StyleBoxFlat_87n1i")
+LargeMenuButton/styles/hover = ExtResource("1_xu8by")
+LargeMenuButton/styles/normal = ExtResource("3_3g3da")
+LargeMenuButton/styles/pressed = ExtResource("3_ubg57")
+PopupMenuButton/base_type = &"Button"
+PopupMenuButton/styles/disabled = ExtResource("1_780a5")
+PopupMenuButton/styles/hover = ExtResource("1_xu8by")
+PopupMenuButton/styles/normal = ExtResource("3_3g3da")
+PopupMenuButton/styles/pressed = ExtResource("3_ubg57")

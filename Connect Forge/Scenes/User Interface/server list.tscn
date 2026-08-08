@@ -15,12 +15,24 @@
 [ext_resource type="ColorPalette" uid="uid://b4u7sst75bwto" path="res://Scenes/Tokens/token colour resources/red_v3.tres" id="10_gorfs"]
 [ext_resource type="Texture2D" uid="uid://swcxn7pj5ghi" path="res://Assets/User Interface/icons/Host.png" id="10_qevr4"]
 [ext_resource type="Texture2D" uid="uid://cn0bu4f6rwreo" path="res://Assets/User Interface/icons/Locked.png" id="11_th4bt"]
+[ext_resource type="StyleBox" uid="uid://b5ssrbend1pgg" path="res://Assets/User Interface/Resources/Buttons/blue/blue_normal.stylebox" id="14_ec2oq"]
+[ext_resource type="StyleBox" uid="uid://bkl0pq7ws0lkx" path="res://Assets/User Interface/Resources/Buttons/blue/blue_pressed.stylebox" id="15_r86v8"]
+[ext_resource type="StyleBox" uid="uid://de5jbcaqgvy0t" path="res://Assets/User Interface/Resources/Buttons/blue/blue_hovered.stylebox" id="16_c0den"]
 [ext_resource type="Texture2D" uid="uid://bgab2rerpc40c" path="res://Assets/User Interface/icons/Add.png" id="16_th4bt"]
+[ext_resource type="StyleBox" uid="uid://ykk36bnfh2a6" path="res://Assets/User Interface/Resources/Buttons/disabled.stylebox" id="17_pa8xg"]
 [ext_resource type="Texture2D" uid="uid://b6uhvokcoi6bc" path="res://Assets/User Interface/icons/Refresh.png" id="17_toyso"]
 [ext_resource type="FontFile" uid="uid://dehtpv13sux26" path="res://fonts/Fredoka-Regular.ttf" id="18_toyso"]
 [ext_resource type="Texture2D" uid="uid://7efuappqgdnt" path="res://Assets/User Interface/icons/single host.png" id="19_svdt1"]
 [ext_resource type="Texture2D" uid="uid://c36fidv633fa6" path="res://Assets/User Interface/icons/Join.png" id="20_6jqcb"]
+[ext_resource type="StyleBox" uid="uid://cl5m2yxgrhfas" path="res://Assets/User Interface/Resources/Buttons/green/green_normal.tres" id="20_8e1oe"]
+[ext_resource type="StyleBox" uid="uid://b1xf1w4dml1pg" path="res://Assets/User Interface/Resources/Buttons/green/green_pressed.tres" id="21_4tsgv"]
 [ext_resource type="PackedScene" uid="uid://bi2gbr08i2xb5" path="res://Scenes/User Interface/enter_password_popup.tscn" id="21_oni21"]
+[ext_resource type="StyleBox" uid="uid://cve3dg86hp3hg" path="res://Assets/User Interface/Resources/Buttons/green/green_hover.tres" id="22_gubtk"]
+[ext_resource type="StyleBox" uid="uid://cusegvg56iy1r" path="res://Assets/User Interface/Resources/Buttons/green/green_disabled.tres" id="23_oh158"]
+[ext_resource type="StyleBox" uid="uid://63jwq08xdjgy" path="res://Assets/User Interface/Resources/Buttons/purple/purple_normal.tres" id="25_44bji"]
+[ext_resource type="StyleBox" uid="uid://b1qwkn6jsg2fv" path="res://Assets/User Interface/Resources/Buttons/purple/purple_pressed.tres" id="26_qeahl"]
+[ext_resource type="StyleBox" uid="uid://c0n6t4l5kwj4u" path="res://Assets/User Interface/Resources/Buttons/purple/purple_hover.tres" id="27_0jl1v"]
+[ext_resource type="StyleBox" uid="uid://dmuvr75bdgx31" path="res://Assets/User Interface/Resources/Buttons/purple/purple_disabled.tres" id="28_j06ob"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8o36d"]
 shader = ExtResource("5_u8gyw")
@@ -292,90 +304,6 @@ corner_radius_bottom_left = 16
 shadow_color = Color(0.3019608, 0.40784314, 0.5372549, 1)
 shadow_size = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6jqcb"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.35686275, 0.6666667, 0.30980393, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.46283996, 0.87, 0.40019998, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oni21"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.29259998, 0.55, 0.253, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.46283996, 0.87, 0.40019998, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_celfv"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.43295997, 0.72, 0.3888, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.46283996, 0.87, 0.40019998, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fb11r"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.3882353, 0.21960784, 0.6392157, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.3882353, 0.21960784, 0.6392157, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toyso"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.33866006, 0.1711, 0.59, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.3882353, 0.21960784, 0.6392157, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_size = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_25e1t"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.46720004, 0.292, 0.73, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.3882353, 0.21960784, 0.6392157, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_size = 4
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_goq5p"]
 bg_color = Color(0.28235295, 0.40392157, 0.53333336, 1)
 border_width_left = 3
@@ -444,20 +372,6 @@ expand_margin_bottom = 2.0
 [sub_resource type="LabelSettings" id="LabelSettings_3yal0"]
 font_size = 24
 font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3yal0"]
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.279, 0.2881, 0.3, 1)
-border_width_left = 2
-border_width_top = 2
-border_color = Color(0.47, 0.47, 0.47, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-corner_detail = 12
-shadow_size = 4
 
 [node name="Server List" type="CanvasLayer" unique_id=1236318408]
 script = ExtResource("1_6jqcb")
@@ -981,9 +895,10 @@ theme_override_constants/margin_right = 16
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxFlat_0jof0")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_7bykh")
-theme_override_styles/hover = SubResource("StyleBoxFlat_n1fq7")
+theme_override_styles/normal = ExtResource("14_ec2oq")
+theme_override_styles/pressed = ExtResource("15_r86v8")
+theme_override_styles/hover = ExtResource("16_c0den")
+theme_override_styles/disabled = ExtResource("17_pa8xg")
 theme_override_styles/focus = SubResource("StyleBoxFlat_c8s8n")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/ScreenMargin/ScreenLayout/Main Section/Lobby Selection Panel/PanelContainer/MarginContainer/VBoxContainer/TabContainer/All/PanelContainer/MarginContainer/PageLayout/Search Section/Filter Button Margin/Filter Button" unique_id=856849306]
@@ -1107,10 +1022,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxFlat_0jof0")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_7bykh")
-theme_override_styles/hover = SubResource("StyleBoxFlat_n1fq7")
-theme_override_styles/focus = SubResource("StyleBoxFlat_c8s8n")
+theme_override_styles/normal = ExtResource("14_ec2oq")
+theme_override_styles/pressed = ExtResource("15_r86v8")
+theme_override_styles/hover = ExtResource("16_c0den")
+theme_override_styles/disabled = ExtResource("17_pa8xg")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/ScreenMargin/ScreenLayout/Main Section/Lobby Details and Buttons/VBoxContainer/Host Refresh Enter lobby code/MarginContainer/VBoxContainer/Host Lobby Button" unique_id=740713652]
 layout_mode = 1
@@ -1154,10 +1069,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxFlat_6jqcb")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_oni21")
-theme_override_styles/hover = SubResource("StyleBoxFlat_celfv")
-theme_override_styles/focus = SubResource("StyleBoxFlat_c8s8n")
+theme_override_styles/normal = ExtResource("20_8e1oe")
+theme_override_styles/pressed = ExtResource("21_4tsgv")
+theme_override_styles/hover = ExtResource("22_gubtk")
+theme_override_styles/disabled = ExtResource("23_oh158")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/ScreenMargin/ScreenLayout/Main Section/Lobby Details and Buttons/VBoxContainer/Host Refresh Enter lobby code/MarginContainer/VBoxContainer/Refresh List Button" unique_id=1405844056]
 layout_mode = 1
@@ -1201,10 +1116,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxFlat_fb11r")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_toyso")
-theme_override_styles/hover = SubResource("StyleBoxFlat_25e1t")
-theme_override_styles/focus = SubResource("StyleBoxFlat_c8s8n")
+theme_override_styles/normal = ExtResource("25_44bji")
+theme_override_styles/pressed = ExtResource("26_qeahl")
+theme_override_styles/hover = ExtResource("27_0jl1v")
+theme_override_styles/disabled = ExtResource("28_j06ob")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/ScreenMargin/ScreenLayout/Main Section/Lobby Details and Buttons/VBoxContainer/Host Refresh Enter lobby code/MarginContainer/VBoxContainer/Enter Lobby Code Button" unique_id=1333071233]
 layout_mode = 1
@@ -1630,11 +1545,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 2
 theme_override_font_sizes/font_size = 48
-theme_override_styles/normal = SubResource("StyleBoxFlat_0jof0")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_7bykh")
-theme_override_styles/hover = SubResource("StyleBoxFlat_n1fq7")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_3yal0")
-theme_override_styles/focus = SubResource("StyleBoxFlat_c8s8n")
+theme_override_styles/normal = ExtResource("14_ec2oq")
+theme_override_styles/pressed = ExtResource("15_r86v8")
+theme_override_styles/hover = ExtResource("16_c0den")
+theme_override_styles/disabled = ExtResource("17_pa8xg")
 disabled = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/ScreenMargin/ScreenLayout/Main Section/Lobby Details and Buttons/VBoxContainer/Join Selected Lobby Button" unique_id=1476968577]
@@ -1674,3 +1588,4 @@ label_settings = SubResource("LabelSettings_7bykh")
 horizontal_alignment = 1
 
 [node name="EnterPasswordPopupUI" parent="." unique_id=356466557 instance=ExtResource("21_oni21")]
+visible = false

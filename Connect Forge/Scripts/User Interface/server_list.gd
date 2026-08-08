@@ -5,6 +5,7 @@ const ROW_SEPARATOR_SCENE:PackedScene = preload("res://Scenes/User Interface/pla
 const ENTER_PASSWORD_POPUP_SCENE:PackedScene = preload("res://Scenes/User Interface/enter_password_popup.tscn")
 
 const TOKEN_LOBBY_SCENE_PATH:String = "res://Scenes/User Interface/Token Lobby/token_lobby.tscn"
+const MAIN_MENU_SCENE_PATH:String = "res://Scenes/User Interface/main_menu.tscn"
 
 const PUBLIC_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/green_v3.tres")
 const PASSWORD_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
@@ -14,6 +15,7 @@ const PASSWORD_ICON:Texture2D = preload("res://Assets/User Interface/icons/Locke
 
 const NO_SELECTION_TEXT:String = "—"
 
+@onready var main_menu_button:Button = find_child("Main Menu Button", true, false) as Button
 @onready var refresh_list_button:Button = find_child("Refresh List Button", true, false) as Button
 @onready var join_selected_lobby_button:Button = find_child("Join Selected Lobby Button", true, false) as Button
 
@@ -78,7 +80,7 @@ func _validate_required_nodes() -> void:
 	_log_missing_node(tokens_to_win_detail_label, "Tokens in a row to win Detail Label")
 	_log_missing_node(turn_timer_detail_label, "Turn Timer Detail Label")
 	_log_missing_node(host_detail_label, "Host Detail Label")
-
+	_log_missing_node(main_menu_button, "Main Menu Button")
 
 func _log_missing_node(node:Node, node_name:String) -> void:
 	if node != null:
@@ -116,6 +118,10 @@ func _connect_lobby_admission_signals() -> void:
 
 
 func _connect_buttons() -> void:
+	if main_menu_button != null:
+		if main_menu_button.pressed.is_connected(_on_main_menu_button_pressed) == false:
+			main_menu_button.pressed.connect(_on_main_menu_button_pressed)
+	
 	if refresh_list_button != null:
 		if refresh_list_button.pressed.is_connected(request_lobby_refresh) == false:
 			refresh_list_button.pressed.connect(request_lobby_refresh)
@@ -123,7 +129,6 @@ func _connect_buttons() -> void:
 	if join_selected_lobby_button != null:
 		if join_selected_lobby_button.pressed.is_connected(_on_join_selected_lobby_pressed) == false:
 			join_selected_lobby_button.pressed.connect(_on_join_selected_lobby_pressed)
-
 
 func request_lobby_refresh() -> void:
 	if join_is_in_progress:
@@ -713,3 +718,20 @@ func set_refresh_button_disabled(is_disabled:bool) -> void:
 		return
 	
 	refresh_list_button.disabled = is_disabled
+
+func _on_main_menu_button_pressed() -> void:
+	if scene_change_requested:
+		return
+	
+	if LobbyAdmission.is_join_pending():
+		LobbyAdmission.cancel_pending_join("Returned to the main menu.")
+	
+	scene_change_requested = true
+	
+	var change_error:Error = get_tree().change_scene_to_file(MAIN_MENU_SCENE_PATH)
+	
+	if change_error == OK:
+		return
+	
+	scene_change_requested = false
+	DebugOverlay.log_error("ServerList", "Could not change to main_menu.tscn. Error code: %d" % change_error)
