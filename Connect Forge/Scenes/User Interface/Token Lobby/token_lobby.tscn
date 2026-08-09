@@ -17,6 +17,9 @@
 [ext_resource type="StyleBox" uid="uid://cusegvg56iy1r" path="res://Assets/User Interface/Resources/Buttons/green/green_disabled.tres" id="15_57rln"]
 [ext_resource type="PackedScene" uid="uid://co8r8a8l1dhym" path="res://Scenes/User Interface/match_options_menu.tscn" id="15_qdbar"]
 [ext_resource type="PackedScene" uid="uid://pj4tijvlt85x" path="res://Scenes/User Interface/Pause Menu/pause_menu.tscn" id="16_eq5re"]
+[ext_resource type="PackedScene" uid="uid://dmc23tuijtf0" path="res://Scenes/User Interface/multiplayer_cursor_manager.tscn" id="18_8lvdh"]
+[ext_resource type="PackedScene" uid="uid://b7pn6acj3ov54" path="res://Scenes/User Interface/multiplayer_disconnect_popup.tscn" id="18_57rln"]
+[ext_resource type="PackedScene" uid="uid://bveqess0ymp3t" path="res://Scenes/User Interface/tooltip_manager.tscn" id="19_nfkiy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8o36d"]
 shader = ExtResource("1_x1gbq")
@@ -547,3 +550,10 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 toggle_button = NodePath("../ScreenLayout/Top Panel/Margin/PanelContainer/HBoxContainer/Pause Button/PanelContainer/Pause Button/Button")
+
+[node name="MultiplayerDisconnectPopup" parent="." unique_id=434215763 instance=ExtResource("18_57rln")]
+visible = false
+
+[node name="Multiplayer Cursor Manager" parent="." unique_id=454017940 instance=ExtResource("18_8lvdh")]
+
+[node name="TooltipManager" parent="." unique_id=638862170 instance=ExtResource("19_nfkiy")]

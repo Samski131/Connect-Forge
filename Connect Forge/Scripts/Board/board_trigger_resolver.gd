@@ -23,30 +23,18 @@ func get_fall_path(token:Token) -> Array[Vector2i]:
 		return path
 	
 	var current_pos:Vector2i = token.token_pos
-	var next_pos:Vector2i = board.get_relative_adjacent_pos(
-		current_pos.x,
-		current_pos.y,
-		BoardSetting.RELATIVE_DIRECTION.DOWN
-	)
+	var next_pos:Vector2i = board.get_relative_adjacent_pos(current_pos.x, current_pos.y, BoardSetting.RELATIVE_DIRECTION.DOWN)
 	
 	while board.is_position_in_bounds(next_pos) and board.get_token(next_pos) == null:
 		path.append(next_pos)
 		current_pos = next_pos
-		next_pos = board.get_relative_adjacent_pos(
-			current_pos.x,
-			current_pos.y,
-			BoardSetting.RELATIVE_DIRECTION.DOWN
-		)
+		next_pos = board.get_relative_adjacent_pos(current_pos.x, current_pos.y, BoardSetting.RELATIVE_DIRECTION.DOWN)
 	
 	return path
 
 
-func find_first_pass_trigger_step(
-	moving_token:Token,
-	start_pos:Vector2i,
-	path:Array[Vector2i]
-) -> Dictionary:
-	var previous_pos := start_pos
+func find_first_pass_trigger_step(moving_token:Token, start_pos:Vector2i, path:Array[Vector2i]) -> Dictionary:
+	var previous_pos:Vector2i = start_pos
 	
 	for to_pos in path:
 		if has_passing_reactor_for_step(moving_token, previous_pos, to_pos):
@@ -58,32 +46,31 @@ func find_first_pass_trigger_step(
 		
 		previous_pos = to_pos
 	
+	var final_pos:Vector2i = start_pos
+	
+	if path.is_empty() == false:
+		final_pos = path.back()
+	
 	return {
 		"has_pass_trigger": false,
 		"from_pos": start_pos,
-		"to_pos": path.back() if path.size() > 0 else start_pos
+		"to_pos": final_pos
 	}
 
 
-func has_passing_reactor_for_step(moving_token:Token,from_pos:Vector2i,to_pos:Vector2i) -> bool:
+func has_passing_reactor_for_step(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i) -> bool:
 	var pass_checks:Array = [
-	[BoardSetting.RELATIVE_DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
-	[BoardSetting.RELATIVE_DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
-	[BoardSetting.RELATIVE_DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
-	[BoardSetting.RELATIVE_DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
-]
+		[BoardSetting.RELATIVE_DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
+		[BoardSetting.RELATIVE_DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
+		[BoardSetting.RELATIVE_DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
+		[BoardSetting.RELATIVE_DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW]
+	]
 	
 	for check in pass_checks:
 		var neighbour_direction:BoardSetting.RELATIVE_DIRECTION = check[0]
 		var keyword:Global.KEYWORD = check[1]
-		
-		var reacting_pos:Vector2i = board.get_relative_adjacent_pos(
-	to_pos.x,
-	to_pos.y,
-	neighbour_direction
-)
-		
-		var reacting_token := board.get_token(reacting_pos)
+		var reacting_pos:Vector2i = board.get_relative_adjacent_pos(to_pos.x, to_pos.y, neighbour_direction)
+		var reacting_token:Token = board.get_token(reacting_pos)
 		
 		if reacting_token == null:
 			continue
@@ -91,7 +78,7 @@ func has_passing_reactor_for_step(moving_token:Token,from_pos:Vector2i,to_pos:Ve
 		if reacting_token == moving_token:
 			continue
 		
-		var context := {
+		var context:Dictionary = {
 			"moving_token": moving_token,
 			"reacting_token": reacting_token,
 			"from_pos": from_pos,
@@ -105,6 +92,7 @@ func has_passing_reactor_for_step(moving_token:Token,from_pos:Vector2i,to_pos:Ve
 	
 	return false
 
+
 func resolve_impact_trigger_for_token(landing_token:Token) -> bool:
 	if landing_token == null:
 		return false
@@ -115,37 +103,58 @@ func resolve_impact_trigger_for_token(landing_token:Token) -> bool:
 	if landing_token.being_destroyed:
 		return false
 	
-	var token_below:Token = board.get_relative_adjacent_token(
-		landing_token.token_pos.x,
-		landing_token.token_pos.y,
-		BoardSetting.RELATIVE_DIRECTION.DOWN
-	)
+	var token_below:Token = board.get_relative_adjacent_token(landing_token.token_pos.x, landing_token.token_pos.y, BoardSetting.RELATIVE_DIRECTION.DOWN)
 	
 	if token_below == null:
 		return false
 	
-	var impact_context := {
+	var impact_context:Dictionary = {
 		"landing_token": landing_token,
 		"impacted_token": token_below,
 		"board": board
 	}
 	
 	return token_below.trigger_keyword(Global.KEYWORD.ON_IMPACT, impact_context)
-	
+
+
 func resolve_landing_triggers(landing_token:Token) -> bool:
 	if landing_token == null:
 		return false
 	
+	if is_instance_valid(landing_token) == false:
+		return false
+	
+	if landing_token.being_destroyed:
+		return false
+	
 	var changed_board:bool = false
+	var position_before_impact:Vector2i = landing_token.token_pos
 	
 	if resolve_impact_trigger_for_token(landing_token):
 		changed_board = true
 	
-	# The landing token may have been deleted or moved by On Impact.
-	if board.get_token(landing_token.token_pos) != landing_token:
+	# On Impact may have destroyed the landing token.
+	if is_instance_valid(landing_token) == false:
 		return changed_board
 	
-	var land_context := {
+	if landing_token.being_destroyed:
+		return changed_board
+	
+	# On Impact may have moved the landing token, such as a Ramp.
+	# If it moved, its movement must continue before it is allowed to land.
+	if landing_token.token_pos != position_before_impact:
+		return changed_board
+	
+	# Make sure the token still occupies the position at which the impact happened.
+	if board.get_token(position_before_impact) != landing_token:
+		return changed_board
+	
+	# An impact may have removed the support beneath the token without moving
+	# the token itself. In that case gravity must resolve before On Land.
+	if board.token_mover.is_token_supported(landing_token) == false:
+		return changed_board
+	
+	var land_context:Dictionary = {
 		"landing_token": landing_token,
 		"board": board
 	}
@@ -155,37 +164,28 @@ func resolve_landing_triggers(landing_token:Token) -> bool:
 	
 	return changed_board
 
-func resolve_passing_triggers(
-	moving_token:Token,
-	from_pos:Vector2i,
-	to_pos:Vector2i
-) -> bool:
+
+func resolve_passing_triggers(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i) -> bool:
 	if moving_token == null:
 		return false
 	
 	if board.get_token(to_pos) != moving_token:
 		return false
 	
-	var changed_board := false
+	var changed_board:bool = false
 	
 	var pass_checks:Array = [
 		[BoardSetting.RELATIVE_DIRECTION.RIGHT, Global.KEYWORD.ON_PASS_LEFT],
 		[BoardSetting.RELATIVE_DIRECTION.LEFT, Global.KEYWORD.ON_PASS_RIGHT],
 		[BoardSetting.RELATIVE_DIRECTION.DOWN, Global.KEYWORD.ON_PASS_ABOVE],
-		[BoardSetting.RELATIVE_DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW],
+		[BoardSetting.RELATIVE_DIRECTION.UP, Global.KEYWORD.ON_PASS_BELOW]
 	]
 	
 	for check in pass_checks:
 		var neighbour_direction:BoardSetting.RELATIVE_DIRECTION = check[0]
 		var keyword:Global.KEYWORD = check[1]
-		
-		var reacting_pos:Vector2i = board.get_relative_adjacent_pos(
-	to_pos.x,
-	to_pos.y,
-	neighbour_direction
-)
-		
-		var reacting_token := board.get_token(reacting_pos)
+		var reacting_pos:Vector2i = board.get_relative_adjacent_pos(to_pos.x, to_pos.y, neighbour_direction)
+		var reacting_token:Token = board.get_token(reacting_pos)
 		
 		if reacting_token == null:
 			continue
@@ -193,7 +193,7 @@ func resolve_passing_triggers(
 		if reacting_token == moving_token:
 			continue
 		
-		var context := {
+		var context:Dictionary = {
 			"moving_token": moving_token,
 			"reacting_token": reacting_token,
 			"from_pos": from_pos,
@@ -211,9 +211,10 @@ func resolve_passing_triggers(
 	
 	return changed_board
 
+
 func resolve_line_full_triggers() -> bool:
 	for pos in board.get_positions_in_gravity_order():
-		var token := board.get_token(pos)
+		var token:Token = board.get_token(pos)
 		
 		if token == null:
 			continue
@@ -224,7 +225,7 @@ func resolve_line_full_triggers() -> bool:
 		if token.being_destroyed:
 			continue
 		
-		var context := {
+		var context:Dictionary = {
 			"line_token": token,
 			"board": board
 		}
@@ -234,11 +235,8 @@ func resolve_line_full_triggers() -> bool:
 	
 	return false
 
-func queue_passing_trigger(
-	moving_token:Token,
-	from_pos:Vector2i,
-	to_pos:Vector2i
-) -> void:
+
+func queue_passing_trigger(moving_token:Token, from_pos:Vector2i, to_pos:Vector2i) -> void:
 	pending_pass_triggers.append({
 		"moving_token": moving_token,
 		"from_pos": from_pos,
@@ -250,8 +248,8 @@ func resolve_pending_pass_triggers() -> bool:
 	if pending_pass_triggers.is_empty():
 		return false
 	
-	var changed_board := false
-	var triggers := pending_pass_triggers.duplicate()
+	var changed_board:bool = false
+	var triggers:Array = pending_pass_triggers.duplicate()
 	pending_pass_triggers.clear()
 	
 	for trigger in triggers:

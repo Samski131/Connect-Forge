@@ -50,6 +50,7 @@ func setup(new_game_manager:GameManager) -> void:
 	game_manager = new_game_manager
 	refresh_network_controls()
 
+
 func refresh_network_controls() -> void:
 	if next_round_button == null:
 		return
@@ -79,9 +80,10 @@ func refresh_network_controls() -> void:
 		next_round_button.disabled = true
 	
 	return_to_lobby_button.text = "Return to Lobby"
-	return_to_lobby_button.disabled = true
-	return_to_lobby_button.tooltip_text = "Network return-to-lobby synchronisation will be added in a later stage."
-	
+	return_to_lobby_button.disabled = false
+	return_to_lobby_button.tooltip_text = "Return every connected player to the token lobby."
+
+
 func show_game_over(new_winner_id:int) -> void:
 	if game_manager == null:
 		return
@@ -175,6 +177,7 @@ func setup_winner_token(winner_palette:ColorPalette) -> void:
 		return
 	
 	winner_token_display.setup_with_palette(TokenLibrary.TokenType.BASIC, winner_id, winner_palette, false)
+
 
 func setup_winner_name(winner_palette:ColorPalette) -> void:
 	if winner_name_label == null:
@@ -400,27 +403,16 @@ func finish_next_round_transition() -> void:
 
 
 func _on_return_to_lobby_pressed() -> void:
-	if game_manager != null:
-		if game_manager.is_network_match_active():
-			DebugOverlay.log_warning("GameOverMenu", "Network return to lobby is not connected yet.")
-			return
-		
 	if return_to_lobby_button != null:
 		return_to_lobby_button.disabled = true
 	
 	if next_round_button != null:
 		next_round_button.disabled = true
 	
-	var change_error:Error = get_tree().change_scene_to_file(TOKEN_LOBBY_SCENE_PATH)
+	var return_started:bool = MultiplayerMatchFlow.request_return_to_lobby("Game over menu")
 	
-	if change_error == OK:
-		MatchData.clear_session()
+	if return_started:
 		return
 	
-	push_error("GameOverMenu: Could not return to the token lobby. Error code: " + str(change_error))
-	
-	if return_to_lobby_button != null:
-		return_to_lobby_button.disabled = false
-	
-	if next_round_button != null:
-		next_round_button.disabled = false
+	DebugOverlay.log_warning("GameOverMenu", "The return-to-lobby request could not be started.")
+	refresh_network_controls()

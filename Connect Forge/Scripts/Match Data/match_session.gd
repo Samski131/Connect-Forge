@@ -12,10 +12,12 @@ signal score_changed
 signal token_type_added(player_id:int, token_type:int)
 signal token_count_changed(player_id:int, token_type:int, new_count:int)
 signal all_tokens_reset
+signal active_players_changed
 
 const BASIC_TOKEN_COUNT:int = 99
 
 var players:Array[MatchSessionPlayerData] = []
+var active_player_ids:Array[int] = []
 
 var starting_token_points:int = 10
 var board_columns:int = 7
@@ -47,12 +49,14 @@ func setup(config:MatchConfig) -> bool:
 	
 	snapshot_rules_from_config(config)
 	create_players_from_config(config)
+	activate_all_players()
 	reset_match_state()
 	return players.is_empty() == false
 
 
 func clear() -> void:
 	players.clear()
+	active_player_ids.clear()
 	
 	starting_token_points = 10
 	board_columns = 7
@@ -116,6 +120,7 @@ func create_players_from_config(config:MatchConfig) -> void:
 		
 		players.append(session_player)
 
+
 func connect_player_signals(player:MatchSessionPlayerData) -> void:
 	if player == null:
 		return
@@ -133,10 +138,10 @@ func connect_player_signals(player:MatchSessionPlayerData) -> void:
 func reset_match_state() -> void:
 	current_turn_phase = Global.TURN_PHASE.NONE
 	
-	if players.is_empty():
+	if active_player_ids.is_empty():
 		current_player_id = -1
 	else:
-		current_player_id = 0
+		current_player_id = active_player_ids[0]
 	
 	current_turn_number = 1
 	current_round_number = 1
@@ -176,12 +181,12 @@ func reset_round_state(new_starting_player_id:int) -> void:
 	reset_game_timer()
 	reset_tokens_for_round()
 	
-	if is_valid_player_id(new_starting_player_id):
+	if is_player_active(new_starting_player_id):
 		set_current_player(new_starting_player_id)
-	elif players.is_empty():
+	elif active_player_ids.is_empty():
 		set_current_player(-1)
 	else:
-		set_current_player(0)
+		set_current_player(active_player_ids[0])
 
 
 func get_starting_token_points() -> int:
@@ -209,17 +214,54 @@ func get_configured_starting_player_id() -> int:
 
 
 func get_resolved_starting_player_id() -> int:
-	if players.is_empty():
+	if active_player_ids.is_empty():
 		return -1
 	
-	if is_valid_player_id(starting_player_id):
+	if is_player_active(starting_player_id):
 		return starting_player_id
 	
-	return randi_range(0, players.size() - 1)
+	var random_index:int = randi_range(0, active_player_ids.size() - 1)
+	return active_player_ids[random_index]
 
 
 func get_player_count() -> int:
 	return players.size()
+
+
+func get_active_player_count() -> int:
+	return active_player_ids.size()
+
+
+func get_active_player_ids() -> Array[int]:
+	return active_player_ids.duplicate()
+
+
+func is_player_active(player_id:int) -> bool:
+	if is_valid_player_id(player_id) == false:
+		return false
+	
+	return active_player_ids.has(player_id)
+
+
+func activate_all_players() -> void:
+	active_player_ids.clear()
+	
+	for player_id in range(players.size()):
+		active_player_ids.append(player_id)
+
+
+func deactivate_player(player_id:int) -> bool:
+	if is_valid_player_id(player_id) == false:
+		return false
+	
+	var active_index:int = active_player_ids.find(player_id)
+	
+	if active_index == -1:
+		return false
+	
+	active_player_ids.remove_at(active_index)
+	active_players_changed.emit()
+	return true
 
 
 func get_player(player_id:int) -> MatchSessionPlayerData:
@@ -263,7 +305,7 @@ func get_player_palette(player_id:int) -> ColorPalette:
 
 
 func set_current_player(player_id:int) -> bool:
-	if player_id == -1 and players.is_empty():
+	if player_id == -1 and active_player_ids.is_empty():
 		if current_player_id == -1:
 			return true
 		
@@ -271,7 +313,7 @@ func set_current_player(player_id:int) -> bool:
 		current_player_changed.emit(current_player_id)
 		return true
 	
-	if is_valid_player_id(player_id) == false:
+	if is_player_active(player_id) == false:
 		return false
 	
 	if current_player_id == player_id:
@@ -283,13 +325,19 @@ func set_current_player(player_id:int) -> bool:
 
 
 func get_next_player_id() -> int:
-	if players.is_empty():
+	if active_player_ids.is_empty():
 		return -1
 	
 	if is_valid_player_id(current_player_id) == false:
-		return 0
+		return active_player_ids[0]
 	
-	return (current_player_id + 1) % players.size()
+	for offset in range(1, players.size() + 1):
+		var candidate_player_id:int = (current_player_id + offset) % players.size()
+		
+		if is_player_active(candidate_player_id):
+			return candidate_player_id
+	
+	return -1
 
 
 func set_turn_phase(new_phase:Global.TURN_PHASE) -> void:
@@ -460,6 +508,7 @@ func get_token_types_for_player(player_id:int) -> Array[int]:
 		return empty_types
 	
 	return player.get_token_types_in_tray_order()
+
 
 func create_network_token_count_snapshot() -> Array:
 	var snapshot:Array = []

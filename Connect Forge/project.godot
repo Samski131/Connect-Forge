@@ -27,6 +27,8 @@ LobbyData="*uid://dhdaul1fyq3ot"
 SteamNetwork="*uid://dphl3t4y142jx"
 LobbyAdmission="*uid://r02ommj8fso8"
 MatchData="*uid://dgxgv8ki3q1d2"
+MultiplayerCursorNetwork="*uid://ctr6exobivnf3"
+MultiplayerMatchFlow="*uid://c8luor2ybea7q"
 
 [display]
 

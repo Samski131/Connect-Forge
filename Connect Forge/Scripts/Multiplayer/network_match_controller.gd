@@ -19,6 +19,9 @@ var last_applied_revision:int = 0
 var pending_turn_state:Dictionary = {}
 var pending_state_checkpoint:Dictionary = {}
 var last_verified_revision:int = 0
+var active_drag_preview_id:int = -1
+var active_drag_preview_player_id:int = -1
+var active_drag_preview_token_type:int = -1
 
 var applied_game_over_revision:int = -1
 var applied_round_revision:int = -1
@@ -49,23 +52,16 @@ func setup(new_game_manager:GameManager) -> void:
 	waiting_for_authoritative_game_over = false
 	round_transition_in_progress = false
 	
+	active_drag_preview_id = -1
+	active_drag_preview_player_id = -1
+	active_drag_preview_token_type = -1
+	
 	if network_active == false:
-		DebugOverlay.log_error(
-			"NetworkMatch",
-			"Network gameplay was not activated. Steam state: %s. Lobby active: %s. Lobby phase: %s. Local member found: %s." % [
-				SteamNetwork.get_network_state_display_name(),
-				str(has_lobby_data),
-				LobbyData.get_lobby_phase_display_name(),
-				str(has_local_member)
-			]
-		)
+		DebugOverlay.log_error("NetworkMatch", "Network gameplay was not activated. Steam state: %s. Lobby active: %s. Lobby phase: %s. Local member found: %s." % [SteamNetwork.get_network_state_display_name(), str(has_lobby_data), LobbyData.get_lobby_phase_display_name(), str(has_local_member)])
 		return
 	
 	if LobbyData.is_match_in_progress() == false:
-		DebugOverlay.log_warning(
-			"NetworkMatch",
-			"The game scene opened before the local lobby phase changed to Match In Progress. Correcting the local phase."
-		)
+		DebugOverlay.log_warning("NetworkMatch", "The game scene opened before the local lobby phase changed to Match In Progress. Correcting the local phase.")
 		LobbyData.set_lobby_phase(LobbyData.LOBBY_PHASE.MATCH_IN_PROGRESS)
 	
 	if local_member.is_player():
@@ -76,15 +72,7 @@ func setup(new_game_manager:GameManager) -> void:
 	if local_is_host:
 		role_name = "Host"
 	
-	DebugOverlay.log_message(
-		"NetworkMatch",
-		"Network gameplay initialised as %s. Local player slot: %d. Peer ID: %d. Controller path: %s." % [
-			role_name,
-			local_player_id,
-			multiplayer.get_unique_id(),
-			str(get_path())
-		]
-	)
+	DebugOverlay.log_message("NetworkMatch", "Network gameplay initialised as %s. Local player slot: %d. Peer ID: %d. Controller path: %s." % [role_name, local_player_id, multiplayer.get_unique_id(), str(get_path())])
 
 
 func is_active() -> bool:
@@ -333,6 +321,8 @@ func apply_authoritative_token_placement(move_revision:int, player_id:int, token
 	if move_revision <= last_applied_revision:
 		return
 	
+	game_manager.clear_remote_drag_preview()
+	
 	last_applied_revision = move_revision
 	authoritative_revision = max(authoritative_revision, move_revision)
 	move_request_pending = false
@@ -368,10 +358,7 @@ func canonicalize_network_snapshot_value(value:Variant) -> Variant:
 		keys.sort_custom(sort_network_snapshot_keys)
 		
 		for key in keys:
-			canonical_entries.append([
-				str(key),
-				canonicalize_network_snapshot_value(dictionary_value[key])
-			])
+			canonical_entries.append([str(key), canonicalize_network_snapshot_value(dictionary_value[key])])
 		
 		return ["dictionary", canonical_entries]
 	
@@ -467,15 +454,7 @@ func broadcast_authoritative_turn_state() -> void:
 	var current_turn_number:int = game_manager.get_current_turn_number()
 	
 	rpc("receive_authoritative_turn_state", turn_revision, current_player_id, current_turn_number)
-	
-	DebugOverlay.log_message(
-		"NetworkMatch",
-		"Broadcast turn %d for player slot %d after revision %d." % [
-			current_turn_number,
-			current_player_id,
-			turn_revision
-		]
-	)
+	DebugOverlay.log_message("NetworkMatch", "Broadcast turn %d for player slot %d after revision %d." % [current_turn_number, current_player_id, turn_revision])
 	
 	broadcast_authoritative_state_checkpoint(turn_revision)
 
@@ -532,13 +511,7 @@ func apply_turn_state(turn_state:Dictionary) -> void:
 	game_manager.set_current_turn_number(turn_number)
 	game_manager.start_turn(player_id)
 	
-	DebugOverlay.log_message(
-		"NetworkMatch",
-		"Applied authoritative turn %d for player slot %d." % [
-			turn_number,
-			player_id
-		]
-	)
+	DebugOverlay.log_message("NetworkMatch", "Applied authoritative turn %d for player slot %d." % [turn_number, player_id])
 	
 	apply_pending_state_checkpoint()
 
@@ -553,23 +526,13 @@ func broadcast_authoritative_state_checkpoint(move_revision:int) -> void:
 	var authoritative_snapshot:Dictionary = game_manager.create_network_match_snapshot()
 	
 	if authoritative_snapshot.is_empty():
-		DebugOverlay.log_error(
-			"NetworkMatch",
-			"Could not create the authoritative state checkpoint for revision %d." % move_revision
-		)
+		DebugOverlay.log_error("NetworkMatch", "Could not create the authoritative state checkpoint for revision %d." % move_revision)
 		return
 	
 	var snapshot_checksum:String = create_network_snapshot_checksum(authoritative_snapshot)
 	
 	rpc("receive_authoritative_state_checkpoint", move_revision, authoritative_snapshot, snapshot_checksum)
-	
-	DebugOverlay.log_message(
-		"NetworkMatch",
-		"Broadcast state checkpoint for revision %d. Checksum %s." % [
-			move_revision,
-			snapshot_checksum.left(12)
-		]
-	)
+	DebugOverlay.log_message("NetworkMatch", "Broadcast state checkpoint for revision %d. Checksum %s." % [move_revision, snapshot_checksum.left(12)])
 
 
 @rpc("authority", "call_remote", "reliable")
@@ -632,10 +595,7 @@ func apply_authoritative_state_checkpoint(checkpoint:Dictionary) -> void:
 		game_manager.set_current_turn_phase(Global.TURN_PHASE.NONE)
 		game_manager.stop_turn_timer()
 		
-		DebugOverlay.log_error(
-			"NetworkMatch",
-			"Further placement has been locked because checkpoint recovery failed for revision %d." % move_revision
-		)
+		DebugOverlay.log_error("NetworkMatch", "Further placement has been locked because checkpoint recovery failed for revision %d." % move_revision)
 		return
 	
 	last_verified_revision = move_revision
@@ -684,15 +644,7 @@ func handle_local_winner_found(winner_id:int, winning_slots:Array[Vector2i]) -> 
 		return true
 	
 	var snapshot_checksum:String = create_network_snapshot_checksum(authoritative_snapshot)
-	
-	rpc(
-		"apply_authoritative_game_over",
-		authoritative_revision,
-		winner_id,
-		safe_winning_slots,
-		authoritative_snapshot,
-		snapshot_checksum
-	)
+	rpc("apply_authoritative_game_over", authoritative_revision, winner_id, safe_winning_slots, authoritative_snapshot, snapshot_checksum)
 	return true
 
 
@@ -721,30 +673,15 @@ func apply_authoritative_game_over(result_revision:int, winner_id:int, winning_s
 	pending_turn_state.clear()
 	pending_state_checkpoint.clear()
 	
-	DebugOverlay.log_message(
-		"NetworkMatch",
-		"Applying authoritative winner player slot %d at revision %d." % [
-			winner_id,
-			result_revision
-		]
-	)
+	DebugOverlay.log_message("NetworkMatch", "Applying authoritative winner player slot %d at revision %d." % [winner_id, result_revision])
 	
 	var applied:bool = game_manager.apply_authoritative_match_result(winner_id, winning_slots)
 	
 	if applied == false:
-		DebugOverlay.log_error(
-			"NetworkMatch",
-			"The authoritative game-over result could not be applied."
-		)
+		DebugOverlay.log_error("NetworkMatch", "The authoritative game-over result could not be applied.")
 		return
 	
-	DebugOverlay.log_message(
-		"NetworkMatch",
-		"Applied authoritative winner player slot %d at revision %d." % [
-			winner_id,
-			result_revision
-		]
-	)
+	DebugOverlay.log_message("NetworkMatch", "Applied authoritative winner player slot %d at revision %d." % [winner_id, result_revision])
 	
 	var context_name:String = "game over revision %d" % result_revision
 	var checkpoint_verified:bool = verify_or_recover_authoritative_snapshot(authoritative_snapshot, snapshot_checksum, context_name)
@@ -753,10 +690,8 @@ func apply_authoritative_game_over(result_revision:int, winner_id:int, winning_s
 		last_verified_revision = max(last_verified_revision, result_revision)
 		return
 	
-	DebugOverlay.log_warning(
-		"NetworkMatch",
-		"The game-over state was applied, but state verification failed for revision %d." % result_revision
-	)
+	DebugOverlay.log_warning("NetworkMatch", "The game-over state was applied, but state verification failed for revision %d." % result_revision)
+
 
 func request_next_round() -> bool:
 	if network_active == false:
@@ -849,3 +784,260 @@ func handle_turn_timeout() -> bool:
 	game_manager.advance_to_next_turn()
 	broadcast_authoritative_turn_state()
 	return true
+
+
+func send_local_drag_preview_started(drag_id:int, token_type:int, board_local_position:Vector2, is_flipped:bool) -> void:
+	if network_active == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	if local_player_id != game_manager.get_current_player_id():
+		return
+	
+	if local_is_host:
+		process_drag_preview_started(multiplayer.get_unique_id(), drag_id, token_type, board_local_position, is_flipped)
+		return
+	
+	rpc_id(SERVER_PEER_ID, "request_drag_preview_started", drag_id, token_type, board_local_position, is_flipped)
+
+
+func send_local_drag_preview_position(drag_id:int, board_local_position:Vector2) -> void:
+	if network_active == false:
+		return
+	
+	if local_is_host:
+		process_drag_preview_position(multiplayer.get_unique_id(), drag_id, board_local_position)
+		return
+	
+	rpc_id(SERVER_PEER_ID, "request_drag_preview_position", drag_id, board_local_position)
+
+
+func send_local_drag_preview_flipped(drag_id:int, is_flipped:bool) -> void:
+	if network_active == false:
+		return
+	
+	if local_is_host:
+		process_drag_preview_flipped(multiplayer.get_unique_id(), drag_id, is_flipped)
+		return
+	
+	rpc_id(SERVER_PEER_ID, "request_drag_preview_flipped", drag_id, is_flipped)
+
+
+func send_local_drag_preview_ended(drag_id:int) -> void:
+	if network_active == false:
+		return
+	
+	if local_is_host:
+		process_drag_preview_ended(multiplayer.get_unique_id(), drag_id)
+		return
+	
+	rpc_id(SERVER_PEER_ID, "request_drag_preview_ended", drag_id)
+
+
+func get_drag_preview_player_for_peer(peer_id:int) -> int:
+	var member:LobbyMemberData = LobbyData.get_member_by_peer_id(peer_id)
+	
+	if member == null:
+		return -1
+	
+	if member.is_player() == false:
+		return -1
+	
+	if game_manager == null:
+		return -1
+	
+	if member.player_slot != game_manager.get_current_player_id():
+		return -1
+	
+	return member.player_slot
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_drag_preview_started(drag_id:int, token_type:int, board_local_position:Vector2, is_flipped:bool) -> void:
+	if local_is_host == false:
+		return
+	
+	var sender_peer_id:int = multiplayer.get_remote_sender_id()
+	process_drag_preview_started(sender_peer_id, drag_id, token_type, board_local_position, is_flipped)
+
+
+func process_drag_preview_started(peer_id:int, drag_id:int, token_type:int, board_local_position:Vector2, is_flipped:bool) -> void:
+	if local_is_host == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	if game_manager.get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
+		return
+	
+	var player_id:int = get_drag_preview_player_for_peer(peer_id)
+	
+	if player_id == -1:
+		return
+	
+	if is_registered_token_type(token_type) == false:
+		return
+	
+	if game_manager.get_token_count(player_id, token_type) <= 0:
+		return
+	
+	var used_is_flipped:bool = false
+	
+	if TokenLibrary.can_flip(token_type):
+		used_is_flipped = is_flipped
+	
+	active_drag_preview_id = drag_id
+	active_drag_preview_player_id = player_id
+	active_drag_preview_token_type = token_type
+	
+	rpc("apply_drag_preview_started", drag_id, player_id, token_type, board_local_position, used_is_flipped)
+
+
+@rpc("authority", "call_local", "reliable")
+func apply_drag_preview_started(drag_id:int, player_id:int, token_type:int, board_local_position:Vector2, is_flipped:bool) -> void:
+	if network_active == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	if player_id == local_player_id:
+		return
+	
+	game_manager.show_remote_drag_preview(drag_id, player_id, token_type, board_local_position, is_flipped)
+
+
+@rpc("any_peer", "call_remote", "unreliable_ordered")
+func request_drag_preview_position(drag_id:int, board_local_position:Vector2) -> void:
+	if local_is_host == false:
+		return
+	
+	var sender_peer_id:int = multiplayer.get_remote_sender_id()
+	process_drag_preview_position(sender_peer_id, drag_id, board_local_position)
+
+
+func process_drag_preview_position(peer_id:int, drag_id:int, board_local_position:Vector2) -> void:
+	if local_is_host == false:
+		return
+	
+	var player_id:int = get_drag_preview_player_for_peer(peer_id)
+	
+	if player_id == -1:
+		return
+	
+	if drag_id != active_drag_preview_id:
+		return
+	
+	if player_id != active_drag_preview_player_id:
+		return
+	
+	rpc("apply_drag_preview_position", drag_id, player_id, board_local_position)
+
+
+@rpc("authority", "call_local", "unreliable_ordered")
+func apply_drag_preview_position(drag_id:int, player_id:int, board_local_position:Vector2) -> void:
+	if network_active == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	if player_id == local_player_id:
+		return
+	
+	game_manager.update_remote_drag_preview(drag_id, board_local_position)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_drag_preview_flipped(drag_id:int, is_flipped:bool) -> void:
+	if local_is_host == false:
+		return
+	
+	var sender_peer_id:int = multiplayer.get_remote_sender_id()
+	process_drag_preview_flipped(sender_peer_id, drag_id, is_flipped)
+
+
+func process_drag_preview_flipped(peer_id:int, drag_id:int, is_flipped:bool) -> void:
+	if local_is_host == false:
+		return
+	
+	var player_id:int = get_drag_preview_player_for_peer(peer_id)
+	
+	if player_id == -1:
+		return
+	
+	if drag_id != active_drag_preview_id:
+		return
+	
+	if player_id != active_drag_preview_player_id:
+		return
+	
+	if TokenLibrary.can_flip(active_drag_preview_token_type) == false:
+		return
+	
+	rpc("apply_drag_preview_flipped", drag_id, player_id, is_flipped)
+
+
+@rpc("authority", "call_local", "reliable")
+func apply_drag_preview_flipped(drag_id:int, player_id:int, is_flipped:bool) -> void:
+	if network_active == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	if player_id == local_player_id:
+		return
+	
+	game_manager.flip_remote_drag_preview(drag_id, is_flipped)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_drag_preview_ended(drag_id:int) -> void:
+	if local_is_host == false:
+		return
+	
+	var sender_peer_id:int = multiplayer.get_remote_sender_id()
+	process_drag_preview_ended(sender_peer_id, drag_id)
+
+
+func process_drag_preview_ended(peer_id:int, drag_id:int) -> void:
+	if local_is_host == false:
+		return
+	
+	var player_id:int = get_drag_preview_player_for_peer(peer_id)
+	
+	if player_id == -1:
+		return
+	
+	if drag_id != active_drag_preview_id:
+		return
+	
+	if player_id != active_drag_preview_player_id:
+		return
+	
+	rpc("apply_drag_preview_ended", drag_id, player_id)
+	clear_active_drag_preview_state()
+
+
+@rpc("authority", "call_local", "reliable")
+func apply_drag_preview_ended(drag_id:int, player_id:int) -> void:
+	if network_active == false:
+		return
+	
+	if game_manager == null:
+		return
+	
+	if player_id == local_player_id:
+		return
+	
+	game_manager.clear_remote_drag_preview(drag_id)
+
+
+func clear_active_drag_preview_state() -> void:
+	active_drag_preview_id = -1
+	active_drag_preview_player_id = -1
+	active_drag_preview_token_type = -1

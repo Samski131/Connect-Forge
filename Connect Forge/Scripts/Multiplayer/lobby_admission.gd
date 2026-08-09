@@ -179,7 +179,7 @@ func request_lobby_admission(steam_id:int, display_name:String, password_attempt
 			reject_remote_admission(sender_peer_id, "The requested player slot could not be assigned.")
 			return
 		
-		var palette:ColorPalette = MatchData.get_default_palette_for_player(assigned_player_slot)
+		var palette:ColorPalette = get_available_default_palette_for_player(assigned_player_slot)
 		
 		if palette != null:
 			new_member.set_colour_palette(palette)
@@ -199,6 +199,75 @@ func request_lobby_admission(steam_id:int, display_name:String, password_attempt
 	
 	rpc_id(sender_peer_id, "receive_lobby_admission_result", true, "", snapshot)
 	rpc("receive_lobby_snapshot", snapshot)
+
+
+func get_available_default_palette_for_player(preferred_player_slot:int) -> ColorPalette:
+	var preferred_palette:ColorPalette = MatchData.get_default_palette_for_player(preferred_player_slot)
+	
+	if preferred_palette != null:
+		if is_palette_in_use(preferred_palette) == false:
+			return preferred_palette
+	
+	var default_palettes:Array[ColorPalette] = MatchData.get_default_player_palettes()
+	
+	for palette in default_palettes:
+		if palette == null:
+			continue
+		
+		if is_palette_in_use(palette):
+			continue
+		
+		return palette
+	
+	DebugOverlay.log_warning("LobbyAdmission", "No unused default player palette was available.")
+	return preferred_palette
+
+
+func is_palette_in_use(palette:ColorPalette) -> bool:
+	if palette == null:
+		return false
+	
+	for member in LobbyData.get_players():
+		if member == null:
+			continue
+		
+		var member_palette:ColorPalette = get_effective_member_palette(member)
+		
+		if palettes_match(member_palette, palette):
+			return true
+	
+	return false
+
+
+func get_effective_member_palette(member:LobbyMemberData) -> ColorPalette:
+	if member == null:
+		return null
+	
+	var palette:ColorPalette = member.get_colour_palette()
+	
+	if palette != null:
+		return palette
+	
+	if member.has_player_slot() == false:
+		return null
+	
+	return MatchData.get_default_palette_for_player(member.player_slot)
+
+
+func palettes_match(first_palette:ColorPalette, second_palette:ColorPalette) -> bool:
+	if first_palette == null:
+		return false
+	
+	if second_palette == null:
+		return false
+	
+	var first_path:String = first_palette.resource_path
+	var second_path:String = second_palette.resource_path
+	
+	if first_path != "" and second_path != "":
+		return first_path == second_path
+	
+	return first_palette == second_palette
 
 
 func reject_remote_admission(peer_id:int, message:String) -> void:

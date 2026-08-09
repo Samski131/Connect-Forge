@@ -11,10 +11,12 @@ extends VBoxContainer
 var game_manager:GameManager = null
 var drag_controller:TokenDragController = null
 var trays:Array[PlayerTokenTrayUI] = []
+var connected_session:MatchSession = null
 
 
 func _exit_tree() -> void:
 	disconnect_game_manager_signals()
+	disconnect_session_signals()
 
 
 func setup(new_game_manager:GameManager, new_drag_controller:TokenDragController) -> void:
@@ -24,6 +26,7 @@ func setup(new_game_manager:GameManager, new_drag_controller:TokenDragController
 	drag_controller = new_drag_controller
 	
 	connect_game_manager_signals()
+	connect_session_signals()
 
 
 func connect_game_manager_signals() -> void:
@@ -48,6 +51,33 @@ func disconnect_game_manager_signals() -> void:
 		game_manager.players_changed.disconnect(_on_players_changed)
 
 
+func connect_session_signals() -> void:
+	if game_manager == null:
+		return
+	
+	if game_manager.session == null:
+		return
+	
+	if connected_session == game_manager.session:
+		return
+	
+	disconnect_session_signals()
+	connected_session = game_manager.session
+	
+	if connected_session.active_players_changed.is_connected(_on_active_players_changed) == false:
+		connected_session.active_players_changed.connect(_on_active_players_changed)
+
+
+func disconnect_session_signals() -> void:
+	if connected_session == null:
+		return
+	
+	if connected_session.active_players_changed.is_connected(_on_active_players_changed):
+		connected_session.active_players_changed.disconnect(_on_active_players_changed)
+	
+	connected_session = null
+
+
 func rebuild_trays() -> void:
 	clear_trays()
 	
@@ -60,9 +90,14 @@ func rebuild_trays() -> void:
 	if player_tray_scene == null:
 		return
 	
-	var player_count:int = game_manager.get_player_count()
+	connect_session_signals()
 	
-	for player_id in range(player_count):
+	if game_manager.session == null:
+		return
+	
+	var active_player_ids:Array[int] = game_manager.session.get_active_player_ids()
+	
+	for player_id in active_player_ids:
 		create_player_tray(player_id)
 	
 	call_deferred("update_current_player_tray_visuals")
@@ -140,4 +175,8 @@ func _on_current_player_changed(_player_id:int) -> void:
 
 
 func _on_players_changed() -> void:
+	rebuild_trays()
+
+
+func _on_active_players_changed() -> void:
 	rebuild_trays()

@@ -10,7 +10,6 @@ enum MenuContext {
 	GAME_BOARD
 }
 
-const TOKEN_LOBBY_SCENE_PATH:String = "res://Scenes/User Interface/Token Lobby/token_lobby.tscn"
 const MAIN_MENU_SCENE_PATH:String = "res://Scenes/User Interface/main_menu.tscn"
 
 const RED_TOKEN_PALETTE:ColorPalette = preload("res://Scenes/Tokens/token colour resources/red_v3.tres")
@@ -111,6 +110,7 @@ func apply_menu_context() -> void:
 	if back_to_lobby_button != null:
 		back_to_lobby_button.visible = true
 		back_to_lobby_button.focus_mode = Control.FOCUS_ALL
+		back_to_lobby_button.disabled = false
 	
 	if quit_button != null:
 		quit_button.visible = true
@@ -302,7 +302,26 @@ func _on_back_to_lobby_button_pressed() -> void:
 		close_menu()
 		return
 	
-	change_to_token_lobby()
+	if back_to_lobby_button != null:
+		back_to_lobby_button.disabled = true
+	
+	controls_tree_pause = false
+	get_tree().paused = false
+	
+	var return_started:bool = MultiplayerMatchFlow.request_return_to_lobby("Pause menu")
+	
+	if return_started:
+		return
+	
+	DebugOverlay.log_warning("PauseMenu", "The return-to-lobby request could not be started.")
+	
+	if back_to_lobby_button != null:
+		back_to_lobby_button.disabled = false
+	
+	if menu_context == MenuContext.GAME_BOARD:
+		controls_tree_pause = true
+		get_tree().paused = true
+
 
 func _on_main_menu_button_pressed() -> void:
 	change_to_main_menu()
@@ -325,27 +344,6 @@ func change_to_main_menu() -> void:
 		return
 	
 	push_error("PauseMenu: Could not return to the main menu. Error code: " + str(scene_change_error))
-	
-	tree_was_paused = previous_tree_pause
-	
-	if menu_context == MenuContext.GAME_BOARD:
-		controls_tree_pause = true
-		get_tree().paused = true
-		
-		
-func change_to_token_lobby() -> void:
-	var previous_tree_pause:bool = tree_was_paused
-	
-	controls_tree_pause = false
-	get_tree().paused = false
-	
-	var scene_change_error:Error = get_tree().change_scene_to_file(TOKEN_LOBBY_SCENE_PATH)
-	
-	if scene_change_error == OK:
-		MatchData.clear_session()
-		return
-	
-	push_error("PauseMenu: Could not return to the token lobby. Error code: " + str(scene_change_error))
 	
 	tree_was_paused = previous_tree_pause
 	

@@ -1,0 +1,274 @@
+[gd_scene format=3 uid="uid://b7pn6acj3ov54"]
+
+[ext_resource type="Script" uid="uid://d0h3whdganvn0" path="res://Scripts/User Interface/multiplayer_disconnect_popup.gd" id="1_tfvw3"]
+[ext_resource type="PackedScene" uid="uid://dsdwgt8o11k35" path="res://Scenes/User Interface/backdrop.tscn" id="2_3rshj"]
+[ext_resource type="Script" uid="uid://b8ghu0lr1vy47" path="res://Scripts/User Interface/Juice/ui_juice_player.gd" id="3_l8hg2"]
+[ext_resource type="Resource" uid="uid://dcj5mm65cf8k6" path="res://Assets/User Interface/Resources/Transitions/popup_enter_soft.tres" id="4_8jix3"]
+[ext_resource type="Resource" uid="uid://clvcbhjq8f4w3" path="res://Assets/User Interface/Resources/Transitions/popup_exit_soft.tres" id="5_wjn2l"]
+[ext_resource type="Resource" uid="uid://bl4rhdjd6hmyn" path="res://Assets/User Interface/Resources/Feedback/invalid_shake.tres" id="6_04gth"]
+[ext_resource type="Resource" uid="uid://8tl0yayri528" path="res://Assets/User Interface/Resources/Transitions/fade_in.tres" id="7_iyrn2"]
+[ext_resource type="Resource" uid="uid://c1v0ab5yl261e" path="res://Assets/User Interface/Resources/Transitions/fade_out.tres" id="8_4b864"]
+[ext_resource type="StyleBox" uid="uid://cot44u8x8t2ig" path="res://Assets/User Interface/Resources/Buttons/red/red_normal.tres" id="9_l7obl"]
+[ext_resource type="StyleBox" uid="uid://bo8gbwwcx5cl2" path="res://Assets/User Interface/Resources/Buttons/red/red_pressed.tres" id="10_6qtwr"]
+[ext_resource type="StyleBox" uid="uid://brgmi28i3e2cm" path="res://Assets/User Interface/Resources/Buttons/red/red_hover.tres" id="11_r5ssk"]
+[ext_resource type="StyleBox" uid="uid://bq0ry32qlyc1f" path="res://Assets/User Interface/Resources/Buttons/red/red_disabled.tres" id="12_h55db"]
+[ext_resource type="Script" uid="uid://c33pm7skuhbhl" path="res://Scripts/Tokens/token_visual_display.gd" id="13_u18ek"]
+[ext_resource type="ColorPalette" uid="uid://b4u7sst75bwto" path="res://Scenes/Tokens/token colour resources/red_v3.tres" id="14_77pk7"]
+[ext_resource type="Texture2D" uid="uid://iccntlihlngg" path="res://Assets/User Interface/icons/Quit.png" id="15_tfvw3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8v3xt"]
+bg_color = Color(0.7882353, 0.18039216, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_color = Color(0.88, 0.3696, 0.3866133, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rolqa"]
+bg_color = Color(0.9019608, 0.8627451, 0.79607844, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7176471, 0.62352943, 0.5176471, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 14
+shadow_color = Color(0, 0, 0, 0.3882353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lueid"]
+bg_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font_size = 48
+font_color = Color(0.101960786, 0.18431373, 0.32156864, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_fsy6u"]
+font_size = 30
+font_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
+
+[node name="MultiplayerDisconnectPopup" type="Control" unique_id=356466557]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_tfvw3")
+
+[node name="Backdrop" parent="." unique_id=1823797956 instance=ExtResource("2_3rshj")]
+layout_mode = 1
+
+[node name="PopupCenter" type="CenterContainer" parent="." unique_id=25291938]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PopupRoot" type="Control" parent="PopupCenter" unique_id=588263096]
+layout_mode = 2
+
+[node name="UIJuicePlayer" type="Node" parent="PopupCenter/PopupRoot" unique_id=837932620]
+unique_name_in_owner = true
+script = ExtResource("3_l8hg2")
+start_mode = 1
+enter_preset = ExtResource("4_8jix3")
+exit_preset = ExtResource("5_wjn2l")
+invalid_preset = ExtResource("6_04gth")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
+[node name="UIJuicePlayerBackdrop" type="Node" parent="PopupCenter/PopupRoot" unique_id=323035621]
+unique_name_in_owner = true
+script = ExtResource("3_l8hg2")
+start_mode = 1
+enter_preset = ExtResource("7_iyrn2")
+exit_preset = ExtResource("8_4b864")
+metadata/_custom_type_script = "uid://b8ghu0lr1vy47"
+
+[node name="OuterFrame" type="PanelContainer" parent="PopupCenter/PopupRoot" unique_id=55612880]
+propagate_maximum_size = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -106.5
+offset_right = 106.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8v3xt")
+
+[node name="OuterMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=107440784]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Inner Panel" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin" unique_id=438187732]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_rolqa")
+
+[node name="ContentMargin" type="MarginContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel" unique_id=473582246]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 26
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 30
+
+[node name="ContentVbox" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin" unique_id=2120904535]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 18
+
+[node name="TopSpacer" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1695223297]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+
+[node name="TitleLabelHbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1377486983]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Left Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox" unique_id=1538383554]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Left Divider" unique_id=411443778]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Left Divider" unique_id=1845412082]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Left Divider/Diamond Holder" unique_id=212539744]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -7.5
+offset_right = 7.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="TitleLabel" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox" unique_id=89453216]
+layout_mode = 2
+text = "Host Disconnected"
+label_settings = SubResource("LabelSettings_lueid")
+horizontal_alignment = 1
+
+[node name="Right Divider" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox" unique_id=413603736]
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="Diamond Holder" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Right Divider" unique_id=996201669]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+
+[node name="Diamond" type="PanelContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Right Divider/Diamond Holder" unique_id=440861944]
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 3.0
+offset_top = -7.5
+offset_right = 13.000004
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.7853982
+theme_override_styles/panel = SubResource("StyleBoxFlat_lueid")
+
+[node name="Line" type="ColorRect" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/TitleLabelHbox/Right Divider" unique_id=2123981903]
+custom_minimum_size = Vector2(150, 2)
+layout_mode = 2
+size_flags_vertical = 4
+color = Color(0.6039216, 0.5803922, 0.53333336, 1)
+
+[node name="MainBody" type="VBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox" unique_id=1815692670]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=275441123]
+layout_mode = 2
+text = "The host has closed the lobby."
+label_settings = SubResource("LabelSettings_fsy6u")
+horizontal_alignment = 1
+
+[node name="Button Hbox" type="HBoxContainer" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody" unique_id=1216376556]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="ReturnToMainMenuButton" type="Button" parent="PopupCenter/PopupRoot/OuterFrame/OuterMargin/Inner Panel/ContentMargin/ContentVbox/MainBody/Button Hbox" unique_id=1084619273]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("9_l7obl")
+theme_override_styles/pressed = ExtResource("10_6qtwr")
+theme_override_styles/hover = ExtResource("11_r5ssk")
+theme_override_styles/disabled = ExtResource("12_h55db")
+text = "Return To Main Menu"
+
+[node name="Token Overlay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame" unique_id=213115429]
+z_index = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TokenVisualDisplay" type="Control" parent="PopupCenter/PopupRoot/OuterFrame/Token Overlay" unique_id=1865169177]
+z_index = 1
+custom_minimum_size = Vector2(220, 220)
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.09
+offset_left = -109.5
+offset_top = -109.5
+offset_right = 110.5
+offset_bottom = 57.219997
+grow_horizontal = 2
+script = ExtResource("13_u18ek")
+visual_scale = 0.54
+overridden_by_inspector = true
+token_palette = ExtResource("14_77pk7")
+override_icon = ExtResource("15_tfvw3")
+override_icon_white = true
+override_icon_scale = 1.2

@@ -48,6 +48,7 @@ func _ready() -> void:
 	_validate_required_nodes()
 	_connect_steam_network_signals()
 	_connect_lobby_admission_signals()
+	_prepare_main_menu_button()
 	_connect_buttons()
 	
 	_clear_lobby_list()
@@ -63,6 +64,22 @@ func _find_join_button_label() -> void:
 		return
 	
 	join_button_label = join_selected_lobby_button.find_child("Label", true, false) as Label
+
+
+func _prepare_main_menu_button() -> void:
+	if main_menu_button == null:
+		return
+	
+	main_menu_button.disabled = false
+	main_menu_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	
+	for child in main_menu_button.find_children("*", "Control", true, false):
+		var child_control:Control = child as Control
+		
+		if child_control == null:
+			continue
+		
+		child_control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func _validate_required_nodes() -> void:
@@ -81,6 +98,7 @@ func _validate_required_nodes() -> void:
 	_log_missing_node(turn_timer_detail_label, "Turn Timer Detail Label")
 	_log_missing_node(host_detail_label, "Host Detail Label")
 	_log_missing_node(main_menu_button, "Main Menu Button")
+
 
 func _log_missing_node(node:Node, node_name:String) -> void:
 	if node != null:
@@ -129,6 +147,7 @@ func _connect_buttons() -> void:
 	if join_selected_lobby_button != null:
 		if join_selected_lobby_button.pressed.is_connected(_on_join_selected_lobby_pressed) == false:
 			join_selected_lobby_button.pressed.connect(_on_join_selected_lobby_pressed)
+
 
 func request_lobby_refresh() -> void:
 	if join_is_in_progress:
@@ -719,9 +738,12 @@ func set_refresh_button_disabled(is_disabled:bool) -> void:
 	
 	refresh_list_button.disabled = is_disabled
 
+
 func _on_main_menu_button_pressed() -> void:
 	if scene_change_requested:
 		return
+	
+	DebugOverlay.log_message("ServerList", "Main Menu button pressed.")
 	
 	if LobbyAdmission.is_join_pending():
 		LobbyAdmission.cancel_pending_join("Returned to the main menu.")

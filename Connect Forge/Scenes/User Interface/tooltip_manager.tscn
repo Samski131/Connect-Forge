@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://bveqess0ymp3t"]
+
+[ext_resource type="Script" uid="uid://bdihjt7khi70j" path="res://Scripts/User Interface/Tooltips/tooltip_manager.gd" id="1_k0y13"]
+[ext_resource type="Theme" uid="uid://c50qjd772br1q" path="res://Connect Forge.tres" id="2_p6oim"]
+[ext_resource type="StyleBox" uid="uid://b5ssrbend1pgg" path="res://Assets/User Interface/Resources/Buttons/blue/blue_normal.stylebox" id="3_wdfwk"]
+
+[node name="TooltipManager" type="CanvasLayer" unique_id=638862170]
+layer = 100
+script = ExtResource("1_k0y13")
+hover_delay_seconds = 1.0
+
+[node name="TooltipPanel" type="PanelContainer" parent="." unique_id=1619137860]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(420, 0)
+offset_right = 420.0
+offset_bottom = 79.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 2
+theme = ExtResource("2_p6oim")
+theme_override_styles/panel = ExtResource("3_wdfwk")
+
+[node name="Margin" type="MarginContainer" parent="TooltipPanel" unique_id=569665488]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="TooltipLabel" type="Label" parent="TooltipPanel/Margin" unique_id=1308114383]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(388, 0)
+layout_mode = 2
+theme = ExtResource("2_p6oim")
+theme_type_variation = &"TooltipLabel"
+autowrap_mode = 3

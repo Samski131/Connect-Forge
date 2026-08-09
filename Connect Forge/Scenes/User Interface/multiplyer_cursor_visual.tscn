@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://bks86i58jdus6"]
+
+[ext_resource type="Script" uid="uid://btq40rqpu8jr2" path="res://Scripts/User Interface/multiplyer_cursor_visual.gd" id="1_5w4wn"]
+[ext_resource type="Texture2D" uid="uid://ccmycggrqa8et" path="res://Assets/User Interface/cursor/Cursor parts/dark main.png" id="1_ceuc6"]
+[ext_resource type="Texture2D" uid="uid://j7wd875lsgk5" path="res://Assets/User Interface/cursor/Cursor parts/Outline.png" id="2_5w4wn"]
+[ext_resource type="Texture2D" uid="uid://da7fe8xllmb7c" path="res://Assets/User Interface/cursor/Cursor parts/Bright main.png" id="3_eokdf"]
+[ext_resource type="Texture2D" uid="uid://jildhlkgpx7t" path="res://Assets/User Interface/cursor/Cursor parts/Outline highlight.png" id="4_vhcru"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_lueid"]
+font_size = 22
+outline_size = 3
+outline_color = Color(0.02745098, 0.15686275, 0.29803923, 1)
+
+[node name="MultiplayerCursorVisual" type="Control" unique_id=961336453]
+custom_minimum_size = Vector2(180, 125)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 180.0
+offset_bottom = 125.0
+mouse_filter = 2
+script = ExtResource("1_5w4wn")
+
+[node name="Cursor" type="Control" parent="." unique_id=1725690695]
+custom_minimum_size = Vector2(71, 96)
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+
+[node name="DarkMain" type="TextureRect" parent="Cursor" unique_id=1844970847]
+unique_name_in_owner = true
+texture_filter = 2
+custom_minimum_size = Vector2(71, 96)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("1_ceuc6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Outline" type="TextureRect" parent="Cursor" unique_id=1401394402]
+unique_name_in_owner = true
+texture_filter = 2
+custom_minimum_size = Vector2(71, 96)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("2_5w4wn")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BrightMain" type="TextureRect" parent="Cursor" unique_id=2036833046]
+unique_name_in_owner = true
+texture_filter = 2
+custom_minimum_size = Vector2(71, 96)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("3_eokdf")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="OutlineHighlight" type="TextureRect" parent="Cursor" unique_id=249665188]
+unique_name_in_owner = true
+texture_filter = 2
+custom_minimum_size = Vector2(71, 96)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("4_vhcru")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayerName" type="Label" parent="." unique_id=1060410263]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 36)
+layout_mode = 0
+offset_left = 32.0
+offset_top = 72.0
+offset_right = 192.0
+offset_bottom = 108.0
+text = "Player"
+label_settings = SubResource("LabelSettings_lueid")

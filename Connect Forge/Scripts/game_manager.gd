@@ -824,3 +824,71 @@ func stop_turn_timer() -> void:
 		return
 	
 	turn_timer.stop_turn_timer()
+	
+func send_local_drag_preview_started(drag_id:int, token_type:int, board_local_position:Vector2, is_flipped:bool) -> void:
+	if is_network_match_active() == false:
+		return
+	
+	if network_match_controller == null:
+		return
+	
+	network_match_controller.send_local_drag_preview_started(drag_id, token_type, board_local_position, is_flipped)
+
+
+func send_local_drag_preview_position(drag_id:int, board_local_position:Vector2) -> void:
+	if is_network_match_active() == false:
+		return
+	
+	if network_match_controller == null:
+		return
+	
+	network_match_controller.send_local_drag_preview_position(drag_id, board_local_position)
+
+
+func send_local_drag_preview_flipped(drag_id:int, is_flipped:bool) -> void:
+	if is_network_match_active() == false:
+		return
+	
+	if network_match_controller == null:
+		return
+	
+	network_match_controller.send_local_drag_preview_flipped(drag_id, is_flipped)
+
+
+func send_local_drag_preview_ended(drag_id:int) -> void:
+	if is_network_match_active() == false:
+		return
+	
+	if network_match_controller == null:
+		return
+	
+	network_match_controller.send_local_drag_preview_ended(drag_id)
+
+
+func show_remote_drag_preview(drag_id:int, player_id:int, token_type:int, board_local_position:Vector2, is_flipped:bool) -> void:
+	if token_drag_controller == null:
+		return
+	
+	token_drag_controller.show_remote_drag_preview(drag_id, player_id, token_type, board_local_position, is_flipped)
+
+
+func update_remote_drag_preview(drag_id:int, board_local_position:Vector2) -> void:
+	if token_drag_controller == null:
+		return
+	
+	token_drag_controller.update_remote_drag_preview(drag_id, board_local_position)
+
+
+func flip_remote_drag_preview(drag_id:int, is_flipped:bool) -> void:
+	if token_drag_controller == null:
+		return
+	
+	token_drag_controller.flip_remote_drag_preview(drag_id, is_flipped)
+
+
+func clear_remote_drag_preview(drag_id:int = -1) -> void:
+	if token_drag_controller == null:
+		return
+	
+	token_drag_controller.clear_remote_drag_preview(drag_id)
+	

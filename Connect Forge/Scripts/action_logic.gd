@@ -1,7 +1,7 @@
 class_name ActionLogic
 extends Node
 
-enum Report {RESOLVED, IN_PROGRESS,EMPTY}
+enum Report {RESOLVED, IN_PROGRESS, EMPTY}
 
 var game_manager:GameManager = null
 var board:BoardManager = null
@@ -94,9 +94,6 @@ func process_movement_pass() -> bool:
 		var token:Token = board.get_token(position)
 		
 		if token == null:
-			continue
-		
-		if token.resolved:
 			continue
 		
 		if token.being_destroyed:

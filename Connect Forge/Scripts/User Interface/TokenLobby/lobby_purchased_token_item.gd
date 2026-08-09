@@ -30,9 +30,19 @@ func setup(new_player_id:int, new_token_type:int, new_count:int, new_player_pale
 		await ready
 	
 	setup_token_visual()
-	tooltip_text = TokenLibrary.get_display_name(token_type) + "\n" + TokenLibrary.get_description(token_type)
+	setup_tooltip()
 	set_count(new_count)
 	set_refund_enabled(refund_enabled)
+
+
+func setup_tooltip() -> void:
+	var tooltip_manager:TooltipManager = TooltipManager.find_for(self)
+	
+	if tooltip_manager == null:
+		return
+	
+	var tooltip_text:String = TokenLibrary.get_display_name(token_type) + "\n" + TokenLibrary.get_description(token_type)
+	tooltip_manager.register_tooltip(self, tooltip_text)
 
 
 func set_refund_enabled(is_enabled:bool) -> void:

@@ -159,6 +159,8 @@ func try_apply_gravity_to_token(token:Token) -> bool:
 	var extra_effects:Array[BoardVisualEffect] = []
 	var moved:bool = move_token_on_board(token, destination, BoardVisualManager.MOVE_VISUAL.FALL, extra_effects, true, fall_path)
 	
+	if moved:
+		token.reset_resolved()
 	
 	return moved
 

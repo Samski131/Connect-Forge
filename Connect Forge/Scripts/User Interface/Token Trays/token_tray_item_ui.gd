@@ -27,6 +27,7 @@ func setup(new_game_manager:GameManager, new_drag_controller:TokenDragController
 	
 	connect_game_manager_signals()
 	setup_visual()
+	setup_tooltip()
 	refresh()
 
 
@@ -63,6 +64,15 @@ func setup_visual() -> void:
 	token_visual_display.setup_with_palette(token_type, player_id, palette)
 
 
+func setup_tooltip() -> void:
+	var tooltip_manager:TooltipManager = TooltipManager.find_for(self)
+	
+	if tooltip_manager == null:
+		return
+	
+	tooltip_manager.register_tooltip(self, TokenLibrary.get_description(token_type))
+
+
 func refresh() -> void:
 	if game_manager == null:
 		return
@@ -73,7 +83,6 @@ func refresh() -> void:
 	var token_count:int = game_manager.get_token_count(player_id, token_type)
 	
 	count_label.text = "x" + str(token_count)
-	tooltip_text = TokenLibrary.get_description(token_type)
 	
 	apply_count_visual(token_count)
 

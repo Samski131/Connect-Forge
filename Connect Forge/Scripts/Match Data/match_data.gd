@@ -86,15 +86,21 @@ func get_session_player(player_id:int) -> MatchSessionPlayerData:
 	return session.get_player(player_id)
 
 
-func get_default_palette_for_player(player_id:int) -> ColorPalette:
+func get_default_player_palettes() -> Array[ColorPalette]:
 	var palettes:Array[ColorPalette] = [
 		YELLOW_PALETTE,
 		RED_PALETTE,
-		GREEN_PALETTE,
-		PINK_PALETTE,
 		VIOLET_PALETTE,
+		PINK_PALETTE,
+		GREEN_PALETTE,
 		BLUE_PALETTE
 	]
+	
+	return palettes
+
+
+func get_default_palette_for_player(player_id:int) -> ColorPalette:
+	var palettes:Array[ColorPalette] = get_default_player_palettes()
 	
 	if palettes.is_empty():
 		return null

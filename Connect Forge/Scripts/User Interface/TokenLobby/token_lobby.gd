@@ -32,6 +32,7 @@ const PLAYER_STATE_TOKENS:String = "selected_tokens"
 
 @onready var match_options_popup:MatchOptionsPopupUI = $Control/ScreenMargin/MatchOptionsPopupUI
 @onready var pause_menu:PauseMenu = $Control/ScreenMargin/PauseMenuPopupUI
+@onready var multiplayer_disconnect_popup:MultiplayerDisconnectPopup = $MultiplayerDisconnectPopup
 
 var is_starting_match:bool = false
 var multiplayer_lobby_active:bool = false
@@ -110,6 +111,9 @@ func connect_multiplayer_lobby_signals() -> void:
 	
 	if LobbyData.lobby_cleared.is_connected(_on_lobby_cleared) == false:
 		LobbyData.lobby_cleared.connect(_on_lobby_cleared)
+	
+	if SteamNetwork.host_disconnected.is_connected(_on_host_disconnected) == false:
+		SteamNetwork.host_disconnected.connect(_on_host_disconnected)
 
 
 func initialise_multiplayer_token_state() -> void:
@@ -1130,3 +1134,11 @@ func _on_lobby_cleared() -> void:
 	state_request_sent = false
 	last_applied_state_revision = -1
 	create_player_trays()
+
+func _on_host_disconnected() -> void:
+	if multiplayer_disconnect_popup == null:
+		push_error("TokenLobby: MultiplayerDisconnectPopup could not be found.")
+		return
+	
+	DebugOverlay.log_message("TokenLobby", "The host disconnected. Showing the lobby closed popup.")
+	multiplayer_disconnect_popup.show_host_disconnected()

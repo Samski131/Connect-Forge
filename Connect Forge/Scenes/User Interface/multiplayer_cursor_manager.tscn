@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dmc23tuijtf0"]
+
+[ext_resource type="Script" uid="uid://bxelym567uwu" path="res://Scripts/User Interface/multiplayer_cursor_manager.gd" id="1_kxsx2"]
+
+[node name="Multiplayer Cursor Manager" type="Control" unique_id=454017940]
+z_index = 100
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_kxsx2")

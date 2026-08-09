@@ -23,12 +23,15 @@ extends Node2D
 @onready var match_options_popup:MatchOptionsPopupUI = $"User Interface/Game UI/MatchOptionsPopupUI"
 @onready var game_over_menu:GameOverMenu = $"User Interface/Game UI/Game Over Menu"
 
+@onready var multiplayer_cursor_manager:MultiplayerCursorManager = $"User Interface/Multiplayer Cursor Manager"
+@onready var multiplayer_disconnect_popup:MultiplayerDisconnectPopup = $"User Interface/MultiplayerDisconnectPopup"
 
 func _ready() -> void:
 	if validate_scene_references() == false:
 		push_error("GameSceneController: Scene wiring failed. The match was not initialised.")
 		return
 	
+	connect_multiplayer_signals()
 	wire_board_systems()
 	wire_match_systems()
 	wire_user_interface()
@@ -52,6 +55,7 @@ func wire_match_systems() -> void:
 	token_drag_controller.setup(game_manager, board_manager)
 	turn_timer.setup(game_manager)
 	game_over_menu.setup(game_manager)
+
 
 func wire_user_interface() -> void:
 	player_token_trays_ui.setup(game_manager, token_drag_controller)
@@ -131,6 +135,9 @@ func validate_scene_references() -> bool:
 	if validate_reference(game_over_menu, "Game Over Menu") == false:
 		references_are_valid = false
 	
+	if validate_reference(multiplayer_disconnect_popup, "Multiplayer Disconnect Popup") == false:
+		references_are_valid = false
+	
 	return references_are_valid
 
 
@@ -140,3 +147,15 @@ func validate_reference(node:Node, reference_name:String) -> bool:
 	
 	push_error("GameSceneController: Missing required scene reference: " + reference_name)
 	return false
+
+func connect_multiplayer_signals() -> void:
+	if SteamNetwork.host_disconnected.is_connected(_on_host_disconnected) == false:
+		SteamNetwork.host_disconnected.connect(_on_host_disconnected)
+		
+func _on_host_disconnected() -> void:
+	if multiplayer_disconnect_popup == null:
+		push_error("GameSceneController: MultiplayerDisconnectPopup could not be found.")
+		return
+	
+	DebugOverlay.log_message("GameSceneController", "The host disconnected during the match. Showing the lobby closed popup.")
+	multiplayer_disconnect_popup.show_host_disconnected()
