@@ -21,23 +21,27 @@ func _play_valid(runner:Node) -> void:
 	_runner = runner
 	_token = target as Token
 	
-	if _token == null or is_instance_valid(_token) == false:
+	if _token == null:
+		_finish()
+		return
+	
+	if is_instance_valid(_token) == false:
 		_finish()
 		return
 	
 	_sprites = _token.sprites as Node2D
 	
 	if _sprites == null:
-		_token.is_flipped = new_is_flipped
+		_token.set_flipped(new_is_flipped)
 		_finish()
 		return
 	
 	_start_scale = _sprites.scale
 	
-	var half_duration := duration * 0.5
-	var squash_scale := Vector2(min_scale_x, _start_scale.y * pop_scale_y)
+	var half_duration:float = duration * 0.5
+	var squash_scale:Vector2 = Vector2(min_scale_x, _start_scale.y * pop_scale_y)
+	var tween:Tween = runner.create_tween()
 	
-	var tween := runner.create_tween()
 	tween.tween_property(_sprites, "scale", squash_scale, half_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.tween_callback(_swap_side)
 	tween.tween_property(_sprites, "scale", _start_scale, half_duration).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -52,3 +56,20 @@ func _swap_side() -> void:
 		return
 	
 	_token.set_flipped(new_is_flipped)
+
+
+func to_replay_action() -> ReplayAction:
+	var token_id:int = get_replay_target_token_id()
+	
+	if token_id < 0:
+		return null
+	
+	var payload:Dictionary = {
+		"token_id": token_id,
+		"flipped": new_is_flipped,
+		"duration": duration,
+		"min_scale_x": min_scale_x,
+		"pop_scale_y": pop_scale_y
+	}
+	
+	return ReplayAction.create_presentation(ReplayFormat.PRESENTATION_TOKEN_FLIP, payload)

@@ -14,6 +14,8 @@ var being_destroyed:bool = false
 var is_flipped:bool = false
 var gravity_visual_rotation_degrees:float = 0.0
 var network_placement_data:Dictionary = {}
+var replay_token_id:int = -1
+var visual_player_palettes:Dictionary = {}
 
 @onready var sprites:Node2D = $Sprites
 
@@ -32,6 +34,7 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 	being_destroyed = false
 	is_flipped = false
 	network_placement_data.clear()
+	visual_player_palettes.clear()
 	scale = Vector2.ONE
 	modulate = Color.WHITE
 	setup_special_token()
@@ -98,11 +101,12 @@ func check_enough_charges(cost:int)->bool:
 	return false
 
 
-func deduct_charges(cost:int):
+func deduct_charges(cost:int) -> void:
 	if cost == 0:
 		return
 	
 	charges -= cost
+	record_replay_state_update()
 	
 	if board != null and board.visuals != null:
 		var darken_effect:ColorTweenVisualEffect = ColorTweenVisualEffect.new(self, ColorTweenVisualEffect.MODE.DARKEN, board.visuals.darken_amount, board.visuals.darken_duration)
@@ -119,6 +123,40 @@ func recolor():
 	
 	if sprites.has_method("recolor"):
 		sprites.recolor(player_id)
+
+
+func clear_visual_player_palettes() -> void:
+	visual_player_palettes.clear()
+
+
+func set_visual_player_palette(visual_player_id:int, palette:ColorPalette) -> bool:
+	if visual_player_id < 0:
+		return false
+	
+	if palette == null:
+		return false
+	
+	visual_player_palettes[visual_player_id] = palette
+	return true
+
+
+func get_visual_player_palette(visual_player_id:int) -> ColorPalette:
+	if visual_player_id < 0:
+		return null
+	
+	# Normal gameplay should always use the live board.
+	if board != null:
+		return board.get_player_palette(visual_player_id)
+	
+	# Boardless tokens, such as replay tokens, use supplied palettes.
+	if visual_player_palettes.has(visual_player_id):
+		var replay_palette:ColorPalette = visual_player_palettes[visual_player_id] as ColorPalette
+		
+		if replay_palette != null:
+			return replay_palette
+	
+	return null
+	
 
 func has_keyword(keyword:Global.KEYWORD)->bool:
 	return keyword in keywords
@@ -195,9 +233,22 @@ func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) 
 	if board.visuals == null:
 		return
 	
+	board.record_replay_presentation_effect(effect)
 	board.visuals.queue_effect(effect, batch_parallel)
 
-
+func queue_visual_effect_with_state_update(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
+	if effect == null:
+		return
+	
+	if board == null:
+		return
+	
+	if board.visuals == null:
+		return
+	
+	board.record_replay_token_update(self, effect)
+	board.visuals.queue_effect(effect, batch_parallel)
+	
 func set_flipped(new_is_flipped:bool) -> void:
 	is_flipped = new_is_flipped
 	apply_flipped_visual()
@@ -219,3 +270,28 @@ func apply_flipped_visual() -> void:
 		sprites.scale.x = -abs(sprites.scale.x)
 	else:
 		sprites.scale.x = abs(sprites.scale.x)
+
+func has_replay_token_id() -> bool:
+	return replay_token_id >= 0
+
+
+func get_replay_token_id() -> int:
+	return replay_token_id
+
+
+func set_replay_token_id(new_replay_token_id:int) -> bool:
+	if new_replay_token_id < 0:
+		return false
+	
+	if replay_token_id >= 0:
+		return replay_token_id == new_replay_token_id
+	
+	replay_token_id = new_replay_token_id
+	return true
+
+func record_replay_state_update() -> void:
+	if board == null:
+		return
+	
+	board.record_replay_token_update(self)
+	

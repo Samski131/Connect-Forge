@@ -47,3 +47,23 @@ func _finish_once() -> void:
 	
 	_finished = true
 	_finish()
+
+
+func to_replay_action() -> ReplayAction:
+	var replay_actions:Array[ReplayAction] = []
+	
+	for effect in effects:
+		if effect == null:
+			continue
+		
+		var replay_action:ReplayAction = effect.to_replay_action()
+		
+		if replay_action == null:
+			continue
+		
+		replay_actions.append(replay_action)
+	
+	if replay_actions.is_empty():
+		return null
+	
+	return ReplayAction.create_parallel(replay_actions)

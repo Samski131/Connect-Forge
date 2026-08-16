@@ -23,10 +23,19 @@ func _build_tween(tween:Tween) -> void:
 		return
 	
 	token.gravity_visual_rotation_degrees = target_rotation_degrees
+	add_property_tween(tween, token.sprites, "rotation_degrees", target_rotation_degrees)
+
+
+func to_replay_action() -> ReplayAction:
+	var token_id:int = get_replay_target_token_id()
 	
-	add_property_tween(
-		tween,
-		token.sprites,
-		"rotation_degrees",
-		target_rotation_degrees
-	)
+	if token_id < 0:
+		return null
+	
+	var payload:Dictionary = {
+		"token_id": token_id,
+		"rotation_degrees": target_rotation_degrees,
+		"duration": duration
+	}
+	
+	return ReplayAction.create_presentation(ReplayFormat.PRESENTATION_TOKEN_GRAVITY_ALIGN, payload)

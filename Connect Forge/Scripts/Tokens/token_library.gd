@@ -15,6 +15,7 @@ enum TokenType {
 	CHAMELEON
 }
 
+const KEY_REPLAY_ID:String = "replay_id"
 const KEY_DISPLAY_NAME:String = "display_name"
 const KEY_DESCRIPTION:String = "description"
 const KEY_SCENE_PATH:String = "scene_path"
@@ -32,6 +33,8 @@ static func get_token_data(token_type:int) -> Dictionary:
 		return {}
 	
 	return data[token_type]
+
+
 static func get_all_token_types() -> Array[int]:
 	return [
 		TokenType.ANVIL,
@@ -51,6 +54,7 @@ static func get_all_token_types() -> Array[int]:
 static func get_all_token_data() -> Dictionary:
 	return {
 		TokenType.BASIC: {
+			KEY_REPLAY_ID: "basic",
 			KEY_DISPLAY_NAME: "Basic",
 			KEY_DESCRIPTION: "A normal token. It has no special effect.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/base token.tscn",
@@ -61,6 +65,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: false
 		},
 		TokenType.ANVIL: {
+			KEY_REPLAY_ID: "anvil",
 			KEY_DISPLAY_NAME: "Anvil",
 			KEY_DESCRIPTION: "On land, destroys the token directly below it.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/anvil token.tscn",
@@ -71,6 +76,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.BOMB: {
+			KEY_REPLAY_ID: "bomb",
 			KEY_DISPLAY_NAME: "Bomb",
 			KEY_DESCRIPTION: "On land, destroys itself and adjacent tokens.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/bomb token.tscn",
@@ -81,6 +87,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.CHAMELEON: {
+			KEY_REPLAY_ID: "chameleon",
 			KEY_DISPLAY_NAME: "Chameleon",
 			KEY_DESCRIPTION: "Disguises itself as another player's token after landing.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/chameleon token.tscn",
@@ -91,6 +98,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.DAGGER: {
+			KEY_REPLAY_ID: "dagger",
 			KEY_DISPLAY_NAME: "Dagger",
 			KEY_DESCRIPTION: "Destroys a token that passes on its trigger side.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/dagger token.tscn",
@@ -101,6 +109,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.DRILL: {
+			KEY_REPLAY_ID: "drill",
 			KEY_DISPLAY_NAME: "Drill",
 			KEY_DESCRIPTION: "Destroys the token below it when it lands, then keeps falling.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/drill token.tscn",
@@ -111,6 +120,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.FAN: {
+			KEY_REPLAY_ID: "fan",
 			KEY_DISPLAY_NAME: "Fan",
 			KEY_DESCRIPTION: "Pushes nearby tokens sideways relative to gravity. Can be flipped before placement.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/fan token.tscn",
@@ -121,6 +131,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.PYRE: {
+			KEY_REPLAY_ID: "pyre",
 			KEY_DISPLAY_NAME: "Pyre",
 			KEY_DESCRIPTION: "Special token with an on-board effect.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/pyre token.tscn",
@@ -131,6 +142,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.RAMP: {
+			KEY_REPLAY_ID: "ramp",
 			KEY_DISPLAY_NAME: "Ramp",
 			KEY_DESCRIPTION: "Redirects a landing token to one side. Can be flipped before placement.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/ramp token.tscn",
@@ -141,6 +153,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.ROTATE_GRAVITY: {
+			KEY_REPLAY_ID: "rotate_gravity",
 			KEY_DISPLAY_NAME: "Rotate Gravity",
 			KEY_DESCRIPTION: "Rotates the board gravity direction.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/rotate gravity token.tscn",
@@ -151,6 +164,7 @@ static func get_all_token_data() -> Dictionary:
 			KEY_AVAILABLE_IN_LOBBY: true
 		},
 		TokenType.TETROMINO: {
+			KEY_REPLAY_ID: "tetromino",
 			KEY_DISPLAY_NAME: "Tetromino",
 			KEY_DESCRIPTION: "Special shape-based token.",
 			KEY_SCENE_PATH: "res://Scenes/Tokens/tetromino token.tscn",
@@ -162,6 +176,7 @@ static func get_all_token_data() -> Dictionary:
 		}
 	}
 
+
 static func get_token_data_value(token_type:int, key:String, default_value):
 	var data:Dictionary = get_token_data(token_type)
 	
@@ -169,6 +184,46 @@ static func get_token_data_value(token_type:int, key:String, default_value):
 		return default_value
 	
 	return data[key]
+
+
+static func get_replay_id(token_type:int) -> String:
+	return str(get_token_data_value(token_type, KEY_REPLAY_ID, ""))
+
+
+static func get_token_type_from_replay_id(replay_id:String) -> int:
+	var used_replay_id:String = replay_id.strip_edges().to_lower()
+	
+	if used_replay_id == "":
+		return -1
+	
+	for token_type in get_all_token_types():
+		if get_replay_id(token_type) == used_replay_id:
+			return token_type
+	
+	return -1
+
+
+static func is_valid_replay_id(replay_id:String) -> bool:
+	return get_token_type_from_replay_id(replay_id) != -1
+
+
+static func validate_replay_ids() -> bool:
+	var found_ids:Dictionary = {}
+	
+	for token_type in get_all_token_types():
+		var replay_id:String = get_replay_id(token_type)
+		
+		if replay_id == "":
+			push_error("TokenLibrary: Token type %d has no replay ID." % token_type)
+			return false
+		
+		if found_ids.has(replay_id):
+			push_error("TokenLibrary: Duplicate replay ID '%s'." % replay_id)
+			return false
+		
+		found_ids[replay_id] = true
+	
+	return true
 
 
 static func get_display_name(token_type:int) -> String:
@@ -234,6 +289,7 @@ static func get_token_types_in_tray_order() -> Array[int]:
 			sorted_types.append(token_type)
 	
 	return sorted_types
+
 
 static func get_cost(token_type:int) -> int:
 	return int(get_token_data_value(token_type, KEY_COST, 1))

@@ -64,7 +64,7 @@ func _ready() -> void:
 	if multiplayer_lobby_active:
 		call_deferred("initialise_multiplayer_token_state")
 
-
+	
 func connect_buttons() -> void:
 	if start_button != null:
 		if start_button.pressed.is_connected(_on_start_button_pressed) == false:

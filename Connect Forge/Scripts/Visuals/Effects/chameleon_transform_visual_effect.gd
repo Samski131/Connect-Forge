@@ -36,3 +36,21 @@ func _finish_transform() -> void:
 			token.finish_chameleon_transform()
 	
 	_finish()
+
+
+func to_replay_action() -> ReplayAction:
+	var token_id:int = get_replay_target_token_id()
+	
+	if token_id < 0:
+		return null
+	
+	if fake_player_id < 0:
+		return null
+	
+	var payload:Dictionary = {
+		"token_id": token_id,
+		"fake_player_id": fake_player_id,
+		"duration": duration
+	}
+	
+	return ReplayAction.create_presentation(ReplayFormat.PRESENTATION_CHAMELEON_TRANSFORM, payload)

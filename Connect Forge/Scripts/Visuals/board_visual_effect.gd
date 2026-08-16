@@ -36,3 +36,30 @@ func _has_valid_target() -> bool:
 func _finish() -> void:
 	if _finished_callback.is_valid():
 		_finished_callback.call()
+
+
+func to_replay_action() -> ReplayAction:
+	return null
+
+
+func get_replay_target_token() -> Token:
+	if target == null:
+		return null
+	
+	if is_instance_valid(target) == false:
+		return null
+	
+	var token:Token = target as Token
+	return token
+
+
+func get_replay_target_token_id() -> int:
+	var token:Token = get_replay_target_token()
+	
+	if token == null:
+		return -1
+	
+	if token.has_replay_token_id() == false:
+		return -1
+	
+	return token.get_replay_token_id()

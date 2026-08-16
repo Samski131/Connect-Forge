@@ -10,8 +10,6 @@ func setup(new_game_manager:GameManager, new_board:BoardManager) -> void:
 	board = new_board
 
 
-
-
 func exit_state() -> void:
 	if game_manager == null:
 		return
@@ -49,8 +47,32 @@ func try_place_dragged_token(token_type:int, slot_pos:Vector2i, start_flipped:bo
 	
 	new_token.apply_network_placement_data(placement_data)
 	
+	record_replay_token_spawn(new_token)
+	
 	exit_state()
 	return true
+
+
+func record_replay_token_spawn(token:Token) -> void:
+	if token == null:
+		return
+	
+	if board == null:
+		return
+	
+	var recorder:ReplayRecorder = board.get_replay_recorder()
+	
+	if recorder == null:
+		return
+	
+	if recorder.is_recording() == false:
+		return
+	
+	var round_number:int = game_manager.get_current_round_number()
+	var turn_number:int = game_manager.get_current_turn_number()
+	
+	if recorder.record_token_spawn(token, round_number, turn_number) == false:
+		DebugOverlay.log_error("ReplayRecorder", "Failed to record the spawn of replay token %d." % token.get_replay_token_id())
 
 
 func is_valid_starting_slot(slot_pos:Vector2i) -> bool:

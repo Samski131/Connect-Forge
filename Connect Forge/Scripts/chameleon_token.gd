@@ -84,8 +84,10 @@ func _on_land(_context:Dictionary) -> bool:
 	charges -= ability_cost
 	
 	if board.visuals != null:
-		queue_visual_effect(ChameleonTransformVisualEffect.new(self, fake_player_id, transform_duration))
+		var transform_effect:ChameleonTransformVisualEffect = ChameleonTransformVisualEffect.new(self, fake_player_id, transform_duration)
+		queue_visual_effect_with_state_update(transform_effect)
 	else:
+		record_replay_state_update()
 		prepare_chameleon_transform(fake_player_id)
 		set_chameleon_dissolve_progress(1.0)
 		finish_chameleon_transform()
@@ -110,15 +112,17 @@ func get_network_fake_player_id() -> int:
 
 
 func pick_fake_player_id() -> int:
-	var game_manager:Node = get_tree().get_first_node_in_group("game manager")
-	
-	if game_manager == null:
+	if board == null:
 		return -1
 	
-	if game_manager.has_method("get_player_count") == false:
+	if board.is_valid_player_id(player_id) == false:
 		return -1
 	
-	var player_count:int = int(game_manager.call("get_player_count"))
+	var player_count:int = board.get_player_count()
+	
+	if player_count <= 1:
+		return -1
+	
 	return choose_fake_player_id(player_id, player_count)
 
 
@@ -181,6 +185,8 @@ func create_chameleon_reveal_effect() -> BoardVisualEffect:
 		return null
 	
 	has_revealed = true
+	fake_player_id = -1
+	
 	return ChameleonRevealVisualEffect.new(self, reveal_duration)
 
 
@@ -189,6 +195,8 @@ func reveal_chameleon_instantly() -> bool:
 		return false
 	
 	has_revealed = true
+	fake_player_id = -1
+	record_replay_state_update()
 	
 	prepare_chameleon_reveal()
 	set_chameleon_reveal_progress(1.0)

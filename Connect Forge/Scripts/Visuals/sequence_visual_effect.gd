@@ -18,7 +18,7 @@ func _play_valid(runner:Node) -> void:
 
 func _play_next() -> void:
 	while _current_index < effects.size():
-		var effect := effects[_current_index]
+		var effect:BoardVisualEffect = effects[_current_index]
 		_current_index += 1
 		
 		if effect == null:
@@ -28,3 +28,23 @@ func _play_next() -> void:
 		return
 	
 	_finish()
+
+
+func to_replay_action() -> ReplayAction:
+	var replay_actions:Array[ReplayAction] = []
+	
+	for effect in effects:
+		if effect == null:
+			continue
+		
+		var replay_action:ReplayAction = effect.to_replay_action()
+		
+		if replay_action == null:
+			continue
+		
+		replay_actions.append(replay_action)
+	
+	if replay_actions.is_empty():
+		return null
+	
+	return ReplayAction.create_sequence(replay_actions)

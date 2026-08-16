@@ -23,7 +23,7 @@ func _play_valid(runner:Node) -> void:
 		_finish()
 		return
 	
-	var tween := runner.create_tween()
+	var tween:Tween = runner.create_tween()
 	tween.tween_method(_set_flash_progress, 0.0, float(pulses), duration).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
 	tween.finished.connect(_finish)
 
@@ -45,17 +45,18 @@ func _collect_items() -> void:
 func _collect_canvas_items(node:Node) -> void:
 	for child in node.get_children():
 		if child is CanvasItem:
-			_items.append(child)
-			_original_colors.append(child.modulate)
+			var item:CanvasItem = child as CanvasItem
+			_items.append(item)
+			_original_colors.append(item.modulate)
 		
 		_collect_canvas_items(child)
 
 
 func _set_flash_progress(value:float) -> void:
-	var amount = abs(sin(value * PI))
+	var amount:float = abs(sin(value * PI))
 	
 	for i in range(_items.size()):
-		var item := _items[i]
+		var item:CanvasItem = _items[i]
 		
 		if item == null:
 			continue
@@ -63,14 +64,42 @@ func _set_flash_progress(value:float) -> void:
 		if is_instance_valid(item) == false:
 			continue
 		
-		var original := _original_colors[i]
-		var used_flash_color := Color(flash_color.r, flash_color.g, flash_color.b, original.a)
+		var original:Color = _original_colors[i]
+		var used_flash_color:Color = Color(flash_color.r, flash_color.g, flash_color.b, original.a)
 		item.modulate = original.lerp(used_flash_color, amount)
+
+
+func to_replay_action() -> ReplayAction:
+	var token_ids:Array = []
+	
+	for token in tokens:
+		if token == null:
+			continue
+		
+		if is_instance_valid(token) == false:
+			continue
+		
+		if token.has_replay_token_id() == false:
+			continue
+		
+		token_ids.append(token.get_replay_token_id())
+	
+	if token_ids.is_empty():
+		return null
+	
+	var payload:Dictionary = {
+		"token_ids": token_ids,
+		"pulses": pulses,
+		"duration": duration,
+		"flash_color": ReplayAction.colour_to_data(flash_color)
+	}
+	
+	return ReplayAction.create_presentation(ReplayFormat.PRESENTATION_TOKEN_FLASH, payload)
 
 
 func _finish() -> void:
 	for i in range(_items.size()):
-		var item := _items[i]
+		var item:CanvasItem = _items[i]
 		
 		if item == null:
 			continue

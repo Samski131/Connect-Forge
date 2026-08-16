@@ -212,6 +212,7 @@ func reveal_chameleon_tokens_after_win() -> void:
 		return
 	
 	var reveal_effects:Array[BoardVisualEffect] = []
+	var revealed_tokens:Array[Token] = []
 	
 	for position in board.get_positions_in_gravity_order():
 		var token:Token = board.get_token(position)
@@ -240,6 +241,7 @@ func reveal_chameleon_tokens_after_win() -> void:
 		
 		if reveal_effect != null:
 			reveal_effects.append(reveal_effect)
+			revealed_tokens.append(token)
 			continue
 		
 		if token.has_method("reveal_chameleon_instantly"):
@@ -251,7 +253,9 @@ func reveal_chameleon_tokens_after_win() -> void:
 	if board.visuals == null:
 		return
 	
-	board.visuals.queue_effect(ParallelVisualEffect.new(reveal_effects))
+	var parallel_reveal_effect:ParallelVisualEffect = ParallelVisualEffect.new(reveal_effects)
+	board.record_replay_token_updates(revealed_tokens, parallel_reveal_effect)
+	board.visuals.queue_effect(parallel_reveal_effect)
 
 
 func finish_game_with_winner(winner_id:int) -> void:

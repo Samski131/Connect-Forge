@@ -22,9 +22,12 @@ func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int,
 		return null
 	
 	var new_token:Token = token_scene.instantiate()
+	
+	if new_token == null:
+		return null
+	
 	new_token.visible = false
 	new_token.global_position = board.slot_to_global_position(slot_pos)
-	
 	board.token_pool.add_child(new_token)
 	
 	new_token.setup(board, slot_pos, player_id)
@@ -34,10 +37,17 @@ func create_new_token(token_scene:PackedScene, slot_pos:Vector2i, player_id:int,
 	else:
 		new_token.is_flipped = start_flipped
 	
-	board.add_token_to_board(new_token, slot_pos)
+	if board.add_token_to_board(new_token, slot_pos) == false:
+		new_token.queue_free()
+		return null
+	
+	var replay_token_id:int = board.register_replay_token(new_token)
+	
+	if replay_token_id >= 0:
+		var replay_token_type:String = TokenLibrary.get_replay_id(new_token.token_type)
+		DebugOverlay.log_message("ReplayRecorder", "Registered board token %d: %s, player %d, slot %s." % [replay_token_id, replay_token_type, player_id, str(slot_pos)])
 	
 	new_token.visible = true
-	
 	return new_token
 
 
@@ -74,15 +84,23 @@ func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualM
 	if board.get_token(destination) != null:
 		return false
 	
+	var recorded_movement_path:Array[Vector2i] = _get_recorded_movement_path(start_pos, destination, movement_path)
+	
 	board.remove_token_from_board(token.token_pos)
 	token.token_pos = destination
 	board.add_token_to_board(token, destination)
 	
+	var effect_to_queue:BoardVisualEffect = null
+	
 	if board.visuals != null:
 		var move_effect:TokenMoveVisualEffect = _create_move_effect(token, destination, move_visual)
-		var effect_to_queue:BoardVisualEffect = _combine_with_extra_parallel_effects(move_effect, extra_parallel_effects)
-		
-		board.visuals.queue_effect(effect_to_queue, move_visual == BoardVisualManager.MOVE_VISUAL.FALL)
+		move_effect.set_replay_movement_context(start_pos, destination, recorded_movement_path)
+		effect_to_queue = _combine_with_extra_parallel_effects(move_effect, extra_parallel_effects)
+	
+	_record_replay_token_move(token, start_pos, destination, effect_to_queue)
+	
+	if board.visuals != null:
+		board.visuals.queue_movement_effect(effect_to_queue)
 	else:
 		token.move_token_visual()
 	
@@ -95,30 +113,174 @@ func move_token_on_board(token:Token, new_pos:Vector2i, move_visual:BoardVisualM
 
 
 func destroy_token(token:Token) -> bool:
-	if token == null:
+	var tokens:Array[Token] = []
+	
+	if token != null:
+		tokens.append(token)
+	
+	return destroy_tokens(tokens)
+
+
+func destroy_tokens(tokens:Array[Token], presentation_effect:BoardVisualEffect = null) -> bool:
+	var valid_tokens:Array[Token] = _get_valid_destroy_tokens(tokens)
+	
+	if valid_tokens.is_empty():
 		return false
 	
-	if is_instance_valid(token) == false:
-		return false
+	var positions:Array[Vector2i] = []
 	
-	if token.being_destroyed:
-		return false
+	for token in valid_tokens:
+		positions.append(token.token_pos)
 	
-	if board.get_token(token.token_pos) == token:
-		board.remove_token_from_board(token.token_pos)
-	
-	token.being_destroyed = true
+	var effect_to_queue:BoardVisualEffect = presentation_effect
 	
 	if board.visuals != null:
-		board.visuals.queue_effect(TokenDestroyVisualEffect.new(token, board.visuals.destroy_duration))
+		if effect_to_queue == null:
+			effect_to_queue = _create_default_destroy_effect(valid_tokens)
+	
+	for token in valid_tokens:
+		if board.get_token(token.token_pos) == token:
+			board.remove_token_from_board(token.token_pos)
+		
+		token.being_destroyed = true
+	
+	_record_replay_token_destruction(valid_tokens, positions, effect_to_queue)
+	
+	if board.visuals != null and effect_to_queue != null:
+		board.visuals.queue_effect(effect_to_queue)
 	else:
-		token.queue_free()
+		for token in valid_tokens:
+			if token != null and is_instance_valid(token):
+				token.queue_free()
 	
 	return true
 
 
+func _get_valid_destroy_tokens(tokens:Array[Token]) -> Array[Token]:
+	var result:Array[Token] = []
+	var found_instances:Dictionary = {}
+	
+	for token in tokens:
+		if token == null:
+			continue
+		
+		if is_instance_valid(token) == false:
+			continue
+		
+		if token.being_destroyed:
+			continue
+		
+		var instance_id:int = token.get_instance_id()
+		
+		if found_instances.has(instance_id):
+			continue
+		
+		found_instances[instance_id] = true
+		result.append(token)
+	
+	return result
+
+
+func _create_default_destroy_effect(tokens:Array[Token]) -> BoardVisualEffect:
+	if board.visuals == null:
+		return null
+	
+	if tokens.is_empty():
+		return null
+	
+	if tokens.size() == 1:
+		return TokenDestroyVisualEffect.new(tokens[0], board.visuals.destroy_duration)
+	
+	var destroy_effects:Array[BoardVisualEffect] = []
+	
+	for token in tokens:
+		destroy_effects.append(TokenDestroyVisualEffect.new(token, board.visuals.destroy_duration))
+	
+	return ParallelVisualEffect.new(destroy_effects)
+
+
+func _record_replay_token_destruction(tokens:Array[Token], positions:Array[Vector2i], visual_effect:BoardVisualEffect) -> void:
+	if board == null:
+		return
+	
+	var recorder:ReplayRecorder = board.get_replay_recorder()
+	
+	if recorder == null:
+		return
+	
+	if recorder.is_recording() == false:
+		return
+	
+	if board.match_session == null:
+		DebugOverlay.log_error("ReplayRecorder", "Could not record token destruction because the board has no MatchSession.")
+		return
+	
+	var presentation_action:ReplayAction = null
+	
+	if visual_effect != null:
+		presentation_action = visual_effect.to_replay_action()
+	
+	var round_number:int = board.match_session.current_round_number
+	var turn_number:int = board.match_session.current_turn_number
+	var acting_player_id:int = board.match_session.current_player_id
+	
+	if recorder.record_token_destruction(tokens, positions, presentation_action, round_number, turn_number, acting_player_id) == false:
+		DebugOverlay.log_error("ReplayRecorder", "Failed to record token destruction.")
+
+
+func _record_replay_token_move(token:Token, start_pos:Vector2i, destination:Vector2i, visual_effect:BoardVisualEffect) -> void:
+	if board == null:
+		return
+	
+	var recorder:ReplayRecorder = board.get_replay_recorder()
+	
+	if recorder == null:
+		return
+	
+	if recorder.is_recording() == false:
+		return
+	
+	if board.match_session == null:
+		DebugOverlay.log_error("ReplayRecorder", "Could not record token movement because the board has no MatchSession.")
+		return
+	
+	var presentation_action:ReplayAction = null
+	
+	if recorder.is_move_batch_active() == false:
+		if visual_effect != null:
+			presentation_action = visual_effect.to_replay_action()
+	
+	var round_number:int = board.match_session.current_round_number
+	var turn_number:int = board.match_session.current_turn_number
+	var acting_player_id:int = board.match_session.current_player_id
+	
+	if recorder.record_token_move(token, start_pos, destination, presentation_action, round_number, turn_number, acting_player_id) == false:
+		DebugOverlay.log_error("ReplayRecorder", "Failed to record movement for replay token %d." % token.get_replay_token_id())
+
+
+func _get_recorded_movement_path(start_pos:Vector2i, destination:Vector2i, requested_path:Array[Vector2i]) -> Array[Vector2i]:
+	var result:Array[Vector2i] = []
+	
+	if requested_path.is_empty():
+		return _create_straight_movement_path(start_pos, destination)
+	
+	for path_pos in requested_path:
+		result.append(path_pos)
+		
+		if path_pos == destination:
+			break
+	
+	if result.is_empty():
+		return _create_straight_movement_path(start_pos, destination)
+	
+	if result.back() != destination:
+		return _create_straight_movement_path(start_pos, destination)
+	
+	return result
+
+
 func _create_move_effect(token:Token, new_pos:Vector2i, move_visual:BoardVisualManager.MOVE_VISUAL) -> TokenMoveVisualEffect:
-	var move_effect := TokenMoveVisualEffect.new(token, board.slot_to_global_position(new_pos), move_visual)
+	var move_effect:TokenMoveVisualEffect = TokenMoveVisualEffect.new(token, board.slot_to_global_position(new_pos), move_visual)
 	
 	move_effect.slide_duration = board.visuals.slide_duration
 	move_effect.min_fall_duration = board.visuals.min_fall_duration
@@ -139,6 +301,7 @@ func _combine_with_extra_parallel_effects(move_effect:BoardVisualEffect, extra_p
 			effects.append(extra_effect)
 	
 	return ParallelVisualEffect.new(effects)
+
 
 func try_apply_gravity_to_token(token:Token) -> bool:
 	if token == null:
@@ -164,6 +327,7 @@ func try_apply_gravity_to_token(token:Token) -> bool:
 	
 	return moved
 
+
 func is_token_supported(token:Token) -> bool:
 	if token == null:
 		return false
@@ -183,6 +347,7 @@ func is_token_supported(token:Token) -> bool:
 		return false
 	
 	return true
+
 
 func is_token_at_gravity_edge(token:Token) -> bool:
 	if token == null:
@@ -229,6 +394,7 @@ func get_supporting_token(token:Token) -> Token:
 		return null
 	
 	return support_token
+
 
 func _get_first_pass_step(token:Token, start_pos:Vector2i, new_pos:Vector2i, movement_path:Array[Vector2i]) -> Dictionary:
 	var path:Array[Vector2i] = _get_pass_check_path(start_pos, new_pos, movement_path)

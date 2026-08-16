@@ -56,10 +56,7 @@ func get_player_palette(player_id:int) -> ColorPalette:
 	if owning_token == null:
 		return FALLBACK_PALETTE
 	
-	if owning_token.board == null:
-		return FALLBACK_PALETTE
-	
-	var palette:ColorPalette = owning_token.board.get_player_palette(player_id)
+	var palette:ColorPalette = owning_token.get_visual_player_palette(player_id)
 	
 	if is_valid_palette(palette):
 		return palette

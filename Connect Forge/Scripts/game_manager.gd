@@ -25,6 +25,7 @@ var game_over_menu:GameOverMenu = null
 var connected_session:MatchSession = null
 var is_initialized:bool = false
 var network_match_controller:NetworkMatchController = null
+var replay_recorder:ReplayRecorder = null
 
 func setup(new_board_builder:BoardBuilder, new_board:BoardManager, new_turn_timer:MatchTurnTimer, new_token_drag_controller:TokenDragController, new_game_over_menu:GameOverMenu) -> void:
 	board_builder = new_board_builder
@@ -49,6 +50,7 @@ func initialize_game() -> void:
 	
 	setup_states()
 	setup_network_match_controller()
+	setup_replay_recorder()
 
 	is_initialized = true
 	
@@ -57,7 +59,30 @@ func initialize_game() -> void:
 	
 	start_game()
 
-
+func _exit_tree() -> void:
+	if replay_recorder == null:
+		return
+	
+	if replay_recorder.is_recording() == false:
+		return
+	
+	var round_number:int = 1
+	var turn_number:int = 1
+	var player_id:int = -1
+	var scores:Array = []
+	
+	if session != null:
+		round_number = session.current_round_number
+		turn_number = session.current_turn_number
+		player_id = session.current_player_id
+		scores = create_replay_score_snapshot()
+	
+	if replay_recorder.record_match_end(round_number, turn_number, player_id, scores, "scene_exit") == false:
+		DebugOverlay.log_error("ReplayRecorder", "Could not record the match-end boundary.")
+	
+	replay_recorder.save_replay()
+	
+	
 func create_match_session() -> bool:
 	disconnect_session_signals()
 	
@@ -603,6 +628,20 @@ func start_game() -> void:
 	session.prepare_first_round(starting_player_id)
 	session.start_game_timer()
 	
+	if replay_recorder != null:
+		if replay_recorder.is_recording():
+			replay_recorder.record_match_start(session.current_round_number, session.current_turn_number, starting_player_id)
+			
+			var gravity:String = ReplayFormat.GRAVITY_DOWN
+			
+			if board != null:
+				var board_gravity:String = board.get_replay_gravity_id(board.settings.gravity_direction)
+				
+				if board_gravity != "":
+					gravity = board_gravity
+			
+			replay_recorder.record_round_start(session.current_round_number, session.current_turn_number, starting_player_id, gravity)
+	
 	start_turn(starting_player_id)
 	
 	turn_number_changed.emit(get_current_turn_number())
@@ -624,6 +663,11 @@ func start_turn(player_id:int) -> void:
 	if player_changed == false:
 		current_player_changed.emit(player_id)
 	
+	if replay_recorder != null:
+		if replay_recorder.is_recording():
+			if replay_recorder.record_turn_start(session.current_round_number, session.current_turn_number, player_id) == false:
+				DebugOverlay.log_error("ReplayRecorder", "Could not record the start of round %d turn %d." % [session.current_round_number, session.current_turn_number])
+	
 	enter_placement_phase()
 	start_turn_timer()
 
@@ -643,12 +687,19 @@ func end_turn() -> void:
 
 
 func advance_to_next_turn() -> void:
+	if replay_recorder != null:
+		if replay_recorder.is_recording():
+			if replay_recorder.record_turn_end() == false:
+				DebugOverlay.log_error("ReplayRecorder", "Could not record the end of the current turn.")
+	
 	var next_player_id:int = get_next_player_id()
 	
 	if has_completed_full_turn(next_player_id):
 		increment_current_turn_number()
 	
 	start_turn(next_player_id)
+	
+	
 
 func handle_turn_timeout() -> void:
 	if session == null:
@@ -747,7 +798,19 @@ func record_match_result(winner_id:int) -> bool:
 	if session == null:
 		return false
 	
-	return session.record_match_result(winner_id)
+	if session.record_match_result(winner_id) == false:
+		return false
+	
+	if replay_recorder != null:
+		if replay_recorder.is_recording():
+			var scores:Array = create_replay_score_snapshot()
+			
+			if replay_recorder.record_round_end(session.current_round_number, session.current_turn_number, winner_id, scores) == false:
+				DebugOverlay.log_error("ReplayRecorder", "Could not record the end of round %d." % session.current_round_number)
+			
+			replay_recorder.save_replay()
+	
+	return true
 
 
 func get_player_wins(player_id:int) -> int:
@@ -809,6 +872,18 @@ func start_next_round_with_player(starting_player_id:int) -> void:
 	session.prepare_next_round(starting_player_id)
 	session.start_game_timer()
 	
+	if replay_recorder != null:
+		if replay_recorder.is_recording():
+			var gravity:String = ReplayFormat.GRAVITY_DOWN
+			
+			if board != null:
+				var board_gravity:String = board.get_replay_gravity_id(board.settings.gravity_direction)
+				
+				if board_gravity != "":
+					gravity = board_gravity
+			
+			if replay_recorder.record_round_start(session.current_round_number, session.current_turn_number, starting_player_id, gravity) == false:
+				DebugOverlay.log_error("ReplayRecorder", "Could not record the start of round %d." % session.current_round_number)
 	start_turn(starting_player_id)
 
 
@@ -891,4 +966,67 @@ func clear_remote_drag_preview(drag_id:int = -1) -> void:
 		return
 	
 	token_drag_controller.clear_remote_drag_preview(drag_id)
+
+
+func setup_replay_recorder() -> void:
+	replay_recorder = null
 	
+	if board != null:
+		board.set_replay_recorder(null)
+	
+	if should_record_replay() == false:
+		DebugOverlay.log_message("ReplayRecorder", "Replay recording disabled on this match client.")
+		return
+	
+	var new_recorder:ReplayRecorder = ReplayRecorder.new()
+	var match_id:String = ReplayRecorder.generate_match_id()
+	
+	if new_recorder.start_recording(match_id) == false:
+		DebugOverlay.log_error("ReplayRecorder", "Could not start the replay recorder.")
+		return
+	
+	var initial_gravity:String = ReplayFormat.GRAVITY_DOWN
+	
+	if board != null:
+		var board_gravity:String = board.get_replay_gravity_id(board.settings.gravity_direction)
+		
+		if board_gravity != "":
+			initial_gravity = board_gravity
+	
+	if new_recorder.configure_match(session, initial_gravity) == false:
+		DebugOverlay.log_error("ReplayRecorder", "Could not configure the replay header.")
+		new_recorder.stop_recording()
+		return
+	
+	replay_recorder = new_recorder
+	
+	if board != null:
+		board.set_replay_recorder(replay_recorder)
+	
+	DebugOverlay.log_message("ReplayRecorder", "Started replay %s." % replay_recorder.get_match_id())
+
+func should_record_replay() -> bool:
+	if is_network_match_active() == false:
+		return true
+	
+	return is_network_match_host()
+
+
+func get_replay_recorder() -> ReplayRecorder:
+	return replay_recorder
+
+
+func create_replay_score_snapshot() -> Array:
+	var scores:Array = []
+	
+	if session == null:
+		return scores
+	
+	for player_id in range(session.get_player_count()):
+		scores.append({
+			"player_id": player_id,
+			"wins": session.get_player_wins(player_id),
+			"losses": session.get_player_losses(player_id)
+		})
+	
+	return scores

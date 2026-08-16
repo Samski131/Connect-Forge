@@ -37,3 +37,17 @@ func _finish_reveal() -> void:
 			token.finish_chameleon_reveal()
 	
 	_finish()
+
+
+func to_replay_action() -> ReplayAction:
+	var token_id:int = get_replay_target_token_id()
+	
+	if token_id < 0:
+		return null
+	
+	var payload:Dictionary = {
+		"token_id": token_id,
+		"duration": duration
+	}
+	
+	return ReplayAction.create_presentation(ReplayFormat.PRESENTATION_CHAMELEON_REVEAL, payload)

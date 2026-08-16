@@ -14,6 +14,7 @@ const NETWORK_TOKEN_STATE_DATA:int = 7
 var token_pool:Node2D = null
 var visuals:BoardVisualManager = null
 var match_session:MatchSession = null
+var replay_recorder:ReplayRecorder = null
 
 var settings:BoardSetting = BoardSetting.new()
 var state:BoardState = null
@@ -34,6 +35,10 @@ func _ready() -> void:
 func setup(new_token_pool:Node2D, new_visuals:BoardVisualManager) -> void:
 	token_pool = new_token_pool
 	visuals = new_visuals
+	
+	if visuals != null:
+		visuals.set_replay_recorder(replay_recorder)
+	
 	initialize_components()
 
 
@@ -41,6 +46,135 @@ func set_match_session(new_match_session:MatchSession) -> void:
 	match_session = new_match_session
 
 
+func set_replay_recorder(new_replay_recorder:ReplayRecorder) -> void:
+	replay_recorder = new_replay_recorder
+	
+	if visuals != null:
+		visuals.set_replay_recorder(replay_recorder)
+
+
+func get_replay_recorder() -> ReplayRecorder:
+	return replay_recorder
+
+
+func register_replay_token(token:Token) -> int:
+	if replay_recorder == null:
+		return -1
+	
+	if replay_recorder.is_recording() == false:
+		return -1
+	
+	return replay_recorder.register_token(token)
+	
+func record_replay_token_update(token:Token, presentation_effect:BoardVisualEffect = null) -> bool:
+	if replay_recorder == null:
+		return false
+	
+	if replay_recorder.is_recording() == false:
+		return false
+	
+	if match_session == null:
+		return false
+	
+	var presentation_action:ReplayAction = null
+	
+	if presentation_effect != null:
+		presentation_action = presentation_effect.to_replay_action()
+	
+	return replay_recorder.record_token_update(token, match_session.current_round_number, match_session.current_turn_number, match_session.current_player_id, presentation_action)
+
+
+func record_replay_token_updates(tokens:Array[Token], presentation_effect:BoardVisualEffect = null) -> bool:
+	if replay_recorder == null:
+		return false
+	
+	if replay_recorder.is_recording() == false:
+		return false
+	
+	if match_session == null:
+		return false
+	
+	if tokens.is_empty():
+		return false
+	
+	var presentation_action:ReplayAction = null
+	
+	if presentation_effect != null:
+		presentation_action = presentation_effect.to_replay_action()
+	
+	return replay_recorder.record_token_updates(tokens, match_session.current_round_number, match_session.current_turn_number, match_session.current_player_id, presentation_action)
+	
+func record_replay_presentation_effect(effect:BoardVisualEffect) -> bool:
+	if replay_recorder == null:
+		return false
+	
+	if replay_recorder.is_recording() == false:
+		return false
+	
+	if match_session == null:
+		return false
+	
+	if effect == null:
+		return false
+	
+	if visuals != null:
+		if visuals.is_move_batch_active():
+			return true
+	
+	var presentation_action:ReplayAction = effect.to_replay_action()
+	
+	if presentation_action == null:
+		return true
+	
+	return replay_recorder.record_presentation(presentation_action, match_session.current_round_number, match_session.current_turn_number, match_session.current_player_id)
+
+
+func record_replay_gravity_change(previous_direction:BoardSetting.GRID_DIRECTION, new_direction:BoardSetting.GRID_DIRECTION, effect:BoardVisualEffect) -> bool:
+	if replay_recorder == null:
+		return false
+	
+	if replay_recorder.is_recording() == false:
+		return false
+	
+	if match_session == null:
+		return false
+	
+	var previous_gravity:String = get_replay_gravity_id(previous_direction)
+	var new_gravity:String = get_replay_gravity_id(new_direction)
+	
+	if previous_gravity == "":
+		return false
+	
+	if new_gravity == "":
+		return false
+	
+	var presentation_action:ReplayAction = null
+	
+	if effect != null:
+		presentation_action = effect.to_replay_action()
+	
+	return replay_recorder.record_gravity_change(previous_gravity, new_gravity, presentation_action, match_session.current_round_number, match_session.current_turn_number, match_session.current_player_id)
+
+
+func get_replay_gravity_id(direction:BoardSetting.GRID_DIRECTION) -> String:
+	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
+	
+	match direction:
+		GRID_DIRECTION.UP:
+			return ReplayFormat.GRAVITY_UP
+		
+		GRID_DIRECTION.RIGHT:
+			return ReplayFormat.GRAVITY_RIGHT
+		
+		GRID_DIRECTION.DOWN:
+			return ReplayFormat.GRAVITY_DOWN
+		
+		GRID_DIRECTION.LEFT:
+			return ReplayFormat.GRAVITY_LEFT
+	
+	return ""
+	
+	
 func get_player_count() -> int:
 	if match_session == null:
 		return 0
@@ -177,7 +311,13 @@ func destroy_token(token:Token) -> bool:
 	
 	return token_mover.destroy_token(token)
 
-
+func destroy_tokens(tokens:Array[Token], presentation_effect:BoardVisualEffect = null) -> bool:
+	if token_mover == null:
+		return false
+	
+	return token_mover.destroy_tokens(tokens, presentation_effect)
+	
+	
 func set_hovered_slot(slot:Slot) -> void:
 	hovered_slot = slot
 
@@ -241,12 +381,12 @@ func rotate_gravity(clockwise:bool = true) -> void:
 	set_gravity_direction(new_direction)
 
 
-func queue_all_tokens_gravity_visual_rotation() -> void:
+func create_all_tokens_gravity_visual_rotation_effect() -> BoardVisualEffect:
 	if visuals == null:
-		apply_all_tokens_gravity_visual_rotation()
-		return
+		return null
 	
 	var effects:Array[BoardVisualEffect] = []
+	var target_rotation_degrees:float = get_gravity_visual_rotation_degrees()
 	
 	for pos in get_positions_in_gravity_order():
 		var token:Token = get_token(pos)
@@ -260,14 +400,26 @@ func queue_all_tokens_gravity_visual_rotation() -> void:
 		if token.being_destroyed:
 			continue
 		
-		var target_rotation_degrees:float = get_gravity_visual_rotation_degrees()
 		var effect:TokenGravityAlignVisualEffect = TokenGravityAlignVisualEffect.new(token, target_rotation_degrees, visuals.gravity_rotate_duration)
 		effects.append(effect)
 	
 	if effects.is_empty():
+		return null
+	
+	return ParallelVisualEffect.new(effects)
+
+
+func queue_all_tokens_gravity_visual_rotation() -> void:
+	if visuals == null:
+		apply_all_tokens_gravity_visual_rotation()
 		return
 	
-	visuals.queue_effect(ParallelVisualEffect.new(effects))
+	var effect:BoardVisualEffect = create_all_tokens_gravity_visual_rotation_effect()
+	
+	if effect == null:
+		return
+	
+	visuals.queue_effect(effect)
 
 
 func apply_all_tokens_gravity_visual_rotation() -> void:
@@ -287,6 +439,8 @@ func set_gravity_direction(new_direction:BoardSetting.GRID_DIRECTION, animate_vi
 	if settings.gravity_direction == new_direction:
 		return false
 	
+	var previous_direction:BoardSetting.GRID_DIRECTION = settings.gravity_direction
+	
 	settings.gravity_direction = new_direction
 	
 	refresh_gravity_order()
@@ -294,12 +448,18 @@ func set_gravity_direction(new_direction:BoardSetting.GRID_DIRECTION, animate_vi
 	get_tree().call_group("token", "reset_resolved")
 	
 	if animate_visual:
-		queue_all_tokens_gravity_visual_rotation()
+		var gravity_effect:BoardVisualEffect = create_all_tokens_gravity_visual_rotation_effect()
+		
+		record_replay_gravity_change(previous_direction, new_direction, gravity_effect)
+		
+		if visuals != null and gravity_effect != null:
+			visuals.queue_effect(gravity_effect)
+		else:
+			apply_all_tokens_gravity_visual_rotation()
 	else:
 		apply_all_tokens_gravity_visual_rotation()
 	
 	return true
-
 
 func get_gravity_visual_rotation_degrees() -> float:
 	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
@@ -333,8 +493,8 @@ func apply_token_gravity_visual(token:Token) -> void:
 	var target_rotation_degrees:float = get_gravity_visual_rotation_degrees()
 	token.gravity_visual_rotation_degrees = target_rotation_degrees
 	token.sprites.rotation_degrees = target_rotation_degrees
-
-
+	
+	
 func get_all_tokens_on_board() -> Array[Token]:
 	var found_tokens:Array[Token] = []
 	

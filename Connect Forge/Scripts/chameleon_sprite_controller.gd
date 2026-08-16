@@ -239,10 +239,10 @@ func get_player_palette(player_id:int) -> ColorPalette:
 	if owning_token == null:
 		return null
 	
-	if owning_token.board == null:
-		return null
+	if owning_token.board != null:
+		return owning_token.board.get_player_palette(player_id)
 	
-	return owning_token.board.get_player_palette(player_id)
+	return owning_token.get_visual_player_palette(player_id)
 
 
 func get_owning_token() -> Token:

@@ -25,9 +25,7 @@ func _try_clear_full_line() -> bool:
 	if line_tokens.is_empty():
 		return false
 	
-	_clear_line_tokens(line_tokens)
-	
-	return true
+	return _clear_line_tokens(line_tokens)
 
 
 func _get_full_line_tokens() -> Array[Token]:
@@ -67,7 +65,18 @@ func _get_line_positions() -> Array[Vector2i]:
 	return positions
 
 
-func _clear_line_tokens(line_tokens:Array[Token]) -> void:
+func _clear_line_tokens(line_tokens:Array[Token]) -> bool:
+	if board == null:
+		return false
+	
+	if line_tokens.is_empty():
+		return false
+	
+	if board.visuals == null:
+		return board.destroy_tokens(line_tokens)
+	
+	var destroy_effects:Array[BoardVisualEffect] = []
+	
 	for token in line_tokens:
 		if token == null:
 			continue
@@ -75,30 +84,12 @@ func _clear_line_tokens(line_tokens:Array[Token]) -> void:
 		if is_instance_valid(token) == false:
 			continue
 		
-		if board.get_token(token.token_pos) == token:
-			board.remove_token_from_board(token.token_pos)
-		
-		token.being_destroyed = true
+		destroy_effects.append(TokenDestroyVisualEffect.new(token, board.visuals.destroy_duration))
 	
-	if board.visuals != null:
-		var destroy_effects:Array[BoardVisualEffect] = []
-		
-		for token in line_tokens:
-			if token == null:
-				continue
-			
-			if is_instance_valid(token) == false:
-				continue
-			
-			destroy_effects.append(TokenDestroyVisualEffect.new(token, board.visuals.destroy_duration))
-		
-		var effect_sequence:Array[BoardVisualEffect] = [
-			TokensFlashVisualEffect.new(line_tokens, line_flash_pulses, line_flash_duration),
-			ParallelVisualEffect.new(destroy_effects)
-		]
-		
-		queue_visual_effect(SequenceVisualEffect.new(effect_sequence))
-	else:
-		for token in line_tokens:
-			if token != null and is_instance_valid(token):
-				token.queue_free()
+	var effect_sequence:Array[BoardVisualEffect] = [
+		TokensFlashVisualEffect.new(line_tokens, line_flash_pulses, line_flash_duration),
+		ParallelVisualEffect.new(destroy_effects)
+	]
+	
+	var presentation_effect:SequenceVisualEffect = SequenceVisualEffect.new(effect_sequence)
+	return board.destroy_tokens(line_tokens, presentation_effect)
