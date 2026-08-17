@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="BotProfile" format=3 uid="uid://brwcv7nlyb2rb"]
+
+[ext_resource type="Script" uid="uid://cquccvxoyftnu" path="res://Scripts/Bots/bot_profile.gd" id="1_axg40"]
+[ext_resource type="Script" uid="uid://c30nym20ye572" path="res://Scripts/Bots/bot_token_preference.gd" id="2_bfjal"]
+
+[sub_resource type="Resource" id="Resource_65s4w"]
+script = ExtResource("2_bfjal")
+standard_count = 1
+extra_purchase_weight = 1
+fallback_priority = 3
+metadata/_custom_type_script = "uid://c30nym20ye572"
+
+[sub_resource type="Resource" id="Resource_3dgsw"]
+script = ExtResource("2_bfjal")
+token_type = 5
+standard_count = 2
+extra_purchase_weight = 2
+fallback_priority = 1
+metadata/_custom_type_script = "uid://c30nym20ye572"
+
+[sub_resource type="Resource" id="Resource_y1t1s"]
+script = ExtResource("2_bfjal")
+token_type = 6
+standard_count = 1
+extra_purchase_weight = 1
+fallback_priority = 2
+metadata/_custom_type_script = "uid://c30nym20ye572"
+
+[resource]
+script = ExtResource("1_axg40")
+profile_id = "duncan"
+display_name = "Duncan"
+description = "Duncan, the finest of smith's trained in the deep mountain forges of the dwarves. Expect plenty  of Anvils, Bombs and Drills!"
+token_preferences = Array[ExtResource("2_bfjal")]([SubResource("Resource_65s4w"), SubResource("Resource_3dgsw"), SubResource("Resource_y1t1s")])
+metadata/_custom_type_script = "uid://cquccvxoyftnu"

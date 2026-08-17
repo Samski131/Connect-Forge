@@ -79,29 +79,7 @@ func is_valid_starting_slot(slot_pos:Vector2i) -> bool:
 	if board == null:
 		return false
 	
-	if board.is_position_in_bounds(slot_pos) == false:
+	if board.state == null:
 		return false
 	
-	if board.get_token(slot_pos) != null:
-		return false
-	
-	var GRID_DIRECTION = BoardSetting.GRID_DIRECTION
-	
-	match board.settings.gravity_direction:
-		GRID_DIRECTION.DOWN:
-			if slot_pos.y == 0:
-				return true
-		
-		GRID_DIRECTION.UP:
-			if slot_pos.y == board.settings.rows - 1:
-				return true
-		
-		GRID_DIRECTION.RIGHT:
-			if slot_pos.x == 0:
-				return true
-		
-		GRID_DIRECTION.LEFT:
-			if slot_pos.x == board.settings.columns - 1:
-				return true
-	
-	return false
+	return PlacementRules.is_valid_starting_slot(board.state, board.settings, slot_pos)

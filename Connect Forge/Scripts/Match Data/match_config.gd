@@ -70,7 +70,25 @@ func get_player_palette(player_id:int) -> ColorPalette:
 	return player.colour_palette
 
 
-func add_player(player_name:String, palette:ColorPalette) -> bool:
+func get_player_controller_type(player_id:int) -> MatchPlayerData.CONTROLLER_TYPE:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return MatchPlayerData.CONTROLLER_TYPE.LOCAL_HUMAN
+	
+	return player.controller_type
+
+
+func is_player_bot(player_id:int) -> bool:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return false
+	
+	return player.is_bot()
+
+
+func add_player(player_name:String, palette:ColorPalette, controller_type:MatchPlayerData.CONTROLLER_TYPE = MatchPlayerData.CONTROLLER_TYPE.LOCAL_HUMAN) -> bool:
 	if players.size() >= MAXIMUM_PLAYERS:
 		return false
 	
@@ -78,9 +96,37 @@ func add_player(player_name:String, palette:ColorPalette) -> bool:
 		return false
 	
 	var player:MatchPlayerData = MatchPlayerData.new()
-	player.setup(player_name, palette, starting_token_points)
+	player.setup(player_name, palette, starting_token_points, controller_type)
 	players.append(player)
 	players_changed.emit()
+	return true
+
+
+func add_bot(bot_profile_id:String, palette:ColorPalette, difficulty:MatchPlayerData.BOT_DIFFICULTY = MatchPlayerData.BOT_DIFFICULTY.NORMAL) -> bool:
+	if players.size() >= MAXIMUM_PLAYERS:
+		return false
+	
+	if palette == null:
+		return false
+	
+	var profile:BotProfile = BotProfileLibrary.get_profile(bot_profile_id)
+	
+	if profile == null:
+		push_error("MatchConfig: Could not add bot because profile '%s' does not exist." % bot_profile_id)
+		return false
+	
+	var player:MatchPlayerData = MatchPlayerData.new()
+	player.setup(profile.display_name, palette, starting_token_points, MatchPlayerData.CONTROLLER_TYPE.BOT)
+	
+	if player.configure_as_bot(profile.profile_id, difficulty) == false:
+		return false
+	
+	if BotProfileLibrary.apply_profile_loadout(player, profile, starting_token_points) == false:
+		return false
+	
+	players.append(player)
+	players_changed.emit()
+	token_settings_changed.emit()
 	return true
 
 
@@ -125,12 +171,145 @@ func set_player_palette(player_id:int, palette:ColorPalette) -> bool:
 	return true
 
 
+func set_player_as_local_human(player_id:int) -> bool:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return false
+	
+	player.configure_as_local_human()
+	player.reset_token_selection(starting_token_points)
+	players_changed.emit()
+	token_settings_changed.emit()
+	return true
+
+
+func set_player_as_network_human(player_id:int) -> bool:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return false
+	
+	player.configure_as_network_human()
+	player.reset_token_selection(starting_token_points)
+	players_changed.emit()
+	token_settings_changed.emit()
+	return true
+
+
+func set_player_as_bot(player_id:int, bot_profile_id:String, difficulty:MatchPlayerData.BOT_DIFFICULTY = MatchPlayerData.BOT_DIFFICULTY.NORMAL) -> bool:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return false
+	
+	var profile:BotProfile = BotProfileLibrary.get_profile(bot_profile_id)
+	
+	if profile == null:
+		push_error("MatchConfig: Could not configure player %d as bot because profile '%s' does not exist." % [player_id, bot_profile_id])
+		return false
+	
+	if player.configure_as_bot(profile.profile_id, difficulty) == false:
+		return false
+	
+	player.player_name = profile.display_name
+	
+	if BotProfileLibrary.apply_profile_loadout(player, profile, starting_token_points) == false:
+		return false
+	
+	players_changed.emit()
+	token_settings_changed.emit()
+	return true
+
+
+func set_bot_difficulty(player_id:int, difficulty:MatchPlayerData.BOT_DIFFICULTY) -> bool:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return false
+	
+	if player.is_bot() == false:
+		return false
+	
+	if player.bot_difficulty == difficulty:
+		return true
+	
+	player.bot_difficulty = difficulty
+	players_changed.emit()
+	return true
+
+
+func set_bot_profile_id(player_id:int, new_profile_id:String) -> bool:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return false
+	
+	if player.is_bot() == false:
+		return false
+	
+	var profile:BotProfile = BotProfileLibrary.get_profile(new_profile_id)
+	
+	if profile == null:
+		push_error("MatchConfig: Could not change bot profile because profile '%s' does not exist." % new_profile_id)
+		return false
+	
+	if player.bot_profile_id == profile.profile_id:
+		return true
+	
+	player.bot_profile_id = profile.profile_id
+	player.player_name = profile.display_name
+	
+	if BotProfileLibrary.apply_profile_loadout(player, profile, starting_token_points) == false:
+		return false
+	
+	players_changed.emit()
+	token_settings_changed.emit()
+	return true
+
+
+func rebuild_bot_loadout(player_id:int) -> bool:
+	var player:MatchPlayerData = get_player(player_id)
+	
+	if player == null:
+		return false
+	
+	if player.is_bot() == false:
+		return false
+	
+	var profile:BotProfile = BotProfileLibrary.get_profile(player.bot_profile_id)
+	
+	if profile == null:
+		return false
+	
+	if BotProfileLibrary.apply_profile_loadout(player, profile, starting_token_points) == false:
+		return false
+	
+	token_settings_changed.emit()
+	return true
+
+
+func rebuild_all_bot_loadouts() -> void:
+	for player in players:
+		if player == null:
+			continue
+		
+		if player.is_bot() == false:
+			continue
+		
+		var profile:BotProfile = BotProfileLibrary.get_profile(player.bot_profile_id)
+		
+		if profile == null:
+			player.reset_token_selection(starting_token_points)
+			continue
+		
+		BotProfileLibrary.apply_profile_loadout(player, profile, starting_token_points)
+	
+	token_settings_changed.emit()
+
+
 func set_starting_token_points(new_amount:int) -> void:
-	var used_amount:int = clamp(
-		new_amount,
-		MINIMUM_STARTING_TOKEN_POINTS,
-		MAXIMUM_STARTING_TOKEN_POINTS
-	)
+	var used_amount:int = clamp(new_amount, MINIMUM_STARTING_TOKEN_POINTS, MAXIMUM_STARTING_TOKEN_POINTS)
 	
 	if starting_token_points == used_amount:
 		return
@@ -141,23 +320,21 @@ func set_starting_token_points(new_amount:int) -> void:
 		if player == null:
 			continue
 		
+		if player.is_bot():
+			var profile:BotProfile = BotProfileLibrary.get_profile(player.bot_profile_id)
+			
+			if profile != null:
+				BotProfileLibrary.apply_profile_loadout(player, profile, starting_token_points)
+				continue
+		
 		player.reset_token_selection(starting_token_points)
 	
 	token_settings_changed.emit()
 
 
 func set_board_size(new_columns:int, new_rows:int) -> void:
-	var used_columns:int = clamp(
-		new_columns,
-		MINIMUM_BOARD_COLUMNS,
-		MAXIMUM_BOARD_COLUMNS
-	)
-	
-	var used_rows:int = clamp(
-		new_rows,
-		MINIMUM_BOARD_ROWS,
-		MAXIMUM_BOARD_ROWS
-	)
+	var used_columns:int = clamp(new_columns, MINIMUM_BOARD_COLUMNS, MAXIMUM_BOARD_COLUMNS)
+	var used_rows:int = clamp(new_rows, MINIMUM_BOARD_ROWS, MAXIMUM_BOARD_ROWS)
 	
 	if board_columns == used_columns and board_rows == used_rows:
 		return
@@ -170,16 +347,8 @@ func set_board_size(new_columns:int, new_rows:int) -> void:
 
 
 func set_tokens_to_win(new_amount:int) -> void:
-	var maximum_line_length:int = max(
-		board_columns,
-		board_rows
-	)
-	
-	var used_amount:int = clamp(
-		new_amount,
-		MINIMUM_TOKENS_TO_WIN,
-		maximum_line_length
-	)
+	var maximum_line_length:int = max(board_columns, board_rows)
+	var used_amount:int = clamp(new_amount, MINIMUM_TOKENS_TO_WIN, maximum_line_length)
 	
 	if tokens_to_win == used_amount:
 		return
@@ -189,16 +358,8 @@ func set_tokens_to_win(new_amount:int) -> void:
 
 
 func clamp_tokens_to_win() -> void:
-	var maximum_line_length:int = max(
-		board_columns,
-		board_rows
-	)
-	
-	tokens_to_win = clamp(
-		tokens_to_win,
-		MINIMUM_TOKENS_TO_WIN,
-		maximum_line_length
-	)
+	var maximum_line_length:int = max(board_columns, board_rows)
+	tokens_to_win = clamp(tokens_to_win, MINIMUM_TOKENS_TO_WIN, maximum_line_length)
 
 
 func set_turn_timer_seconds(new_seconds:int) -> void:

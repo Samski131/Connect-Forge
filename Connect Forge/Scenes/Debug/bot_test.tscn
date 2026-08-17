@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b38don00o6s3j"]
+
+[ext_resource type="Script" uid="uid://bxcage22mm168" path="res://Scripts/Debug/bot_simulation_clone_test.gd" id="1_65s4w"]
+
+[node name="Bot Test" type="Node" unique_id=1215171109]
+script = ExtResource("1_65s4w")

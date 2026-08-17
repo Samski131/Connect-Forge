@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="BotProfile" format=3 uid="uid://dk6smyv6ug6ih"]
+
+[ext_resource type="Script" uid="uid://cquccvxoyftnu" path="res://Scripts/Bots/bot_profile.gd" id="1_t8ns3"]
+[ext_resource type="Script" uid="uid://c30nym20ye572" path="res://Scripts/Bots/bot_token_preference.gd" id="2_yce0r"]
+
+[sub_resource type="Resource" id="Resource_dp41l"]
+script = ExtResource("2_yce0r")
+token_type = 10
+standard_count = 2
+extra_purchase_weight = 2
+fallback_priority = 1
+metadata/_custom_type_script = "uid://c30nym20ye572"
+
+[sub_resource type="Resource" id="Resource_8yj7o"]
+script = ExtResource("2_yce0r")
+token_type = 3
+standard_count = 1
+extra_purchase_weight = 1
+fallback_priority = 2
+metadata/_custom_type_script = "uid://c30nym20ye572"
+
+[sub_resource type="Resource" id="Resource_14spr"]
+script = ExtResource("2_yce0r")
+token_type = 9
+standard_count = 1
+extra_purchase_weight = 1
+fallback_priority = 3
+metadata/_custom_type_script = "uid://c30nym20ye572"
+
+[sub_resource type="Resource" id="Resource_wf8d5"]
+script = ExtResource("2_yce0r")
+token_type = 8
+standard_count = 1
+extra_purchase_weight = 1
+fallback_priority = 4
+metadata/_custom_type_script = "uid://c30nym20ye572"
+
+[resource]
+script = ExtResource("1_t8ns3")
+profile_id = "periwinkle"
+display_name = "Periwinkle"
+description = "Periwinkle is a crafty engineer with a talent for mixing machinery and magic. Expect Chameleons, strange contraptions and ways to keep you on your toes!"
+token_preferences = Array[ExtResource("2_yce0r")]([SubResource("Resource_dp41l"), SubResource("Resource_8yj7o"), SubResource("Resource_14spr"), SubResource("Resource_wf8d5")])
+metadata/_custom_type_script = "uid://cquccvxoyftnu"

@@ -10,6 +10,10 @@ var player_id:int = -1
 var player_name:String = ""
 var colour_palette:ColorPalette = null
 
+var controller_type:MatchPlayerData.CONTROLLER_TYPE = MatchPlayerData.CONTROLLER_TYPE.LOCAL_HUMAN
+var bot_profile_id:String = ""
+var bot_difficulty:MatchPlayerData.BOT_DIFFICULTY = MatchPlayerData.BOT_DIFFICULTY.NORMAL
+
 var wins:int = 0
 var losses:int = 0
 
@@ -21,6 +25,9 @@ func setup(new_player_id:int, source_player:MatchPlayerData) -> void:
 	player_id = new_player_id
 	player_name = "Player " + str(player_id + 1)
 	colour_palette = null
+	controller_type = MatchPlayerData.CONTROLLER_TYPE.LOCAL_HUMAN
+	bot_profile_id = ""
+	bot_difficulty = MatchPlayerData.BOT_DIFFICULTY.NORMAL
 	wins = 0
 	losses = 0
 	starting_token_counts.clear()
@@ -29,9 +36,54 @@ func setup(new_player_id:int, source_player:MatchPlayerData) -> void:
 	if source_player != null:
 		player_name = get_valid_player_name(source_player.player_name)
 		colour_palette = source_player.colour_palette
+		controller_type = source_player.controller_type
+		bot_profile_id = source_player.bot_profile_id
+		bot_difficulty = source_player.bot_difficulty
 		set_starting_token_counts(source_player.selected_tokens)
 	
 	reset_tokens_for_round()
+
+
+func is_bot() -> bool:
+	return controller_type == MatchPlayerData.CONTROLLER_TYPE.BOT
+
+
+func is_local_human() -> bool:
+	return controller_type == MatchPlayerData.CONTROLLER_TYPE.LOCAL_HUMAN
+
+
+func is_network_human() -> bool:
+	return controller_type == MatchPlayerData.CONTROLLER_TYPE.NETWORK_HUMAN
+
+
+func is_human() -> bool:
+	return is_bot() == false
+
+
+func get_controller_type_name() -> String:
+	match controller_type:
+		MatchPlayerData.CONTROLLER_TYPE.LOCAL_HUMAN:
+			return "Local Human"
+		MatchPlayerData.CONTROLLER_TYPE.NETWORK_HUMAN:
+			return "Network Human"
+		MatchPlayerData.CONTROLLER_TYPE.BOT:
+			return "Bot"
+	
+	return "Unknown"
+
+
+func get_bot_difficulty_name() -> String:
+	match bot_difficulty:
+		MatchPlayerData.BOT_DIFFICULTY.EASY:
+			return "Easy"
+		MatchPlayerData.BOT_DIFFICULTY.NORMAL:
+			return "Normal"
+		MatchPlayerData.BOT_DIFFICULTY.HARD:
+			return "Hard"
+		MatchPlayerData.BOT_DIFFICULTY.EXPERT:
+			return "Expert"
+	
+	return "Normal"
 
 
 func get_valid_player_name(new_name:String) -> String:
@@ -100,6 +152,7 @@ func get_token_count(token_type:int) -> int:
 func get_token_counts() -> Dictionary:
 	return token_counts.duplicate(true)
 
+
 func replace_token_counts(new_counts:Dictionary) -> bool:
 	var validated_counts:Dictionary = {}
 	
@@ -118,8 +171,8 @@ func replace_token_counts(new_counts:Dictionary) -> bool:
 	token_counts = validated_counts
 	tokens_reset.emit(player_id)
 	return true
-	
-	
+
+
 func get_token_types() -> Array[int]:
 	var result:Array[int] = []
 	

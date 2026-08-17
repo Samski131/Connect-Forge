@@ -23,6 +23,7 @@ var visual_player_palettes:Dictionary = {}
 @export var charges:int = 0
 @export var ability_cost:int = 0
 
+
 func _ready():
 	pass
 
@@ -50,6 +51,13 @@ func setup(new_board:BoardManager, new_pos:Vector2i, new_player_id:int):
 func setup_special_token():
 	token_type = TokenLibrary.TokenType.BASIC
 	keywords = []
+
+
+func get_placement_choice_variants(_context:Dictionary) -> Array[Dictionary]:
+	var result:Array[Dictionary] = []
+	result.append({})
+	return result
+
 
 func requires_network_placement_data() -> bool:
 	return false
@@ -79,6 +87,7 @@ func create_network_state_data() -> Dictionary:
 func apply_network_state_data(_new_state_data:Dictionary) -> void:
 	pass
 	
+
 func _try_to_use_ability()->bool:
 	return false
 
@@ -236,6 +245,7 @@ func queue_visual_effect(effect:BoardVisualEffect, batch_parallel:bool = false) 
 	board.record_replay_presentation_effect(effect)
 	board.visuals.queue_effect(effect, batch_parallel)
 
+
 func queue_visual_effect_with_state_update(effect:BoardVisualEffect, batch_parallel:bool = false) -> void:
 	if effect == null:
 		return
@@ -249,6 +259,7 @@ func queue_visual_effect_with_state_update(effect:BoardVisualEffect, batch_paral
 	board.record_replay_token_update(self, effect)
 	board.visuals.queue_effect(effect, batch_parallel)
 	
+
 func set_flipped(new_is_flipped:bool) -> void:
 	is_flipped = new_is_flipped
 	apply_flipped_visual()
@@ -271,6 +282,7 @@ func apply_flipped_visual() -> void:
 	else:
 		sprites.scale.x = abs(sprites.scale.x)
 
+
 func has_replay_token_id() -> bool:
 	return replay_token_id >= 0
 
@@ -289,9 +301,9 @@ func set_replay_token_id(new_replay_token_id:int) -> bool:
 	replay_token_id = new_replay_token_id
 	return true
 
+
 func record_replay_state_update() -> void:
 	if board == null:
 		return
 	
 	board.record_replay_token_update(self)
-	
