@@ -17,14 +17,42 @@ func setup_special_token() -> void:
 	ability_cost = 1
 	keywords = [Global.KEYWORD.ON_LAND]
 
+
 func requires_network_placement_data() -> bool:
 	return true
+
+
+func get_random_placement_outcome_variants(context:Dictionary) -> Array[Dictionary]:
+	var result:Array[Dictionary] = []
+	
+	var placement_player_id:int = int(context.get("player_id", -1))
+	var player_count:int = int(context.get("player_count", 0))
+	
+	var valid_player_ids:Array[int] = get_valid_fake_player_ids(placement_player_id, player_count)
+	
+	if valid_player_ids.is_empty():
+		return result
+	
+	var probability:float = 1.0 / float(valid_player_ids.size())
+	
+	for valid_player_id in valid_player_ids:
+		result.append({
+			"probability": probability,
+			"placement_data": {
+				NETWORK_KEY_FAKE_PLAYER_ID: valid_player_id
+			},
+			"description": "Disguise as Player %d" % (valid_player_id + 1)
+		})
+	
+	return result
 
 
 func create_network_placement_data(context:Dictionary) -> Dictionary:
 	var placement_player_id:int = int(context.get("player_id", -1))
 	var player_count:int = int(context.get("player_count", 0))
-	var chosen_player_id:int = choose_fake_player_id(placement_player_id, player_count)
+	var random_source:RandomNumberGenerator = context.get("random_number_generator", null) as RandomNumberGenerator
+	
+	var chosen_player_id:int = choose_fake_player_id(placement_player_id, player_count, random_source)
 	
 	if chosen_player_id == -1:
 		return {}
@@ -32,7 +60,7 @@ func create_network_placement_data(context:Dictionary) -> Dictionary:
 	return {
 		NETWORK_KEY_FAKE_PLAYER_ID: chosen_player_id
 	}
-	
+
 
 func create_network_state_data() -> Dictionary:
 	return {
@@ -62,6 +90,7 @@ func apply_network_state_data(new_state_data:Dictionary) -> void:
 
 func _try_to_use_ability() -> bool:
 	return false
+
 
 func _on_land(_context:Dictionary) -> bool:
 	if has_transformed:
@@ -94,6 +123,7 @@ func _on_land(_context:Dictionary) -> bool:
 	
 	return true
 
+
 func get_network_fake_player_id() -> int:
 	var placement_data:Dictionary = get_network_placement_data()
 	
@@ -123,10 +153,31 @@ func pick_fake_player_id() -> int:
 	if player_count <= 1:
 		return -1
 	
-	return choose_fake_player_id(player_id, player_count)
+	var random_source:RandomNumberGenerator = null
+	
+	if board.has_method("get_gameplay_random_number_generator"):
+		random_source = board.call("get_gameplay_random_number_generator") as RandomNumberGenerator
+	
+	return choose_fake_player_id(player_id, player_count, random_source)
 
 
-func choose_fake_player_id(used_player_id:int, player_count:int) -> int:
+func choose_fake_player_id(used_player_id:int, player_count:int, random_source:RandomNumberGenerator = null) -> int:
+	var valid_player_ids:Array[int] = get_valid_fake_player_ids(used_player_id, player_count)
+	
+	if valid_player_ids.is_empty():
+		return -1
+	
+	var random_index:int = 0
+	
+	if random_source != null:
+		random_index = random_source.randi_range(0, valid_player_ids.size() - 1)
+	else:
+		random_index = randi_range(0, valid_player_ids.size() - 1)
+	
+	return valid_player_ids[random_index]
+
+
+func get_valid_fake_player_ids(used_player_id:int, player_count:int) -> Array[int]:
 	var valid_player_ids:Array[int] = []
 	var used_player_count:int = max(player_count, 0)
 	
@@ -136,11 +187,7 @@ func choose_fake_player_id(used_player_id:int, player_count:int) -> int:
 		
 		valid_player_ids.append(candidate_player_id)
 	
-	if valid_player_ids.is_empty():
-		return -1
-	
-	var random_index:int = randi_range(0, valid_player_ids.size() - 1)
-	return valid_player_ids[random_index]
+	return valid_player_ids
 
 
 func prepare_chameleon_transform(new_fake_player_id:int) -> void:

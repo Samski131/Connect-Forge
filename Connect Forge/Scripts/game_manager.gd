@@ -26,6 +26,7 @@ var connected_session:MatchSession = null
 var is_initialized:bool = false
 var network_match_controller:NetworkMatchController = null
 var replay_recorder:ReplayRecorder = null
+var bot_manager:BotManager = null
 
 func setup(new_board_builder:BoardBuilder, new_board:BoardManager, new_turn_timer:MatchTurnTimer, new_token_drag_controller:TokenDragController, new_game_over_menu:GameOverMenu) -> void:
 	board_builder = new_board_builder
@@ -51,6 +52,7 @@ func initialize_game() -> void:
 	setup_states()
 	setup_network_match_controller()
 	setup_replay_recorder()
+	setup_bot_manager()
 
 	is_initialized = true
 	
@@ -134,6 +136,14 @@ func setup_states() -> void:
 	
 	if resolution_state != null:
 		resolution_state.setup(self, board)
+
+func setup_bot_manager() -> void:
+	if bot_manager == null:
+		bot_manager = BotManager.new()
+		bot_manager.name = "Bot Manager"
+		add_child(bot_manager)
+	
+	bot_manager.setup(session, self)
 
 func setup_network_match_controller() -> void:
 	if network_match_controller != null:
@@ -1030,3 +1040,155 @@ func create_replay_score_snapshot() -> Array:
 		})
 	
 	return scores
+
+
+func try_execute_bot_action(action:BotAction) -> bool:
+	if action == null:
+		return false
+	
+	if action.is_well_formed() == false:
+		return false
+	
+	if session == null:
+		return false
+	
+	if placement_state == null:
+		return false
+	
+	# Phase 5F is local integration only.
+	# Multiplayer bots will be submitted by the host through the
+	# authoritative network path in Phase 8.
+	if is_network_match_active():
+		DebugOverlay.log_warning(
+			"BotAI",
+			"Local bot execution was rejected because this is a network match."
+		)
+		return false
+	
+	if session.winner_id != -1:
+		return false
+	
+	if get_current_turn_phase() != Global.TURN_PHASE.PLACEMENT:
+		return false
+	
+	if is_valid_player_id(action.player_id) == false:
+		return false
+	
+	if session.is_player_active(action.player_id) == false:
+		return false
+	
+	var player:MatchSessionPlayerData = session.get_player(action.player_id)
+	
+	if player == null:
+		return false
+	
+	if player.is_bot() == false:
+		return false
+	
+	if get_current_player_id() != action.player_id:
+		return false
+	
+	if get_token_count(action.player_id, action.token_type) <= 0:
+		return false
+	
+	if is_valid_starting_slot(action.starting_slot) == false:
+		return false
+	
+	var placement_result:Dictionary = create_bot_action_placement_data(action)
+	
+	if bool(placement_result.get("is_valid", false)) == false:
+		DebugOverlay.log_error(
+			"BotAI",
+			"Could not create placement data for %s." % action.get_description()
+		)
+		return false
+	
+	var placement_data:Dictionary = placement_result.get("data", {}) as Dictionary
+	
+	if spend_token(action.player_id, action.token_type) == false:
+		return false
+	
+	var placed:bool = placement_state.try_place_dragged_token(
+		action.token_type,
+		action.starting_slot,
+		action.start_flipped,
+		placement_data
+	)
+	
+	if placed == false:
+		refund_token(action.player_id, action.token_type)
+		return false
+	
+	return true
+
+
+func create_bot_action_placement_data(action:BotAction) -> Dictionary:
+	var failed_result:Dictionary = {
+		"is_valid": false,
+		"data": {}
+	}
+	
+	if action == null:
+		return failed_result
+	
+	if action.is_well_formed() == false:
+		return failed_result
+	
+	var explicit_placement_data:Dictionary = action.get_placement_data()
+	
+	if explicit_placement_data.is_empty() == false:
+		return {
+			"is_valid": true,
+			"data": explicit_placement_data.duplicate(true)
+		}
+	
+	var token_scene:PackedScene = TokenLibrary.get_token_scene(action.token_type)
+	
+	if token_scene == null:
+		return failed_result
+	
+	var temporary_node:Node = token_scene.instantiate()
+	
+	if temporary_node == null:
+		return failed_result
+	
+	var temporary_token:Token = temporary_node as Token
+	
+	if temporary_token == null:
+		temporary_node.free()
+		return failed_result
+	
+	var choice_data:Dictionary = action.get_choice_data()
+	
+	var context:Dictionary = {
+		"game_manager": self,
+		"session": session,
+		"board": board,
+		"board_state": board.state,
+		"settings": board.settings,
+		"player_id": action.player_id,
+		"player_count": get_player_count(),
+		"token_type": action.token_type,
+		"slot_pos": action.starting_slot,
+		"start_flipped": action.start_flipped,
+		"choice_data": choice_data.duplicate(true)
+	}
+	
+	for choice_key in choice_data.keys():
+		if context.has(choice_key):
+			continue
+		
+		context[choice_key] = choice_data[choice_key]
+	
+	var placement_data:Dictionary = temporary_token.create_network_placement_data(context)
+	var placement_data_is_required:bool = temporary_token.requires_network_placement_data()
+	
+	temporary_token.free()
+	
+	if placement_data_is_required and placement_data.is_empty():
+		return failed_result
+	
+	return {
+		"is_valid": true,
+		"data": placement_data.duplicate(true)
+	}

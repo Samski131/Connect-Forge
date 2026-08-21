@@ -56,6 +56,8 @@ func _ready() -> void:
 	
 	if multiplayer_lobby_active:
 		synchronise_match_config_from_lobby()
+	else:
+		setup_local_bot_smoke_test()
 	
 	create_shop_cards()
 	create_player_trays()
@@ -1142,3 +1144,25 @@ func _on_host_disconnected() -> void:
 	
 	DebugOverlay.log_message("TokenLobby", "The host disconnected. Showing the lobby closed popup.")
 	multiplayer_disconnect_popup.show_host_disconnected()
+
+func setup_local_bot_smoke_test() -> void:
+	if MatchData.config == null:
+		return
+	
+	if MatchData.config.get_player_count() < 2:
+		return
+	
+	if MatchData.config.set_player_as_bot(
+		0,
+		"duncan",
+		MatchPlayerData.BOT_DIFFICULTY.NORMAL
+	) == false:
+		push_error("TokenLobby: Could not configure Player 1 as Duncan.")
+		return
+	
+	if MatchData.config.set_player_as_bot(
+		1,
+		"periwinkle",
+		MatchPlayerData.BOT_DIFFICULTY.NORMAL
+	) == false:
+		push_error("TokenLobby: Could not configure Player 2 as Periwinkle.")

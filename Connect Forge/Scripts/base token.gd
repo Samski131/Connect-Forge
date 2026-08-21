@@ -58,7 +58,11 @@ func get_placement_choice_variants(_context:Dictionary) -> Array[Dictionary]:
 	result.append({})
 	return result
 
-
+func get_random_placement_outcome_variants(_context:Dictionary) -> Array[Dictionary]:
+	var result:Array[Dictionary] = []
+	return result
+	
+	
 func requires_network_placement_data() -> bool:
 	return false
 

@@ -2,7 +2,7 @@ class_name BotSimulationStateCloner
 extends RefCounted
 
 
-static func clone_state(source_session:MatchSession, source_board_state:BoardState, source_settings:BoardSetting) -> BotSimulationState:
+static func clone_state(source_session:MatchSession, source_board_state:BoardState, source_settings:BoardSetting, random_seed:int = BotSimulationState.DEFAULT_RANDOM_SEED) -> BotSimulationState:
 	if source_session == null:
 		push_error("BotSimulationStateCloner: Cannot clone a null MatchSession.")
 		return null
@@ -29,7 +29,7 @@ static func clone_state(source_session:MatchSession, source_board_state:BoardSta
 	
 	var result:BotSimulationState = BotSimulationState.new()
 	
-	if result.setup(cloned_settings, cloned_session) == false:
+	if result.setup(cloned_settings, cloned_session, random_seed) == false:
 		return null
 	
 	if _clone_board(source_board_state, result) == false:
@@ -226,13 +226,8 @@ static func _clone_token(source:Token) -> Token:
 		push_error("BotSimulationStateCloner: Token scene for type %d did not instantiate a Token." % source.token_type)
 		return null
 	
-	# setup() is intentionally NOT called here.
-	# It requires a BoardManager and performs live/presentation setup.
-	# setup_special_token() establishes token type, keywords and normal
-	# token configuration without connecting the clone to the live board.
 	result.setup_special_token()
 	
-	# Common gameplay state.
 	result.player_id = source.player_id
 	result.token_pos = source.token_pos
 	result.resolved = source.resolved
@@ -242,22 +237,15 @@ static func _clone_token(source:Token) -> Token:
 	result.ability_cost = source.ability_cost
 	result.keywords = source.keywords.duplicate()
 	
-	# The simulation token must never point back at the live BoardManager.
 	result.board = null
 	
-	# Presentation/replay state is deliberately detached from the live match.
 	result.gravity_visual_rotation_degrees = source.gravity_visual_rotation_degrees
 	result.replay_token_id = -1
 	result.clear_visual_player_palettes()
 	
-	# Generic placement-time persistent data.
 	var placement_data:Dictionary = source.get_network_placement_data()
 	result.apply_network_placement_data(placement_data.duplicate(true))
 	
-	# Token-specific persistent data.
-	# Current examples:
-	# Chameleon: fake_player_id, transformed, revealed
-	# Drill: has_activated
 	var token_state_data:Dictionary = source.create_network_state_data()
 	result.apply_network_state_data(token_state_data.duplicate(true))
 	

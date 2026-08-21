@@ -1,15 +1,21 @@
 class_name BotSimulationState
 extends RefCounted
 
+const DEFAULT_RANDOM_SEED:int = 1
+
 var settings:BoardSetting = null
 var session:MatchSession = null
 var board_state:BoardState = null
 
-var token_root:Node = null
+var token_root:Node2D = null
+
+var random_seed:int = DEFAULT_RANDOM_SEED
+var random_number_generator:RandomNumberGenerator = null
+
 var disposed:bool = true
 
 
-func setup(new_settings:BoardSetting, new_session:MatchSession) -> bool:
+func setup(new_settings:BoardSetting, new_session:MatchSession, new_random_seed:int = DEFAULT_RANDOM_SEED) -> bool:
 	dispose()
 	
 	if new_settings == null:
@@ -24,10 +30,31 @@ func setup(new_settings:BoardSetting, new_session:MatchSession) -> bool:
 	board_state = BoardState.new(settings)
 	board_state.setup_empty_board()
 	
-	token_root = Node.new()
+	token_root = Node2D.new()
+	
+	random_number_generator = RandomNumberGenerator.new()
+	set_random_seed(new_random_seed)
+	
 	disposed = false
 	
 	return true
+
+
+func set_random_seed(new_random_seed:int) -> void:
+	random_seed = new_random_seed
+	
+	if random_number_generator == null:
+		random_number_generator = RandomNumberGenerator.new()
+	
+	random_number_generator.seed = random_seed
+
+
+func get_random_seed() -> int:
+	return random_seed
+
+
+func get_random_number_generator() -> RandomNumberGenerator:
+	return random_number_generator
 
 
 func own_token(token:Token) -> bool:
@@ -89,6 +116,9 @@ func is_valid_state() -> bool:
 	if token_root == null:
 		return false
 	
+	if random_number_generator == null:
+		return false
+	
 	return true
 
 
@@ -109,3 +139,6 @@ func dispose() -> void:
 	board_state = null
 	session = null
 	settings = null
+	
+	random_number_generator = null
+	random_seed = DEFAULT_RANDOM_SEED

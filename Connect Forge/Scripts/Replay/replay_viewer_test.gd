@@ -1,6 +1,6 @@
 extends Control
 
-const TEST_REPLAY_PATH:String = "user://replays/96c0e0d4-2929-4318-9a68-e25ca13353c0.afreplay"
+const TEST_REPLAY_PATH:String = "user://replays/70bf6cda-5801-4b03-b034-3ecc1589971f.afreplay"
 
 var controller:ReplayController = null
 var board_view:ReplayBoardView = null
